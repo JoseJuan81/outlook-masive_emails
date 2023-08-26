@@ -1,0 +1,372 @@
+00.748[info]-[4560] FUNc:OHOS::HiviewDFX::FingerprintDft::OnUnorderedEvent :Receive from WinEvent eventId 202001.
+
+2023-07-27 15:56:00.751[info]-[4560] FUNc:OHOS::HiviewDFX::WindowsErrorReporting::OnUnorderedEvent :Receive from WinEvent eventId 202002.
+
+2023-07-27 15:56:00.752[info]-[3056] FUNc:OHOS::HiviewDFX::EventSwitchPlugin::OnEvent :EventSwitchPlugin::OnEvent finish(id = 954001035)
+2023-07-27 15:56:01.292[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:01.293[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:01.293[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:01.294[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:01.294[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:02.029[info]-[4560] FUNc:OHOS::HiviewDFX::WindowsErrorReporting::OnUnorderedEvent :Receive from WinEvent eventId 202002.
+
+2023-07-27 15:56:02.030[info]-[3056] FUNc:OHOS::HiviewDFX::EventSwitchPlugin::OnEvent :EventSwitchPlugin::OnEvent finish(id = 954001035)
+2023-07-27 15:56:02.033[info]-[4560] FUNc:OHOS::HiviewDFX::AudioWinEvtMonitor::OnUnorderedEvent :Receive UnorderedEvent from WinEvent, eventId[202001].
+
+2023-07-27 15:56:02.033[info]-[4560] FUNc:OHOS::HiviewDFX::FingerprintDft::OnUnorderedEvent :Receive from WinEvent eventId 202001.
+
+2023-07-27 15:56:02.037[info]-[4560] FUNc:OHOS::HiviewDFX::WindowsErrorReporting::OnUnorderedEvent :Receive from WinEvent eventId 202002.
+
+2023-07-27 15:56:02.037[info]-[3056] FUNc:OHOS::HiviewDFX::EventSwitchPlugin::OnEvent :EventSwitchPlugin::OnEvent finish(id = 954001035)
+2023-07-27 15:56:02.040[info]-[4560] FUNc:OHOS::HiviewDFX::WindowsErrorReporting::OnUnorderedEvent :Receive from WinEvent eventId 202002.
+
+2023-07-27 15:56:02.041[info]-[3056] FUNc:OHOS::HiviewDFX::EventSwitchPlugin::OnEvent :EventSwitchPlugin::OnEvent finish(id = 954001035)
+2023-07-27 15:56:02.043[info]-[4560] FUNc:OHOS::HiviewDFX::AudioWinEvtMonitor::OnUnorderedEvent :Receive UnorderedEvent from WinEvent, eventId[202001].
+
+2023-07-27 15:56:02.043[info]-[4560] FUNc:OHOS::HiviewDFX::FingerprintDft::OnUnorderedEvent :Receive from WinEvent eventId 202001.
+
+2023-07-27 15:56:02.293[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:02.294[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:03.301[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:03.302[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:03.303[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:03.443[info]-[4560] FUNc:OHOS::HiviewDFX::WindowsErrorReporting::OnUnorderedEvent :Receive from WinEvent eventId 202002.
+
+2023-07-27 15:56:03.444[info]-[3056] FUNc:OHOS::HiviewDFX::EventSwitchPlugin::OnEvent :EventSwitchPlugin::OnEvent finish(id = 954001035)
+2023-07-27 15:56:03.449[info]-[4560] FUNc:OHOS::HiviewDFX::AudioWinEvtMonitor::OnUnorderedEvent :Receive UnorderedEvent from WinEvent, eventId[202001].
+
+2023-07-27 15:56:03.449[info]-[4560] FUNc:OHOS::HiviewDFX::FingerprintDft::OnUnorderedEvent :Receive from WinEvent eventId 202001.
+
+2023-07-27 15:56:03.452[info]-[4560] FUNc:OHOS::HiviewDFX::WindowsErrorReporting::OnUnorderedEvent :Receive from WinEvent eventId 202002.
+
+2023-07-27 15:56:03.453[info]-[3056] FUNc:OHOS::HiviewDFX::EventSwitchPlugin::OnEvent :EventSwitchPlugin::OnEvent finish(id = 954001035)
+2023-07-27 15:56:03.456[info]-[4560] FUNc:OHOS::HiviewDFX::WindowsErrorReporting::OnUnorderedEvent :Receive from WinEvent eventId 202002.
+
+2023-07-27 15:56:03.457[info]-[3056] FUNc:OHOS::HiviewDFX::EventSwitchPlugin::OnEvent :EventSwitchPlugin::OnEvent finish(id = 954001035)
+2023-07-27 15:56:04.317[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:04.319[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:04.321[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:04.565[info]-[4560] FUNc:OHOS::HiviewDFX::AudioWinEvtMonitor::OnUnorderedEvent :Receive UnorderedEvent from WinEvent, eventId[202001].
+
+2023-07-27 15:56:04.566[info]-[4560] FUNc:OHOS::HiviewDFX::FingerprintDft::OnUnorderedEvent :Receive from WinEvent eventId 202001.
+
+2023-07-27 15:56:04.572[info]-[4560] FUNc:OHOS::HiviewDFX::WindowsErrorReporting::OnUnorderedEvent :Receive from WinEvent eventId 202002.
+
+2023-07-27 15:56:04.573[info]-[3056] FUNc:OHOS::HiviewDFX::EventSwitchPlugin::OnEvent :EventSwitchPlugin::OnEvent finish(id = 954001035)
+2023-07-27 15:56:04.576[info]-[4560] FUNc:OHOS::HiviewDFX::WindowsErrorReporting::OnUnorderedEvent :Receive from WinEvent eventId 202002.
+
+2023-07-27 15:56:04.577[info]-[3056] FUNc:OHOS::HiviewDFX::EventSwitchPlugin::OnEvent :EventSwitchPlugin::OnEvent finish(id = 954001035)
+2023-07-27 15:56:04.580[info]-[4560] FUNc:OHOS::HiviewDFX::AudioWinEvtMonitor::OnUnorderedEvent :Receive UnorderedEvent from WinEvent, eventId[202001].
+
+2023-07-27 15:56:04.580[info]-[4560] FUNc:OHOS::HiviewDFX::FingerprintDft::OnUnorderedEvent :Receive from WinEvent eventId 202001.
+
+2023-07-27 15:56:05.327[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:05.328[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:05.328[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:05.954[info]-[4560] FUNc:OHOS::HiviewDFX::WindowsErrorReporting::OnUnorderedEvent :Receive from WinEvent eventId 202002.
+
+2023-07-27 15:56:05.955[info]-[3056] FUNc:OHOS::HiviewDFX::EventSwitchPlugin::OnEvent :EventSwitchPlugin::OnEvent finish(id = 954001035)
+2023-07-27 15:56:05.959[info]-[4560] FUNc:OHOS::HiviewDFX::WindowsErrorReporting::OnUnorderedEvent :Receive from WinEvent eventId 202002.
+
+2023-07-27 15:56:05.960[info]-[3056] FUNc:OHOS::HiviewDFX::EventSwitchPlugin::OnEvent :EventSwitchPlugin::OnEvent finish(id = 954001035)
+2023-07-27 15:56:05.962[info]-[4560] FUNc:OHOS::HiviewDFX::AudioWinEvtMonitor::OnUnorderedEvent :Receive UnorderedEvent from WinEvent, eventId[202001].
+
+2023-07-27 15:56:05.962[info]-[4560] FUNc:OHOS::HiviewDFX::FingerprintDft::OnUnorderedEvent :Receive from WinEvent eventId 202001.
+
+2023-07-27 15:56:05.966[info]-[4560] FUNc:OHOS::HiviewDFX::WindowsErrorReporting::OnUnorderedEvent :Receive from WinEvent eventId 202002.
+
+2023-07-27 15:56:05.967[info]-[3056] FUNc:OHOS::HiviewDFX::EventSwitchPlugin::OnEvent :EventSwitchPlugin::OnEvent finish(id = 954001035)
+2023-07-27 15:56:06.343[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:06.344[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:06.344[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:06.345[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:06.346[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:07.061[info]-[4560] FUNc:OHOS::HiviewDFX::AudioWinEvtMonitor::OnUnorderedEvent :Receive UnorderedEvent from WinEvent, eventId[202001].
+
+2023-07-27 15:56:07.061[info]-[4560] FUNc:OHOS::HiviewDFX::FingerprintDft::OnUnorderedEvent :Receive from WinEvent eventId 202001.
+
+2023-07-27 15:56:07.065[info]-[4560] FUNc:OHOS::HiviewDFX::WindowsErrorReporting::OnUnorderedEvent :Receive from WinEvent eventId 202002.
+
+2023-07-27 15:56:07.066[info]-[3056] FUNc:OHOS::HiviewDFX::EventSwitchPlugin::OnEvent :EventSwitchPlugin::OnEvent finish(id = 954001035)
+2023-07-27 15:56:07.069[info]-[4560] FUNc:OHOS::HiviewDFX::WindowsErrorReporting::OnUnorderedEvent :Receive from WinEvent eventId 202002.
+
+2023-07-27 15:56:07.070[info]-[3056] FUNc:OHOS::HiviewDFX::EventSwitchPlugin::OnEvent :EventSwitchPlugin::OnEvent finish(id = 954001035)
+2023-07-27 15:56:07.073[info]-[4560] FUNc:OHOS::HiviewDFX::AudioWinEvtMonitor::OnUnorderedEvent :Receive UnorderedEvent from WinEvent, eventId[202001].
+
+2023-07-27 15:56:07.073[info]-[4560] FUNc:OHOS::HiviewDFX::FingerprintDft::OnUnorderedEvent :Receive from WinEvent eventId 202001.
+
+2023-07-27 15:56:07.356[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:07.357[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:08.187[info]-[4560] FUNc:OHOS::HiviewDFX::WindowsErrorReporting::OnUnorderedEvent :Receive from WinEvent eventId 202002.
+
+2023-07-27 15:56:08.189[info]-[3056] FUNc:OHOS::HiviewDFX::EventSwitchPlugin::OnEvent :EventSwitchPlugin::OnEvent finish(id = 954001035)
+2023-07-27 15:56:08.194[info]-[4560] FUNc:OHOS::HiviewDFX::WindowsErrorReporting::OnUnorderedEvent :Receive from WinEvent eventId 202002.
+
+2023-07-27 15:56:08.195[info]-[3056] FUNc:OHOS::HiviewDFX::EventSwitchPlugin::OnEvent :EventSwitchPlugin::OnEvent finish(id = 954001035)
+2023-07-27 15:56:08.199[info]-[4560] FUNc:OHOS::HiviewDFX::AudioWinEvtMonitor::OnUnorderedEvent :Receive UnorderedEvent from WinEvent, eventId[202001].
+
+2023-07-27 15:56:08.199[info]-[4560] FUNc:OHOS::HiviewDFX::FingerprintDft::OnUnorderedEvent :Receive from WinEvent eventId 202001.
+
+2023-07-27 15:56:08.203[info]-[4560] FUNc:OHOS::HiviewDFX::WindowsErrorReporting::OnUnorderedEvent :Receive from WinEvent eventId 202002.
+
+2023-07-27 15:56:08.205[info]-[3056] FUNc:OHOS::HiviewDFX::EventSwitchPlugin::OnEvent :EventSwitchPlugin::OnEvent finish(id = 954001035)
+2023-07-27 15:56:09.277[info]-[4560] FUNc:OHOS::HiviewDFX::WindowsErrorReporting::OnUnorderedEvent :Receive from WinEvent eventId 202002.
+
+2023-07-27 15:56:09.278[info]-[3056] FUNc:OHOS::HiviewDFX::EventSwitchPlugin::OnEvent :EventSwitchPlugin::OnEvent finish(id = 954001035)
+2023-07-27 15:56:09.281[info]-[4560] FUNc:OHOS::HiviewDFX::AudioWinEvtMonitor::OnUnorderedEvent :Receive UnorderedEvent from WinEvent, eventId[202001].
+
+2023-07-27 15:56:09.281[info]-[4560] FUNc:OHOS::HiviewDFX::FingerprintDft::OnUnorderedEvent :Receive from WinEvent eventId 202001.
+
+2023-07-27 15:56:09.284[info]-[4560] FUNc:OHOS::HiviewDFX::WindowsErrorReporting::OnUnorderedEvent :Receive from WinEvent eventId 202002.
+
+2023-07-27 15:56:09.286[info]-[3056] FUNc:OHOS::HiviewDFX::EventSwitchPlugin::OnEvent :EventSwitchPlugin::OnEvent finish(id = 954001035)
+2023-07-27 15:56:09.370[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:09.371[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:09.371[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:09.372[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:10.382[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:10.383[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:10.383[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:10.445[info]-[4560] FUNc:OHOS::HiviewDFX::WindowsErrorReporting::OnUnorderedEvent :Receive from WinEvent eventId 202002.
+
+2023-07-27 15:56:10.446[info]-[3056] FUNc:OHOS::HiviewDFX::EventSwitchPlugin::OnEvent :EventSwitchPlugin::OnEvent finish(id = 954001035)
+2023-07-27 15:56:10.451[info]-[4560] FUNc:OHOS::HiviewDFX::AudioWinEvtMonitor::OnUnorderedEvent :Receive UnorderedEvent from WinEvent, eventId[202001].
+
+2023-07-27 15:56:10.451[info]-[4560] FUNc:OHOS::HiviewDFX::FingerprintDft::OnUnorderedEvent :Receive from WinEvent eventId 202001.
+
+2023-07-27 15:56:10.454[info]-[4560] FUNc:OHOS::HiviewDFX::WindowsErrorReporting::OnUnorderedEvent :Receive from WinEvent eventId 202002.
+
+2023-07-27 15:56:10.455[info]-[3056] FUNc:OHOS::HiviewDFX::EventSwitchPlugin::OnEvent :EventSwitchPlugin::OnEvent finish(id = 954001035)
+2023-07-27 15:56:10.458[info]-[4560] FUNc:OHOS::HiviewDFX::AudioWinEvtMonitor::OnUnorderedEvent :Receive UnorderedEvent from WinEvent, eventId[202001].
+
+2023-07-27 15:56:10.458[info]-[4560] FUNc:OHOS::HiviewDFX::FingerprintDft::OnUnorderedEvent :Receive from WinEvent eventId 202001.
+
+2023-07-27 15:56:11.396[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:11.396[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:11.396[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:11.458[info]-[4560] FUNc:OHOS::HiviewDFX::WindowsErrorReporting::OnUnorderedEvent :Receive from WinEvent eventId 202002.
+
+2023-07-27 15:56:11.459[info]-[3056] FUNc:OHOS::HiviewDFX::EventSwitchPlugin::OnEvent :EventSwitchPlugin::OnEvent finish(id = 954001035)
+2023-07-27 15:56:11.462[info]-[4560] FUNc:OHOS::HiviewDFX::WindowsErrorReporting::OnUnorderedEvent :Receive from WinEvent eventId 202002.
+
+2023-07-27 15:56:11.463[info]-[3056] FUNc:OHOS::HiviewDFX::EventSwitchPlugin::OnEvent :EventSwitchPlugin::OnEvent finish(id = 954001035)
+2023-07-27 15:56:11.465[info]-[4560] FUNc:OHOS::HiviewDFX::AudioWinEvtMonitor::OnUnorderedEvent :Receive UnorderedEvent from WinEvent, eventId[202001].
+
+2023-07-27 15:56:11.465[info]-[4560] FUNc:OHOS::HiviewDFX::FingerprintDft::OnUnorderedEvent :Receive from WinEvent eventId 202001.
+
+2023-07-27 15:56:11.468[info]-[4560] FUNc:OHOS::HiviewDFX::WindowsErrorReporting::OnUnorderedEvent :Receive from WinEvent eventId 202002.
+
+2023-07-27 15:56:11.469[info]-[3056] FUNc:OHOS::HiviewDFX::EventSwitchPlugin::OnEvent :EventSwitchPlugin::OnEvent finish(id = 954001035)
+2023-07-27 15:56:12.410[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:12.412[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:12.413[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:12.414[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:12.505[info]-[4560] FUNc:OHOS::HiviewDFX::WindowsErrorReporting::OnUnorderedEvent :Receive from WinEvent eventId 202002.
+
+2023-07-27 15:56:12.506[info]-[3056] FUNc:OHOS::HiviewDFX::EventSwitchPlugin::OnEvent :EventSwitchPlugin::OnEvent finish(id = 954001035)
+2023-07-27 15:56:12.510[info]-[4560] FUNc:OHOS::HiviewDFX::AudioWinEvtMonitor::OnUnorderedEvent :Receive UnorderedEvent from WinEvent, eventId[202001].
+
+2023-07-27 15:56:12.510[info]-[4560] FUNc:OHOS::HiviewDFX::FingerprintDft::OnUnorderedEvent :Receive from WinEvent eventId 202001.
+
+2023-07-27 15:56:12.514[info]-[4560] FUNc:OHOS::HiviewDFX::WindowsErrorReporting::OnUnorderedEvent :Receive from WinEvent eventId 202002.
+
+2023-07-27 15:56:12.515[info]-[3056] FUNc:OHOS::HiviewDFX::EventSwitchPlugin::OnEvent :EventSwitchPlugin::OnEvent finish(id = 954001035)
+2023-07-27 15:56:13.421[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:13.422[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:13.513[info]-[4560] FUNc:OHOS::HiviewDFX::WindowsErrorReporting::OnUnorderedEvent :Receive from WinEvent eventId 202002.
+
+2023-07-27 15:56:13.515[info]-[3056] FUNc:OHOS::HiviewDFX::EventSwitchPlugin::OnEvent :EventSwitchPlugin::OnEvent finish(id = 954001035)
+2023-07-27 15:56:13.526[info]-[4560] FUNc:OHOS::HiviewDFX::AudioWinEvtMonitor::OnUnorderedEvent :Receive UnorderedEvent from WinEvent, eventId[202001].
+
+2023-07-27 15:56:13.526[info]-[4560] FUNc:OHOS::HiviewDFX::FingerprintDft::OnUnorderedEvent :Receive from WinEvent eventId 202001.
+
+2023-07-27 15:56:14.435[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:14.436[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:14.439[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:14.666[info]-[4560] FUNc:OHOS::HiviewDFX::WindowsErrorReporting::OnUnorderedEvent :Receive from WinEvent eventId 202002.
+
+2023-07-27 15:56:14.668[info]-[3056] FUNc:OHOS::HiviewDFX::EventSwitchPlugin::OnEvent :EventSwitchPlugin::OnEvent finish(id = 954001035)
+2023-07-27 15:56:14.671[info]-[4560] FUNc:OHOS::HiviewDFX::WindowsErrorReporting::OnUnorderedEvent :Receive from WinEvent eventId 202002.
+
+2023-07-27 15:56:14.672[info]-[3056] FUNc:OHOS::HiviewDFX::EventSwitchPlugin::OnEvent :EventSwitchPlugin::OnEvent finish(id = 954001035)
+2023-07-27 15:56:14.674[info]-[4560] FUNc:OHOS::HiviewDFX::AudioWinEvtMonitor::OnUnorderedEvent :Receive UnorderedEvent from WinEvent, eventId[202001].
+
+2023-07-27 15:56:14.674[info]-[4560] FUNc:OHOS::HiviewDFX::FingerprintDft::OnUnorderedEvent :Receive from WinEvent eventId 202001.
+
+2023-07-27 15:56:15.442[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:15.444[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:15.445[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:16.301[info]-[4560] FUNc:OHOS::HiviewDFX::WindowsErrorReporting::OnUnorderedEvent :Receive from WinEvent eventId 202002.
+
+2023-07-27 15:56:16.302[info]-[3056] FUNc:OHOS::HiviewDFX::EventSwitchPlugin::OnEvent :EventSwitchPlugin::OnEvent finish(id = 954001035)
+2023-07-27 15:56:16.304[info]-[4560] FUNc:OHOS::HiviewDFX::WindowsErrorReporting::OnUnorderedEvent :Receive from WinEvent eventId 202002.
+
+2023-07-27 15:56:16.305[info]-[3056] FUNc:OHOS::HiviewDFX::EventSwitchPlugin::OnEvent :EventSwitchPlugin::OnEvent finish(id = 954001035)
+2023-07-27 15:56:16.307[info]-[4560] FUNc:OHOS::HiviewDFX::AudioWinEvtMonitor::OnUnorderedEvent :Receive UnorderedEvent from WinEvent, eventId[202001].
+
+2023-07-27 15:56:16.308[info]-[4560] FUNc:OHOS::HiviewDFX::FingerprintDft::OnUnorderedEvent :Receive from WinEvent eventId 202001.
+
+2023-07-27 15:56:16.311[info]-[4560] FUNc:OHOS::HiviewDFX::WindowsErrorReporting::OnUnorderedEvent :Receive from WinEvent eventId 202002.
+
+2023-07-27 15:56:16.312[info]-[3056] FUNc:OHOS::HiviewDFX::EventSwitchPlugin::OnEvent :EventSwitchPlugin::OnEvent finish(id = 954001035)
+2023-07-27 15:56:17.527[info]-[4560] FUNc:OHOS::HiviewDFX::AudioWinEvtMonitor::OnUnorderedEvent :Receive UnorderedEvent from WinEvent, eventId[202001].
+
+2023-07-27 15:56:17.527[info]-[4560] FUNc:OHOS::HiviewDFX::FingerprintDft::OnUnorderedEvent :Receive from WinEvent eventId 202001.
+
+2023-07-27 15:56:17.531[info]-[4560] FUNc:OHOS::HiviewDFX::WindowsErrorReporting::OnUnorderedEvent :Receive from WinEvent eventId 202002.
+
+2023-07-27 15:56:17.532[info]-[3056] FUNc:OHOS::HiviewDFX::EventSwitchPlugin::OnEvent :EventSwitchPlugin::OnEvent finish(id = 954001035)
+2023-07-27 15:56:17.534[info]-[4560] FUNc:OHOS::HiviewDFX::WindowsErrorReporting::OnUnorderedEvent :Receive from WinEvent eventId 202002.
+
+2023-07-27 15:56:17.535[info]-[3056] FUNc:OHOS::HiviewDFX::EventSwitchPlugin::OnEvent :EventSwitchPlugin::OnEvent finish(id = 954001035)
+2023-07-27 15:56:17.539[info]-[4560] FUNc:OHOS::HiviewDFX::AudioWinEvtMonitor::OnUnorderedEvent :Receive UnorderedEvent from WinEvent, eventId[202001].
+
+2023-07-27 15:56:17.539[info]-[4560] FUNc:OHOS::HiviewDFX::FingerprintDft::OnUnorderedEvent :Receive from WinEvent eventId 202001.
+
+2023-07-27 15:56:17.607[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:17.608[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:17.608[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:18.609[info]-[4560] FUNc:OHOS::HiviewDFX::WindowsErrorReporting::OnUnorderedEvent :Receive from WinEvent eventId 202002.
+
+2023-07-27 15:56:18.609[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:18.610[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:18.611[info]-[3056] FUNc:OHOS::HiviewDFX::EventSwitchPlugin::OnEvent :EventSwitchPlugin::OnEvent finish(id = 954001035)
+2023-07-27 15:56:18.614[info]-[4560] FUNc:OHOS::HiviewDFX::WindowsErrorReporting::OnUnorderedEvent :Receive from WinEvent eventId 202002.
+
+2023-07-27 15:56:18.615[info]-[3056] FUNc:OHOS::HiviewDFX::EventSwitchPlugin::OnEvent :EventSwitchPlugin::OnEvent finish(id = 954001035)
+2023-07-27 15:56:18.617[info]-[4560] FUNc:OHOS::HiviewDFX::AudioWinEvtMonitor::OnUnorderedEvent :Receive UnorderedEvent from WinEvent, eventId[202001].
+
+2023-07-27 15:56:18.617[info]-[4560] FUNc:OHOS::HiviewDFX::FingerprintDft::OnUnorderedEvent :Receive from WinEvent eventId 202001.
+
+2023-07-27 15:56:18.621[info]-[4560] FUNc:OHOS::HiviewDFX::WindowsErrorReporting::OnUnorderedEvent :Receive from WinEvent eventId 202002.
+
+2023-07-27 15:56:18.622[info]-[3056] FUNc:OHOS::HiviewDFX::EventSwitchPlugin::OnEvent :EventSwitchPlugin::OnEvent finish(id = 954001035)
+2023-07-27 15:56:19.614[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:19.615[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:19.615[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:19.616[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:20.390[info]-[4560] FUNc:OHOS::HiviewDFX::WindowsErrorReporting::OnUnorderedEvent :Receive from WinEvent eventId 202002.
+
+2023-07-27 15:56:20.391[info]-[3056] FUNc:OHOS::HiviewDFX::EventSwitchPlugin::OnEvent :EventSwitchPlugin::OnEvent finish(id = 954001035)
+2023-07-27 15:56:20.395[info]-[4560] FUNc:OHOS::HiviewDFX::WindowsErrorReporting::OnUnorderedEvent :Receive from WinEvent eventId 202002.
+
+2023-07-27 15:56:20.396[info]-[3056] FUNc:OHOS::HiviewDFX::EventSwitchPlugin::OnEvent :EventSwitchPlugin::OnEvent finish(id = 954001035)
+2023-07-27 15:56:20.399[info]-[4560] FUNc:OHOS::HiviewDFX::WindowsErrorReporting::OnUnorderedEvent :Receive from WinEvent eventId 202002.
+
+2023-07-27 15:56:20.400[info]-[3056] FUNc:OHOS::HiviewDFX::EventSwitchPlugin::OnEvent :EventSwitchPlugin::OnEvent finish(id = 954001035)
+2023-07-27 15:56:22.152[info]-[4560] FUNc:OHOS::HiviewDFX::WindowsErrorReporting::OnUnorderedEvent :Receive from WinEvent eventId 202002.
+
+2023-07-27 15:56:22.153[info]-[3056] FUNc:OHOS::HiviewDFX::EventSwitchPlugin::OnEvent :EventSwitchPlugin::OnEvent finish(id = 954001035)
+2023-07-27 15:56:22.156[info]-[4560] FUNc:OHOS::HiviewDFX::WindowsErrorReporting::OnUnorderedEvent :Receive from WinEvent eventId 202002.
+
+2023-07-27 15:56:22.157[info]-[3056] FUNc:OHOS::HiviewDFX::EventSwitchPlugin::OnEvent :EventSwitchPlugin::OnEvent finish(id = 954001035)
+2023-07-27 15:56:23.271[info]-[4560] FUNc:OHOS::HiviewDFX::WindowsErrorReporting::OnUnorderedEvent :Receive from WinEvent eventId 202002.
+
+2023-07-27 15:56:23.271[info]-[3056] FUNc:OHOS::HiviewDFX::EventSwitchPlugin::OnEvent :EventSwitchPlugin::OnEvent finish(id = 954001035)
+2023-07-27 15:56:24.067[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:24.925[info]-[4560] FUNc:OHOS::HiviewDFX::WindowsErrorReporting::OnUnorderedEvent :Receive from WinEvent eventId 202002.
+
+2023-07-27 15:56:24.927[info]-[3056] FUNc:OHOS::HiviewDFX::EventSwitchPlugin::OnEvent :EventSwitchPlugin::OnEvent finish(id = 954001035)
+2023-07-27 15:56:24.930[info]-[4560] FUNc:OHOS::HiviewDFX::WindowsErrorReporting::OnUnorderedEvent :Receive from WinEvent eventId 202002.
+
+2023-07-27 15:56:24.931[info]-[3056] FUNc:OHOS::HiviewDFX::EventSwitchPlugin::OnEvent :EventSwitchPlugin::OnEvent finish(id = 954001035)
+2023-07-27 15:56:26.759[info]-[4560] FUNc:OHOS::HiviewDFX::WindowsErrorReporting::OnUnorderedEvent :Receive from WinEvent eventId 202002.
+
+2023-07-27 15:56:26.760[info]-[3056] FUNc:OHOS::HiviewDFX::EventSwitchPlugin::OnEvent :EventSwitchPlugin::OnEvent finish(id = 954001035)
+2023-07-27 15:56:27.777[info]-[4560] FUNc:OHOS::HiviewDFX::WindowsErrorReporting::OnUnorderedEvent :Receive from WinEvent eventId 202002.
+
+2023-07-27 15:56:27.778[info]-[4560] FUNc:OHOS::HiviewDFX::WindowsErrorReporting::OnUnorderedEvent :Receive from WinEvent eventId 202002.
+
+2023-07-27 15:56:27.779[info]-[3056] FUNc:OHOS::HiviewDFX::EventSwitchPlugin::OnEvent :EventSwitchPlugin::OnEvent finish(id = 954001035)
+2023-07-27 15:56:27.780[info]-[3056] FUNc:OHOS::HiviewDFX::EventSwitchPlugin::OnEvent :EventSwitchPlugin::OnEvent finish(id = 954001035)
+2023-07-27 15:56:29.126[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:29.531[info]-[4560] FUNc:OHOS::HiviewDFX::WindowsErrorReporting::OnUnorderedEvent :Receive from WinEvent eventId 202002.
+
+2023-07-27 15:56:29.532[info]-[3056] FUNc:OHOS::HiviewDFX::EventSwitchPlugin::OnEvent :EventSwitchPlugin::OnEvent finish(id = 954001035)
+2023-07-27 15:56:29.536[info]-[4560] FUNc:OHOS::HiviewDFX::WindowsErrorReporting::OnUnorderedEvent :Receive from WinEvent eventId 202002.
+
+2023-07-27 15:56:29.537[info]-[3056] FUNc:OHOS::HiviewDFX::EventSwitchPlugin::OnEvent :EventSwitchPlugin::OnEvent finish(id = 954001035)
+2023-07-27 15:56:31.272[info]-[4560] FUNc:OHOS::HiviewDFX::WindowsErrorReporting::OnUnorderedEvent :Receive from WinEvent eventId 202002.
+
+2023-07-27 15:56:31.273[info]-[3056] FUNc:OHOS::HiviewDFX::EventSwitchPlugin::OnEvent :EventSwitchPlugin::OnEvent finish(id = 954001035)
+2023-07-27 15:56:31.277[info]-[4560] FUNc:OHOS::HiviewDFX::WindowsErrorReporting::OnUnorderedEvent :Receive from WinEvent eventId 202002.
+
+2023-07-27 15:56:31.278[info]-[3056] FUNc:OHOS::HiviewDFX::EventSwitchPlugin::OnEvent :EventSwitchPlugin::OnEvent finish(id = 954001035)
+2023-07-27 15:56:33.117[info]-[4560] FUNc:OHOS::HiviewDFX::WindowsErrorReporting::OnUnorderedEvent :Receive from WinEvent eventId 202002.
+
+2023-07-27 15:56:33.118[info]-[3056] FUNc:OHOS::HiviewDFX::EventSwitchPlugin::OnEvent :EventSwitchPlugin::OnEvent finish(id = 954001035)
+2023-07-27 15:56:34.125[info]-[4560] FUNc:OHOS::HiviewDFX::WindowsErrorReporting::OnUnorderedEvent :Receive from WinEvent eventId 202002.
+
+2023-07-27 15:56:34.126[info]-[3056] FUNc:OHOS::HiviewDFX::EventSwitchPlugin::OnEvent :EventSwitchPlugin::OnEvent finish(id = 954001035)
+2023-07-27 15:56:34.276[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:34.276[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:35.288[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:35.492[info]-[4560] FUNc:OHOS::HiviewDFX::WindowsErrorReporting::OnUnorderedEvent :Receive from WinEvent eventId 202002.
+
+2023-07-27 15:56:35.493[info]-[3056] FUNc:OHOS::HiviewDFX::EventSwitchPlugin::OnEvent :EventSwitchPlugin::OnEvent finish(id = 954001035)
+2023-07-27 15:56:36.609[info]-[4560] FUNc:OHOS::HiviewDFX::WindowsErrorReporting::OnUnorderedEvent :Receive from WinEvent eventId 202002.
+
+2023-07-27 15:56:36.610[info]-[3056] FUNc:OHOS::HiviewDFX::EventSwitchPlugin::OnEvent :EventSwitchPlugin::OnEvent finish(id = 954001035)
+2023-07-27 15:56:37.312[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:37.983[info]-[4560] FUNc:OHOS::HiviewDFX::WindowsErrorReporting::OnUnorderedEvent :Receive from WinEvent eventId 202002.
+
+2023-07-27 15:56:37.984[info]-[3056] FUNc:OHOS::HiviewDFX::EventSwitchPlugin::OnEvent :EventSwitchPlugin::OnEvent finish(id = 954001035)
+2023-07-27 15:56:38.327[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:38.327[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:38.328[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:38.328[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:38.329[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:38.329[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:38.330[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:38.330[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:38.331[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:38.331[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:38.332[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:38.332[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:39.338[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:39.342[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:39.343[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:39.343[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:39.344[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:39.345[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:40.348[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:40.349[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:40.350[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:40.351[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:40.352[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:40.353[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:41.349[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:41.350[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:41.352[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:41.354[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:42.364[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:42.367[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:42.371[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:42.372[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:43.375[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:43.376[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:44.390[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:44.391[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:44.391[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:44.392[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:44.392[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:44.393[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:44.393[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:44.393[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:44.394[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:44.395[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:44.395[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:44.395[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:44.396[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:44.396[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:45.391[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:45.391[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:45.392[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:45.392[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:45.393[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:45.393[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:45.394[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:45.394[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:45.395[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:45.395[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intype 19 and outtype 1
+2023-07-27 15:56:45.396[error]-[8264] FUNc:OHOS::HiviewDFX::EtwTaskSheet::GetPropertyLength :Failed to format ETW event property. Unexpected length of 0 for intyp
