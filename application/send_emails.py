@@ -57,8 +57,9 @@ class SendEmails:
         confirm_callback: ConfirmationCallback,
         preview_service: HtmlPreviewPort | None = None,
         preview_callback: PreviewApprovalCallback | None = None,
-        delay_seconds: float = 0.2,
+        delay_seconds: float = 2.0,
         max_retries: int = 3,
+        tracker=None,
     ) -> None:
         self.contact_repository = contact_repository
         self.email_sender = email_sender
@@ -68,6 +69,7 @@ class SendEmails:
         self.preview_callback = preview_callback
         self.delay_seconds = delay_seconds
         self.max_retries = max_retries
+        self.tracker = tracker
 
     def get_contacts(self) -> list[ContactEntity]:
         """Return contacts normalized for the domain layer."""
@@ -125,6 +127,9 @@ class SendEmails:
             logger.info("Envio cancelado por el usuario")
             return
 
+        if self.tracker:
+            self.tracker.start_run()
+
         failed: list[str] = []
         for counter, contact in enumerate(contacts, start=1):
             logger.info(
@@ -152,12 +157,23 @@ class SendEmails:
             logger.error("Envios fallidos (%d): %s", len(failed), ", ".join(failed))
         logger.info("FIN — enviados: %d/%d", contacts_len - len(failed), contacts_len)
 
+        if self.tracker:
+            self.tracker.finish_run()
+            self.tracker.print_summary()
+
     def _send_with_retry(self, email: EmailMessage, counter: int, total: int) -> bool:
         """Attempt to send with exponential backoff. Returns True on success."""
         for attempt in range(1, self.max_retries + 1):
             try:
-                self.email_sender.send(email)
+                entry_id = None
+                if hasattr(self.email_sender, "send_with_tracking"):
+                    info = self.email_sender.send_with_tracking(email)
+                    entry_id = info.get("entry_id")
+                else:
+                    self.email_sender.send(email)
                 logger.info("Enviado %d/%d -> %s", counter, total, email.to)
+                if self.tracker:
+                    self.tracker.record_sent(email.to, email.subject, entry_id=entry_id)
                 return True
             except Exception as exc:
                 if attempt < self.max_retries:
@@ -172,6 +188,8 @@ class SendEmails:
                         "FALLO definitivo tras %d intentos -> %s | %s",
                         self.max_retries, email.to, exc,
                     )
+                    if self.tracker:
+                        self.tracker.record_failed(email.to, email.subject, str(exc), attempt)
         return False
 
     def _extract_contact_data(self, contact: RawContact) -> tuple[str, str, MetadataMap]:

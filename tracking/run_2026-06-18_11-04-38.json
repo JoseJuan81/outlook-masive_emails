@@ -1,0 +1,25 @@
+{
+  "run_id": "2026-06-18_11-04-38",
+  "started_at": "2026-06-18T11:04:38.285277",
+  "finished_at": "2026-06-18T11:04:38.285364",
+  "total": 3,
+  "sent": 0,
+  "failed": 3,
+  "emails": [
+    {
+      "to": "josejuan.dominguez@int-elle.com",
+      "status": "failed",
+      "error": "(-2147352567, 'Ocurrió una excepción.', (4096, 'Microsoft Outlook', 'Se movió o eliminó el elemento.', None, 0, -2147221238), None)"
+    },
+    {
+      "to": "pe.dominguezjosejuan@gmail.com",
+      "status": "failed",
+      "error": "(-2147352567, 'Ocurrió una excepción.', (4096, 'Microsoft Outlook', 'Se movió o eliminó el elemento.', None, 0, -2147221238), None)"
+    },
+    {
+      "to": "dominguez.josejuan@gmail.com",
+      "status": "failed",
+      "error": "(-2147352567, 'Ocurrió una excepción.', (4096, 'Microsoft Outlook', 'Se movió o eliminó el elemento.', None, 0, -2147221238), None)"
+    }
+  ]
+}

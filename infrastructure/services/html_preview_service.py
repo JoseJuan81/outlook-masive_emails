@@ -2,12 +2,13 @@
 
 from __future__ import annotations
 
+import base64
 import re
 import webbrowser
 from pathlib import Path
 
-from Classes.base64_converter import Base64Converter
-from Classes.body_class import HtmlBody
+_PROJECT_ROOT = Path(__file__).resolve().parents[2]
+_BODY_IMAGES_DIR = _PROJECT_ROOT / "html" / "images" / "body"
 
 
 class HtmlPreviewService:
@@ -32,13 +33,29 @@ class HtmlPreviewService:
         return preview_path
 
     def _cids_to_base64(self, html: str) -> str:
-        """Convierte referencias cid:image_N a data URIs para renderizado en browser."""
-        image_paths = HtmlBody().image_paths
+        """Convert cid:image_N references to base64 data URIs for browser rendering."""
+        image_paths = self._get_body_images()
 
         def replace(m: re.Match) -> str:
             idx = int(m.group(1))
             if idx < len(image_paths):
-                return f'src="{Base64Converter.convert_to_bs64(image_paths[idx])}"'
+                return f'src="{self._to_data_uri(image_paths[idx])}"'
             return m.group(0)
 
         return re.sub(r'src="cid:image_(\d+)"', replace, html)
+
+    @staticmethod
+    def _get_body_images() -> list[Path]:
+        if not _BODY_IMAGES_DIR.exists():
+            return []
+        return sorted(
+            (f for f in _BODY_IMAGES_DIR.iterdir() if f.is_file() and not f.name.endswith(".Identifier")),
+            key=lambda f: f.name,
+        )
+
+    @staticmethod
+    def _to_data_uri(path: Path) -> str:
+        ext = path.suffix.lstrip(".").lower()
+        mime = {"png": "image/png", "jpg": "image/jpeg", "jpeg": "image/jpeg", "gif": "image/gif"}.get(ext, "image/png")
+        data = base64.b64encode(path.read_bytes()).decode("ascii")
+        return f"data:{mime};base64,{data}"

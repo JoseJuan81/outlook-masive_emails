@@ -1,0 +1,25 @@
+{
+  "run_id": "2026-06-18_12-17-34",
+  "started_at": "2026-06-18T12:17:34.869701",
+  "finished_at": "2026-06-18T12:17:34.871944",
+  "total": 3,
+  "sent": 3,
+  "failed": 0,
+  "emails": [
+    {
+      "to": "josejuan.dominguez@int-elle.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "pe.dominguezjosejuan@gmail.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "dominguez.josejuan@gmail.com",
+      "status": "sent",
+      "entry_id": null
+    }
+  ]
+}

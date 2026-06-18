@@ -25,18 +25,28 @@ class OutlookDesktopAdapter(EmailSenderPort):
         self.outlook = outlook_client or self._create_outlook_client()
 
     def send(self, email: EmailMessage) -> None:
+        self.send_with_tracking(email)
+
+    def send_with_tracking(self, email: EmailMessage) -> dict:
+        """Send and return tracking info: {"entry_id": ..., "sent_on": ...}."""
         mail = self.outlook.CreateItem(0)
         sender_email = os.getenv("OUTLOOK_SENDER_EMAIL")
         account = self._find_account(sender_email) if sender_email else None
 
         if account is not None:
             mail.SendUsingAccount = account
+            try:
+                sent_folder = account.DeliveryStore.GetDefaultFolder(5)
+                mail.SaveSentMessageFolder = sent_folder
+            except Exception as err:
+                logger.warning("No se pudo asignar carpeta Enviados -> %r", err)
             logger.debug("Outlook account selected -> smtp=%r", sender_email)
         elif sender_email:
             logger.warning("Outlook account not found -> smtp=%r", sender_email)
 
         mail.Subject = email.subject
         mail.To = email.to
+        mail.OriginatorDeliveryReportRequested = True
         self._attach_body_images(mail)
         mail.HTMLBody = email.html_body
         logger.debug("Outlook send start -> to=%r, subject=%r", email.to, email.subject)
@@ -47,10 +57,16 @@ class OutlookDesktopAdapter(EmailSenderPort):
             logger.error("Outlook send error -> to=%r, error=%r", email.to, error)
             raise
 
+        tracking_info = {"entry_id": None, "sent_on": None}
         try:
-            logger.debug("Outlook send details -> %s", self._collect_mail_debug_info(mail))
+            debug_info = self._collect_mail_debug_info(mail)
+            logger.debug("Outlook send details -> %s", debug_info)
+            tracking_info["entry_id"] = debug_info.get("entry_id")
+            tracking_info["sent_on"] = str(debug_info.get("sent_on")) if debug_info.get("sent_on") else None
         except Exception as error:
             logger.debug("Outlook send details unavailable -> to=%r, error=%r", email.to, error)
+
+        return tracking_info
 
     def _attach_body_images(self, mail) -> None:
         """Adjunta imágenes del cuerpo como inline CID. El HTML ya trae referencias cid:image_N."""

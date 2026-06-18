@@ -1,0 +1,985 @@
+{
+  "run_id": "2026-06-18_14-02-04",
+  "started_at": "2026-06-18T14:02:04.406458",
+  "finished_at": "2026-06-18T14:02:04.418779",
+  "total": 195,
+  "sent": 194,
+  "failed": 1,
+  "emails": [
+    {
+      "to": "hbueno@antamina.com",
+      "status": "sent_pending",
+      "entry_id": null
+    },
+    {
+      "to": "dlopezes@fmi.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "victor.manchego@hudbayminerals.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "christian.chalco@hudbayminerals.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "edwin.arica@mmg.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "Miguel.Rojas@mmg.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "ed.arzapalo@mmg.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "richard.pareja@angloamerican.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "ana.carbajal@hudbayminerals.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "jesus.bonilla@hudbayminerals.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "fperez@antamina.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "fperez@antamina.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "jose.luperdi@miskimayo.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "Tomas.Maldonado@minsur.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "Jose.Barrera@minsur.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "carlos.camacho@minsur.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "christian.davila@minsur.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "jesus.larcon@minsur.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "julio.avalos@minsur.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "jgonzales@antamina.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "adiazt@SouthernPeru.com.pe",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "fblanco@chinalco.com.pe",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "jmunayco@chinalco.com.pe",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "hans.chavez@spm.pe",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "armando.ccama@hudbayminerals.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "marx.salazar@hudbayminerals.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "alain.yance@hudbayminerals.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "billy.estrada@hudbayminerals.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "ciro.diaz@hudbayminerals.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "wilfredo.motta@hudbayminerals.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "jafet.mollapaza@hudbayminerals.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "victor.salazar@hudbayminerals.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "hudbay.peru.planning.maintenance@hudbayminerals.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "mcuzco@poderosa.com.pe",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "cperaltac@southernperu.com.pe",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "cristian.miranda@goldfields.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "giancarlo.granda@minsur.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "yoselyn.noriega@zafranal.com.pe",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "alberto.collantes@minsur.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "equispev@mibsac.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "Eulloa@Southernperu.com.pe",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "daniela.lovon@marcobre.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "jorge.gomez@sierrametals.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "mcespedes@alpayana.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "DRoque@SouthernPeru.com.pe",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "avaldiviah@chinalco.com.pe",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "jvasquez@chinalco.com.pe",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "sgarcia@chinalco.com.pe",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "ORomeroS@SouthernPeru.com.pe",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "Manuel.silva@nexaresources.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "armida.valverde@spm.pe",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "vlademir.bastidas@spm.pe",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "dpomag@cosapi.com.pe",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "mvalqui@mibsac.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "Crabanal17@gmail.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "Jose.Chavez@mmg.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "aadama@antamina.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "Hernan.Vega@mmg.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "dyanac@kolpa.com.pe",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "msimon@poderosa.com.pe",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "mecheverria@poderosa.com.pe",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "pramirez@poderosa.com.pe",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "mocampoc@fmi.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "lherrerag@southernperu.com.pe",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "cconcha@southernperu.com.pe",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "aamadoa@southernperu.com.pe",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "Henry.Palomino@minsur.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "julio.palomino@mmg.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "luis.ticona@mmg.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "jlaos@antamina.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "guido.medina@zafranal.com.pe",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "Richard.hurtado@hocplc.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "victor.lavado@spm.pe",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "mpena@psv.com.pe",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "mgonzales@coprefa.com.pe",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "cflorest@fmi.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "hhernanm@aasa.com.pe",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "Ricardo.Palma@mmg.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "hugo.alburqueque@mmg.com",
+      "status": "sent_pending",
+      "entry_id": null
+    },
+    {
+      "to": "gustavo.castro@nexaresources.com",
+      "status": "sent_pending",
+      "entry_id": null
+    },
+    {
+      "to": "Alan.Aguilar@glencore.com.pe",
+      "status": "sent_pending",
+      "entry_id": null
+    },
+    {
+      "to": "scoronel@fmi.com",
+      "status": "sent_pending",
+      "entry_id": null
+    },
+    {
+      "to": "gpozo@chinalco.com.pe",
+      "status": "sent_pending",
+      "entry_id": null
+    },
+    {
+      "to": "rg.gomez@angloamerican.com",
+      "status": "sent_pending",
+      "entry_id": null
+    },
+    {
+      "to": "marco.zapata@siemensgamesa.com",
+      "status": "sent_pending",
+      "entry_id": null
+    },
+    {
+      "to": "rfidler@fmi.com",
+      "status": "sent_pending",
+      "entry_id": null
+    },
+    {
+      "to": "jalvarez5@fmi.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "gshinno@qorikallpa.com.pe",
+      "status": "sent_pending",
+      "entry_id": null
+    },
+    {
+      "to": "paolohurtado92@gmail.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "arivero@acerosarequipa.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "rpacheco@acerosarequipa.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "jneyrato@fmi.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "dgarciar@fmi.com",
+      "status": "sent_pending",
+      "entry_id": null
+    },
+    {
+      "to": "erick.portugal@angloamerican.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "victor.vargas@sider.com.pe",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "hans.osorio@mmg.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "mquiroz@lajoyamining.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "fulloasolis2018@gmail.com",
+      "status": "sent_pending",
+      "entry_id": null
+    },
+    {
+      "to": "sergio.toribio@buenaventura.pe",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "jose.hancco@hudbayminerals.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "carlos.gutierrez@miskimayo.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "droca@chinalco.com.pe",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "planeamientomap@shp.pe",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "epena@southernperu.com.pe ",
+      "status": "sent_pending",
+      "entry_id": null
+    },
+    {
+      "to": "Claudio.Huauya@gmail.com ",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "dfernand3@fmi.com",
+      "status": "sent_pending",
+      "entry_id": null
+    },
+    {
+      "to": "marcial.medina@hudbayminerals.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "gustavo.calero@miskimayo.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "echoquev@fmi.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "ROviedo@SouthernPeru.com.pe",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "evalenzuelaz@southernperu.com.pe",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "pamela.florian@hatch.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "planeamientomap@shp.pe",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "pperez@chinalco.com.pe",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "mrosas@shp.pe",
+      "status": "sent_pending",
+      "entry_id": null
+    },
+    {
+      "to": "jcahuana@fmi.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "ljimenez@chinalco.com.pe",
+      "status": "sent_pending",
+      "entry_id": null
+    },
+    {
+      "to": "aldo.garcia@hudbayminerals.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "evalverd@fmi.com",
+      "status": "sent_pending",
+      "entry_id": null
+    },
+    {
+      "to": "mlozano@colquisiri.com.pe",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "mpozo@chinalco.com.pe",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "jacuna@chinalco.com.pe",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "sarmas@chinalco.com.pe",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "rdiaz@grenergy.eu",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "Hambert.tejada@mmg.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "elmer.ruiz@miskimayo.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "halfaro@antamina.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "ANGEL.DELCASTILLO@miskimayo.com",
+      "status": "sent_pending",
+      "entry_id": null
+    },
+    {
+      "to": "mvarasr@poderosa.com.pe",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "rpineda@shp.pe",
+      "status": "sent_pending",
+      "entry_id": null
+    },
+    {
+      "to": "etapia@chinalco.com.pe",
+      "status": "sent_pending",
+      "entry_id": null
+    },
+    {
+      "to": "JOSE.LUPERDI@mosaicco.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "jbautista@antamina.com",
+      "status": "sent_pending",
+      "entry_id": null
+    },
+    {
+      "to": "milton.mamani@samancomining.com.pe",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "edgar.quiroz@mmg.com",
+      "status": "sent_pending",
+      "entry_id": null
+    },
+    {
+      "to": "iramirezg@southernperu.com.pe",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "carlos.castro@mmg.com",
+      "status": "sent_pending",
+      "entry_id": null
+    },
+    {
+      "to": "jefe.mantenimiento@ferrosalt.com.pe",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "Daniel.Castaneda@miskimayo.com",
+      "status": "sent_pending",
+      "entry_id": null
+    },
+    {
+      "to": "planeamientomap@shp.pe",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "jlira@southernperu.com.pe",
+      "status": "sent_pending",
+      "entry_id": null
+    },
+    {
+      "to": "aaguilarc@southernperu.com.pe",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "hvaldivia@antamina.com",
+      "status": "sent_pending",
+      "entry_id": null
+    },
+    {
+      "to": "richard.becerra2@newmont.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "eyampasi@shp.pe",
+      "status": "sent_pending",
+      "entry_id": null
+    },
+    {
+      "to": "orodriguezh@southernperu.com.pe",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "danny.andia@mmg.com",
+      "status": "sent_pending",
+      "entry_id": null
+    },
+    {
+      "to": "lchambiv@fmi.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "ocastillo@chinalco.com.pe",
+      "status": "sent_pending",
+      "entry_id": null
+    },
+    {
+      "to": "JULIO.CANORIO@miskimayo.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "jpereza@southernperu.com.pe",
+      "status": "sent_pending",
+      "entry_id": null
+    },
+    {
+      "to": "mpuemape@shp.pe",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "jfelipac@fmi.com",
+      "status": "sent_pending",
+      "entry_id": null
+    },
+    {
+      "to": "fnina@chinalco.com.pe",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "jhuayhua@shp.pe",
+      "status": "sent_pending",
+      "entry_id": null
+    },
+    {
+      "to": "jterrones@chinalco.com.pe",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "liset.romero@mmg.com",
+      "status": "sent_pending",
+      "entry_id": null
+    },
+    {
+      "to": " Vladimir.Asto@minsur.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "dante.poquioma@minsur.com",
+      "status": "sent_pending",
+      "entry_id": null
+    },
+    {
+      "to": "maykel.bustamante@elbrocal.com.pe",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "raguirre@shp.pe",
+      "status": "sent_pending",
+      "entry_id": null
+    },
+    {
+      "to": "hromanme@fmi.com",
+      "status": "sent_pending",
+      "entry_id": null
+    },
+    {
+      "to": "falburqueque@chinalco.com.pe",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "randradeq@chinalco.com.pe",
+      "status": "sent_pending",
+      "entry_id": null
+    },
+    {
+      "to": "francisco.rozas@zafranal.com.pe",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "rvasquezg@southernperu.com.pe",
+      "status": "sent_pending",
+      "entry_id": null
+    },
+    {
+      "to": "fsalazar1@fmi.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "c.dawson@blexim.com",
+      "status": "sent_pending",
+      "entry_id": null
+    },
+    {
+      "to": "rvargasv6@hotmail.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "eperezsa@fmi.com",
+      "status": "sent_pending",
+      "entry_id": null
+    },
+    {
+      "to": "derly.vizcarra@mmg.com",
+      "status": "sent_pending",
+      "entry_id": null
+    },
+    {
+      "to": "mfigueroaq@southernperu.com.pe",
+      "status": "sent_pending",
+      "entry_id": null
+    },
+    {
+      "to": "mporras@antamina.com",
+      "status": "sent_pending",
+      "entry_id": null
+    },
+    {
+      "to": "jorge.galarza@glencore.com.pe ",
+      "status": "sent_pending",
+      "entry_id": null
+    },
+    {
+      "to": "marco.villalta@mmg.com",
+      "status": "sent_pending",
+      "entry_id": null
+    },
+    {
+      "to": "jtello@cpsaa.com.pe",
+      "status": "sent_pending",
+      "entry_id": null
+    },
+    {
+      "to": "emiranda@cpsaa.com.pe",
+      "status": "sent_pending",
+      "entry_id": null
+    },
+    {
+      "to": "rolando.cruces@angloamerican.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "juancarlos.salas@angloamerican.com",
+      "status": "sent_pending",
+      "entry_id": null
+    },
+    {
+      "to": "jesus.chavez@angloamerican.com",
+      "status": "sent_pending",
+      "entry_id": null
+    },
+    {
+      "to": "proyectos@mitraconsac.com, grupo.mitracon.peru@gmail.com",
+      "status": "failed",
+      "error": "(-2147352567, 'Ocurrió una excepción.', (4096, 'Microsoft Outlook', 'Outlook no reconoce alguno de los nombres. ', None, 0, -2147467259), None)"
+    },
+    {
+      "to": "GBenavides@SouthernPeru.com.pe",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "jorge.cerda@mountar.com.mx",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "Fredy.Dominguez@MMG.COM",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "Fernando.Talavera@MMG.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "fredy.dominguez@mmg.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "Eder.Chiroque@MMG.com",
+      "status": "sent_pending",
+      "entry_id": null
+    },
+    {
+      "to": "Javier.Sehuin@MMG.COM",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "jonathan.gomez@mmg.com",
+      "status": "sent_pending",
+      "entry_id": null
+    },
+    {
+      "to": "ffrisancho@antamina.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "rrojasr@antamina.com",
+      "status": "sent",
+      "entry_id": null
+    },
+    {
+      "to": "rsalinas@antamina.com",
+      "status": "sent_pending",
+      "entry_id": null
+    },
+    {
+      "to": "jlondona@poderosa.com.pe",
+      "status": "sent_pending",
+      "entry_id": null
+    },
+    {
+      "to": "hpaitamala@poderosa.com.pe",
+      "status": "sent_pending",
+      "entry_id": null
+    },
+    {
+      "to": "aramos@poderosa.com.pe",
+      "status": "sent_pending",
+      "entry_id": null
+    }
+  ]
+}
