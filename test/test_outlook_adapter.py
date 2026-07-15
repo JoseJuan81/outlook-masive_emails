@@ -94,7 +94,7 @@ def test_outlook_adapter_uses_matching_send_account(monkeypatch):
     mail = fake_outlook.created_items[0]
     assert mail.SendUsingAccount.SmtpAddress == "sender@example.com"
     assert mail.send_called is True
-    assert mail.OriginatorDeliveryReportRequested is True
+    assert mail.OriginatorDeliveryReportRequested is False
     assert isinstance(mail.SaveSentMessageFolder, FakeSentFolder)
 
 

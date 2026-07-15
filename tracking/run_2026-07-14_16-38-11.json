@@ -1,0 +1,26 @@
+{
+  "run_id": "2026-07-14_16-38-11",
+  "started_at": "2026-07-14T16:38:11.469761",
+  "finished_at": "2026-07-14T16:38:11.478764",
+  "total": 3,
+  "sent": 0,
+  "pending": 0,
+  "failed": 3,
+  "emails": [
+    {
+      "to": "josejuan.dominguez@int-elle.com",
+      "status": "failed",
+      "reason": "not_delivered_to_server"
+    },
+    {
+      "to": "pe.dominguezjosejuan@gmail.com",
+      "status": "failed",
+      "reason": "not_delivered_to_server"
+    },
+    {
+      "to": "dominguez.josejuan@gmail.com",
+      "status": "failed",
+      "reason": "not_delivered_to_server"
+    }
+  ]
+}

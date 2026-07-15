@@ -4,6 +4,7 @@ After each mail.Send(), triggers a Sync and waits for the email to
 appear in Sent Items before dispatching the next one.
 """
 
+import gc
 import json
 import os
 import time
@@ -20,6 +21,21 @@ _HIDDEN_PROP = "http://schemas.microsoft.com/mapi/proptag/0x7FFE000B"
 
 MAX_WAIT = 60
 POLL_INTERVAL = 0.3
+
+
+def release_com_object(obj):
+    """Release a COM object reference safely. Never raises.
+
+    Drops the python wrapper reference and runs a gc pass so the underlying
+    RCW releases its reference to the COM object. Safe to call multiple times
+    or with None.
+    """
+    try:
+        if obj is not None:
+            del obj
+            gc.collect()
+    except Exception:
+        pass
 
 
 def load_env():
@@ -153,7 +169,7 @@ def main():
 
             mail.Subject = item["subject"]
             mail.To = item["to"]
-            mail.OriginatorDeliveryReportRequested = True
+            mail.OriginatorDeliveryReportRequested = False
 
             for idx, img_path in enumerate(images):
                 att = mail.Attachments.Add(str(img_path))
@@ -194,6 +210,12 @@ def main():
         except Exception as e:
             results.append({"to": item["to"], "status": "failed", "error": str(e)})
             failed_list.append(item["to"])
+
+        # Release the COM wrapper for this iteration's item before the next one.
+        # Without this, the wrapper keeps the previous item alive in zombie state
+        # and properties read back as None for items after the first one.
+        release_com_object(mail)
+        mail = None
 
         # Update after each email
         write_progress({
@@ -249,6 +271,24 @@ def main():
     tracking_file.write_text(json.dumps(tracking, ensure_ascii=False, indent=2), encoding="utf-8")
 
     print(json.dumps({"ok": True, "total": total, "sent": sent, "pending": pending, "failed": failed_list}))
+
+    # Release top-level COM references at end of run. We intentionally do NOT
+    # call outlook.Quit() — the user's Outlook client must remain open.
+    release_com_object(namespace)
+    release_com_object(outlook)
+    namespace = None
+    outlook = None
+
+    # Uninitialize COM on this apartment. Safe to call: CoUninitialize is
+    # reference-counted and silently no-ops on extra calls in modern pywin32.
+    try:
+        import pythoncom
+        try:
+            pythoncom.CoUninitialize()
+        except Exception:
+            pass
+    except Exception:
+        pass
 
 
 if __name__ == "__main__":

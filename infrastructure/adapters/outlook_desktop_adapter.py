@@ -46,7 +46,7 @@ class OutlookDesktopAdapter(EmailSenderPort):
 
         mail.Subject = email.subject
         mail.To = email.to
-        mail.OriginatorDeliveryReportRequested = True
+        mail.OriginatorDeliveryReportRequested = False
         self._attach_body_images(mail)
         mail.HTMLBody = email.html_body
         logger.debug("Outlook send start -> to=%r, subject=%r", email.to, email.subject)
