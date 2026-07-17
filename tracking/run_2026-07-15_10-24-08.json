@@ -1,0 +1,1815 @@
+{
+  "run_id": "2026-07-15_10-24-08",
+  "started_at": "2026-07-15T10:24:08.254004",
+  "finished_at": "2026-07-15T10:24:08.256416",
+  "total": 445,
+  "sent": 421,
+  "pending": 0,
+  "failed": 24,
+  "emails": [
+    {
+      "to": "hbueno@antamina.com",
+      "status": "sent"
+    },
+    {
+      "to": "framirez.rolini@gmail.com",
+      "status": "sent"
+    },
+    {
+      "to": "jesussalazar@teslatechnology.com.ve",
+      "status": "sent"
+    },
+    {
+      "to": "livia.goulart@mtaboca.com.br",
+      "status": "sent"
+    },
+    {
+      "to": "mirka.boudreau@int-elle.com",
+      "status": "sent"
+    },
+    {
+      "to": "dlopezes@fmi.com",
+      "status": "sent"
+    },
+    {
+      "to": "josejuan.dominguez@int-elle.com",
+      "status": "sent"
+    },
+    {
+      "to": "victor.manchego@hudbayminerals.com",
+      "status": "sent"
+    },
+    {
+      "to": "christian.chalco@hudbayminerals.com",
+      "status": "sent"
+    },
+    {
+      "to": "edwin.arica@mmg.com",
+      "status": "sent"
+    },
+    {
+      "to": "Miguel.Rojas@mmg.com",
+      "status": "sent"
+    },
+    {
+      "to": "ed.arzapalo@mmg.com",
+      "status": "sent"
+    },
+    {
+      "to": "richard.pareja@angloamerican.com",
+      "status": "sent"
+    },
+    {
+      "to": "",
+      "status": "failed",
+      "error": "(-2147352567, 'Ocurrió una excepción.', (4096, 'Microsoft Outlook', 'Necesitamos saber a quién enviar esto. Asegúrese de que introducir al menos un nombre.', None, 0, -2147467259), None)"
+    },
+    {
+      "to": "ana.carbajal@hudbayminerals.com",
+      "status": "sent"
+    },
+    {
+      "to": "jesus.bonilla@hudbayminerals.com",
+      "status": "sent"
+    },
+    {
+      "to": "fperez@antamina.com",
+      "status": "sent"
+    },
+    {
+      "to": "fperez@antamina.com",
+      "status": "sent"
+    },
+    {
+      "to": "brandon.merma@hudbayminerals.com",
+      "status": "sent"
+    },
+    {
+      "to": "alexandra.cusi@hudbayminerals.com",
+      "status": "sent"
+    },
+    {
+      "to": "omar.marron@hudbayminerals.com",
+      "status": "sent"
+    },
+    {
+      "to": "carlos.cruz@hudbayminerals.com",
+      "status": "sent"
+    },
+    {
+      "to": "",
+      "status": "failed",
+      "error": "(-2147352567, 'Ocurrió una excepción.', (4096, 'Microsoft Outlook', 'Necesitamos saber a quién enviar esto. Asegúrese de que introducir al menos un nombre.', None, 0, -2147467259), None)"
+    },
+    {
+      "to": "anita.monterola@hudbayminerals.com",
+      "status": "sent"
+    },
+    {
+      "to": "hector.janampa@mmg.com",
+      "status": "sent"
+    },
+    {
+      "to": "jose.luperdi@miskimayo.com",
+      "status": "sent"
+    },
+    {
+      "to": "Jose.Barrera@nexaresources.com",
+      "status": "sent"
+    },
+    {
+      "to": "christian.davila@minsur.com",
+      "status": "sent"
+    },
+    {
+      "to": "julio.avalos@minsur.com",
+      "status": "sent"
+    },
+    {
+      "to": "",
+      "status": "failed",
+      "error": "(-2147352567, 'Ocurrió una excepción.', (4096, 'Microsoft Outlook', 'Necesitamos saber a quién enviar esto. Asegúrese de que introducir al menos un nombre.', None, 0, -2147467259), None)"
+    },
+    {
+      "to": "jgonzales@antamina.com",
+      "status": "sent"
+    },
+    {
+      "to": "adiazt@SouthernPeru.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "fblanco@chinalco.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "2fguayana2015@gmail.com",
+      "status": "sent"
+    },
+    {
+      "to": "jmunayco@chinalco.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "hans.chavez@zafranal.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "jorge.diaz@angloamerican.com",
+      "status": "sent"
+    },
+    {
+      "to": "elizabeth.romero@nexaresources.com",
+      "status": "sent"
+    },
+    {
+      "to": "jhosmely.espinoza@nexaresources.com",
+      "status": "sent"
+    },
+    {
+      "to": "lessly.cervera@hudbayminerals.com",
+      "status": "sent"
+    },
+    {
+      "to": "armando.ccama@hudbayminerals.com",
+      "status": "sent"
+    },
+    {
+      "to": "marx.salazar@hudbayminerals.com",
+      "status": "sent"
+    },
+    {
+      "to": "alain.yance@hudbayminerals.com",
+      "status": "sent"
+    },
+    {
+      "to": "billy.estrada@hudbayminerals.com",
+      "status": "sent"
+    },
+    {
+      "to": "ciro.diaz@hudbayminerals.com",
+      "status": "sent"
+    },
+    {
+      "to": "wilfredo.motta@hudbayminerals.com",
+      "status": "sent"
+    },
+    {
+      "to": "jafet.mollapaza@hudbayminerals.com",
+      "status": "sent"
+    },
+    {
+      "to": "victor.salazar@hudbayminerals.com",
+      "status": "sent"
+    },
+    {
+      "to": "hudbay.peru.planning.maintenance@hudbayminerals.com",
+      "status": "sent"
+    },
+    {
+      "to": "hudbay.peru.mechanical.maintenance.supervision.plant@hudbayminerals.com",
+      "status": "sent"
+    },
+    {
+      "to": "walter.carpio@hudbayminerals.com",
+      "status": "sent"
+    },
+    {
+      "to": "mcuzco@poderosa.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "cperaltac@southernperu.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "tawa_consultor11@chinalco.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "cristian.miranda@goldfields.com",
+      "status": "sent"
+    },
+    {
+      "to": "emiranda@cpsaa.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "giancarlo.granda@minsur.com",
+      "status": "sent"
+    },
+    {
+      "to": "lmiranda@fmi.com",
+      "status": "sent"
+    },
+    {
+      "to": "yoselyn.noriega@zafranal.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "alberto.collantes@minsur.com",
+      "status": "sent"
+    },
+    {
+      "to": "fhuancab@fmi.com",
+      "status": "sent"
+    },
+    {
+      "to": "AYucraT@SouthernPeru.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "peter.alvarado@spm.pe",
+      "status": "sent"
+    },
+    {
+      "to": "margaret.llerena@angloamerican.com",
+      "status": "sent"
+    },
+    {
+      "to": "equispev@mibsac.com",
+      "status": "sent"
+    },
+    {
+      "to": "Eulloa@Southernperu.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "daniela.lovon@marcobre.com",
+      "status": "sent"
+    },
+    {
+      "to": "fguillen@cosapi.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "aalcca@cosapi.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "lchumbimuni@cosapi.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "jorge.gomez@sierrametals.com",
+      "status": "sent"
+    },
+    {
+      "to": "procurasangabriel@buenaventura.pe",
+      "status": "sent"
+    },
+    {
+      "to": "andre.aguilar@buenaventura.pe",
+      "status": "sent"
+    },
+    {
+      "to": "mcespedes@alpayana.com",
+      "status": "sent"
+    },
+    {
+      "to": "DRoque@SouthernPeru.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "atorres@acerosarequipa.com",
+      "status": "sent"
+    },
+    {
+      "to": "francisco.mendoza@int-elle.com",
+      "status": "sent"
+    },
+    {
+      "to": "623652623@qq.com",
+      "status": "sent"
+    },
+    {
+      "to": "avaldiviah@chinalco.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "jvasquez@chinalco.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "sgarcia@chinalco.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "Fredy.Soria@nexaresources.com",
+      "status": "sent"
+    },
+    {
+      "to": "kolpa-logistica@kolpa.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "cecilianunez@gmail.com",
+      "status": "sent"
+    },
+    {
+      "to": "logistica_cmc@cmc.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "llaurente@poderosa.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "ORomeroS@SouthernPeru.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "cgarciam@poderosa.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "",
+      "status": "failed",
+      "error": "(-2147352567, 'Ocurrió una excepción.', (4096, 'Microsoft Outlook', 'Necesitamos saber a quién enviar esto. Asegúrese de que introducir al menos un nombre.', None, 0, -2147467259), None)"
+    },
+    {
+      "to": "armida.valverde@spm.pe",
+      "status": "sent"
+    },
+    {
+      "to": "vlademir.bastidas@spm.pe",
+      "status": "sent"
+    },
+    {
+      "to": "szegarra1@fmi.com",
+      "status": "sent"
+    },
+    {
+      "to": "Gerardo.alonso@spm.pe",
+      "status": "sent"
+    },
+    {
+      "to": "mvalqui@mibsac.com",
+      "status": "sent"
+    },
+    {
+      "to": "Crabanal17@gmail.com",
+      "status": "sent"
+    },
+    {
+      "to": "Jose.Chavez@mmg.com",
+      "status": "sent"
+    },
+    {
+      "to": "aadama@antamina.com",
+      "status": "sent"
+    },
+    {
+      "to": "Hernan.Vega@mmg.com",
+      "status": "sent"
+    },
+    {
+      "to": "dyanac@kolpa.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "msimon@poderosa.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "mecheverria@poderosa.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "pramirez@poderosa.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "mocampoc@fmi.com",
+      "status": "sent"
+    },
+    {
+      "to": "marias@sierrasungroup.com",
+      "status": "sent"
+    },
+    {
+      "to": "lherrerag@southernperu.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "cconcha@southernperu.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "aamadoa@southernperu.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "Henry.Palomino@minsur.com",
+      "status": "sent"
+    },
+    {
+      "to": "julio.palomino@mmg.com",
+      "status": "sent"
+    },
+    {
+      "to": "luis.ticona@mmg.com",
+      "status": "sent"
+    },
+    {
+      "to": "jlaos@antamina.com",
+      "status": "sent"
+    },
+    {
+      "to": "rodrigo.haro@marcobre.com",
+      "status": "sent"
+    },
+    {
+      "to": "rrobles@fmi.com",
+      "status": "sent"
+    },
+    {
+      "to": "luz.sakihara@nexaresources.com",
+      "status": "sent"
+    },
+    {
+      "to": "kerly.rodriguez@nexaresources.com",
+      "status": "sent"
+    },
+    {
+      "to": "luis.jimenez@marcobre.com",
+      "status": "sent"
+    },
+    {
+      "to": "guido.medina@zafranal.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "Richard.hurtado@hocplc.com",
+      "status": "sent"
+    },
+    {
+      "to": "victor.lavado@spm.pe",
+      "status": "sent"
+    },
+    {
+      "to": "jmsanchez@adgeminco.pe",
+      "status": "sent"
+    },
+    {
+      "to": "jatoche@remicsa.com",
+      "status": "sent"
+    },
+    {
+      "to": "andreacarpio@psv.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "mpena@psv.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "ricardo.palacios@siemensgamesa.com",
+      "status": "sent"
+    },
+    {
+      "to": "mgonzales@coprefa.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "cmacavilca@sierrasungroup.com",
+      "status": "sent"
+    },
+    {
+      "to": "jroman@solexcom.pe",
+      "status": "sent"
+    },
+    {
+      "to": "cflorest@fmi.com",
+      "status": "sent"
+    },
+    {
+      "to": "floubert.garay@minsur.com",
+      "status": "sent"
+    },
+    {
+      "to": "hhernanm@aasa.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "Ricardo.Palma@mmg.com",
+      "status": "sent"
+    },
+    {
+      "to": "hugo.alburqueque@mmg.com",
+      "status": "sent"
+    },
+    {
+      "to": "lizbeth.urrutia@global.komatsu",
+      "status": "sent"
+    },
+    {
+      "to": "Alan.Aguilar@glencore.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "Manuelruiz@byjsasociados.com",
+      "status": "sent"
+    },
+    {
+      "to": "scoronel@fmi.com",
+      "status": "sent"
+    },
+    {
+      "to": "gpozo@chinalco.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "rg.gomez@angloamerican.com",
+      "status": "sent"
+    },
+    {
+      "to": "marco.zapata@siemensgamesa.com",
+      "status": "sent"
+    },
+    {
+      "to": "karla.escudero@nexaresources.com",
+      "status": "sent"
+    },
+    {
+      "to": "rfidler@fmi.com",
+      "status": "sent"
+    },
+    {
+      "to": "catherine.gil@nexaresources.com",
+      "status": "sent"
+    },
+    {
+      "to": "jalvarez5@fmi.com",
+      "status": "sent"
+    },
+    {
+      "to": "Alvaro.Camacho@spm.pe",
+      "status": "sent"
+    },
+    {
+      "to": "luis.garro@spm.pe",
+      "status": "sent"
+    },
+    {
+      "to": "ximena.alarcon@buenaventura.pe",
+      "status": "sent"
+    },
+    {
+      "to": "judith.bravo@buenaventura.pe",
+      "status": "sent"
+    },
+    {
+      "to": "",
+      "status": "failed",
+      "error": "(-2147352567, 'Ocurrió una excepción.', (4096, 'Microsoft Outlook', 'Necesitamos saber a quién enviar esto. Asegúrese de que introducir al menos un nombre.', None, 0, -2147467259), None)"
+    },
+    {
+      "to": "paolohurtado92@gmail.com",
+      "status": "sent"
+    },
+    {
+      "to": "arivero@acerosarequipa.com",
+      "status": "sent"
+    },
+    {
+      "to": "rpacheco@acerosarequipa.com",
+      "status": "sent"
+    },
+    {
+      "to": "ernie.samir@minsur.com",
+      "status": "sent"
+    },
+    {
+      "to": "compras@acerosarequipa.com",
+      "status": "sent"
+    },
+    {
+      "to": "javier.neyra@marcobre.com",
+      "status": "sent"
+    },
+    {
+      "to": "dgarciar@fmi.com",
+      "status": "sent"
+    },
+    {
+      "to": "wili.chirinos@yura.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "",
+      "status": "failed",
+      "error": "(-2147352567, 'Ocurrió una excepción.', (4096, 'Microsoft Outlook', 'Necesitamos saber a quién enviar esto. Asegúrese de que introducir al menos un nombre.', None, 0, -2147467259), None)"
+    },
+    {
+      "to": "VMENDOZA@ADGEMINCO.PE",
+      "status": "sent"
+    },
+    {
+      "to": "erick.portugal@angloamerican.com",
+      "status": "sent"
+    },
+    {
+      "to": "alfredo.agurto@laytaruma.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "victor.vargas@sider.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "rfeliz@venprecar.com",
+      "status": "sent"
+    },
+    {
+      "to": "comunicaciones@canadaperu.org",
+      "status": "sent"
+    },
+    {
+      "to": "hans.osorio@mmg.com",
+      "status": "sent"
+    },
+    {
+      "to": "randol.velarde@incaone.com",
+      "status": "sent"
+    },
+    {
+      "to": "ventas03@choice-cargo.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "ricardo.andujar@minsur.com",
+      "status": "sent"
+    },
+    {
+      "to": "brito.marianny@gmail.com",
+      "status": "sent"
+    },
+    {
+      "to": "",
+      "status": "failed",
+      "error": "(-2147352567, 'Ocurrió una excepción.', (4096, 'Microsoft Outlook', 'Necesitamos saber a quién enviar esto. Asegúrese de que introducir al menos un nombre.', None, 0, -2147467259), None)"
+    },
+    {
+      "to": "stuncar@sierrasungroup.com",
+      "status": "sent"
+    },
+    {
+      "to": "martin.chavez@buenaventura.pe",
+      "status": "sent"
+    },
+    {
+      "to": "mquiroz@lajoyamining.com",
+      "status": "sent"
+    },
+    {
+      "to": "",
+      "status": "failed",
+      "error": "(-2147352567, 'Ocurrió una excepción.', (4096, 'Microsoft Outlook', 'Necesitamos saber a quién enviar esto. Asegúrese de que introducir al menos un nombre.', None, 0, -2147467259), None)"
+    },
+    {
+      "to": "fulloasolis2018@gmail.com",
+      "status": "sent"
+    },
+    {
+      "to": "",
+      "status": "failed",
+      "error": "(-2147352567, 'Ocurrió una excepción.', (4096, 'Microsoft Outlook', 'Necesitamos saber a quién enviar esto. Asegúrese de que introducir al menos un nombre.', None, 0, -2147467259), None)"
+    },
+    {
+      "to": "sergio.toribio@buenaventura.pe",
+      "status": "sent"
+    },
+    {
+      "to": "jose.hancco@hudbayminerals.com",
+      "status": "sent"
+    },
+    {
+      "to": "carlos.gutierrez@miskimayo.com",
+      "status": "sent"
+    },
+    {
+      "to": "droca@chinalco.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "planeamientomap@shp.pe",
+      "status": "sent"
+    },
+    {
+      "to": "HBASTARDO@relansa.com.ve",
+      "status": "sent"
+    },
+    {
+      "to": "jechevarria@cmc.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "arendon@aasa.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "epena@southernperu.com.pe ",
+      "status": "sent"
+    },
+    {
+      "to": "adalbertoortega@gmail.com",
+      "status": "sent"
+    },
+    {
+      "to": "Claudio.Huauya@gmail.com ",
+      "status": "sent"
+    },
+    {
+      "to": "Ernesto.Torres@minsur.com",
+      "status": "sent"
+    },
+    {
+      "to": "dfernand3@fmi.com",
+      "status": "sent"
+    },
+    {
+      "to": "acampos@chinalco.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "david.bayona@angloamerican.com ",
+      "status": "sent"
+    },
+    {
+      "to": "CAVILAN@relansa.com.ve",
+      "status": "sent"
+    },
+    {
+      "to": "lmedina@relansa.com.ve",
+      "status": "sent"
+    },
+    {
+      "to": "marcial.medina@hudbayminerals.com",
+      "status": "sent"
+    },
+    {
+      "to": "gustavo.calero@miskimayo.com",
+      "status": "sent"
+    },
+    {
+      "to": "",
+      "status": "failed",
+      "error": "(-2147352567, 'Ocurrió una excepción.', (4096, 'Microsoft Outlook', 'Necesitamos saber a quién enviar esto. Asegúrese de que introducir al menos un nombre.', None, 0, -2147467259), None)"
+    },
+    {
+      "to": "lvizcarra@cosapi.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "egaray@cmc.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "rumaldo@ferrominera.go.ve",
+      "status": "sent"
+    },
+    {
+      "to": "juanz@martin-eng.com",
+      "status": "sent"
+    },
+    {
+      "to": "Diego.arana@incaone.com",
+      "status": "sent"
+    },
+    {
+      "to": "echoquev@fmi.com",
+      "status": "sent"
+    },
+    {
+      "to": "ROviedo@SouthernPeru.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "fjimenez@shp.pe",
+      "status": "sent"
+    },
+    {
+      "to": "rafael.guillen@buenaventura.pe ",
+      "status": "sent"
+    },
+    {
+      "to": "crivero@venprecar.com",
+      "status": "sent"
+    },
+    {
+      "to": "joserm@ferrominera.gob.ve",
+      "status": "sent"
+    },
+    {
+      "to": "evalenzuelaz@southernperu.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "cronceros@mtp.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "pamela.florian@hatch.com",
+      "status": "sent"
+    },
+    {
+      "to": "planeamientomap@shp.pe",
+      "status": "sent"
+    },
+    {
+      "to": "pperez@chinalco.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "mrosas@shp.pe",
+      "status": "sent"
+    },
+    {
+      "to": "jorge.diaz@minsur.com",
+      "status": "sent"
+    },
+    {
+      "to": "rastete@lajoyamining.com",
+      "status": "sent"
+    },
+    {
+      "to": "richard.leon@elbrocal.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "oscar.mayta@minsur.com",
+      "status": "sent"
+    },
+    {
+      "to": "eduardo.candela@incaone.com",
+      "status": "sent"
+    },
+    {
+      "to": "ramiro.diaz@angloamerican.com",
+      "status": "sent"
+    },
+    {
+      "to": "laferiaminera@gmail.com",
+      "status": "sent"
+    },
+    {
+      "to": "christiamcortez@gmail.com",
+      "status": "sent"
+    },
+    {
+      "to": "jcahuana@fmi.com",
+      "status": "sent"
+    },
+    {
+      "to": "ljimenez@chinalco.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "edward.leon@minsur.com",
+      "status": "sent"
+    },
+    {
+      "to": "aldo.garcia@hudbayminerals.com",
+      "status": "sent"
+    },
+    {
+      "to": "evalverd@fmi.com",
+      "status": "sent"
+    },
+    {
+      "to": "alapuente@poderosa.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "mlozano@colquisiri.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "mpozo@chinalco.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "jacuna@chinalco.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "Ruben.alvarado@mmg.com",
+      "status": "sent"
+    },
+    {
+      "to": "sarmas@chinalco.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "narciso.espinoza@buenaventura.pe",
+      "status": "sent"
+    },
+    {
+      "to": "carla.salinas@cementosur.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "rbetetta@shp.pe",
+      "status": "sent"
+    },
+    {
+      "to": "rdiaz@grenergy.eu",
+      "status": "sent"
+    },
+    {
+      "to": "Hambert.tejada@mmg.com",
+      "status": "sent"
+    },
+    {
+      "to": "fgelklin@venprecar.com.ve",
+      "status": "sent"
+    },
+    {
+      "to": "Ruben.galvez@hocplc.com",
+      "status": "sent"
+    },
+    {
+      "to": "elmer.ruiz@miskimayo.com",
+      "status": "sent"
+    },
+    {
+      "to": "g.calvo@chinalco.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "deyvi.gama@minsur.com",
+      "status": "sent"
+    },
+    {
+      "to": "manuel.chapilliquen@minsur.com",
+      "status": "sent"
+    },
+    {
+      "to": "halfaro@antamina.com",
+      "status": "sent"
+    },
+    {
+      "to": "",
+      "status": "failed",
+      "error": "(-2147352567, 'Ocurrió una excepción.', (4096, 'Microsoft Outlook', 'Necesitamos saber a quién enviar esto. Asegúrese de que introducir al menos un nombre.', None, 0, -2147467259), None)"
+    },
+    {
+      "to": "ANGEL.DELCASTILLO@miskimayo.com",
+      "status": "sent"
+    },
+    {
+      "to": "mvarasr@poderosa.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "rpineda@shp.pe",
+      "status": "sent"
+    },
+    {
+      "to": "jlmartinez@antamina.com",
+      "status": "sent"
+    },
+    {
+      "to": "etapia@chinalco.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "JOSE.LUPERDI@mosaicco.com",
+      "status": "sent"
+    },
+    {
+      "to": "Felix.JimenezCieza@international.gc.ca",
+      "status": "sent"
+    },
+    {
+      "to": "jbautista@antamina.com",
+      "status": "sent"
+    },
+    {
+      "to": "ddmirabal@sidor.com",
+      "status": "sent"
+    },
+    {
+      "to": "eduardo.bernahola@marcobre.com",
+      "status": "sent"
+    },
+    {
+      "to": "milton.mamani@samancomining.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "jalvarez@higher-tech.com",
+      "status": "sent"
+    },
+    {
+      "to": "",
+      "status": "failed",
+      "error": "(-2147352567, 'Ocurrió una excepción.', (4096, 'Microsoft Outlook', 'Necesitamos saber a quién enviar esto. Asegúrese de que introducir al menos un nombre.', None, 0, -2147467259), None)"
+    },
+    {
+      "to": "edgar.quiroz@mmg.com",
+      "status": "sent"
+    },
+    {
+      "to": "vallesmorillo@gmail.com",
+      "status": "sent"
+    },
+    {
+      "to": "iramirezg@southernperu.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "carlos.castro@mmg.com",
+      "status": "sent"
+    },
+    {
+      "to": "pablo.bolivar@alicantoconsulting.com",
+      "status": "sent"
+    },
+    {
+      "to": "lgongora@lajoyamining.com",
+      "status": "sent"
+    },
+    {
+      "to": "rbendezu@bbpsac.com",
+      "status": "sent"
+    },
+    {
+      "to": "ventas@llaqta.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "cweigel@fmi.com ",
+      "status": "sent"
+    },
+    {
+      "to": "pmarcano@sidor.com",
+      "status": "sent"
+    },
+    {
+      "to": "jefe.mantenimiento@ferrosalt.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "Daniel.Castaneda@miskimayo.com",
+      "status": "sent"
+    },
+    {
+      "to": "planeamientomap@shp.pe",
+      "status": "sent"
+    },
+    {
+      "to": "eBLAS@ADGEMINCO.PE",
+      "status": "sent"
+    },
+    {
+      "to": "jlira@southernperu.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "aaguilarc@southernperu.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "hvaldivia@antamina.com",
+      "status": "sent"
+    },
+    {
+      "to": "",
+      "status": "failed",
+      "error": "(-2147352567, 'Ocurrió una excepción.', (4096, 'Microsoft Outlook', 'Necesitamos saber a quién enviar esto. Asegúrese de que introducir al menos un nombre.', None, 0, -2147467259), None)"
+    },
+    {
+      "to": "jorge.coral@mmg.com",
+      "status": "sent"
+    },
+    {
+      "to": "carmennr@ferrominera.com",
+      "status": "sent"
+    },
+    {
+      "to": "richard.becerra2@newmont.com",
+      "status": "sent"
+    },
+    {
+      "to": "jMORALES@ADGEMINCO.PE",
+      "status": "sent"
+    },
+    {
+      "to": "ppineda@higher-tech.com",
+      "status": "sent"
+    },
+    {
+      "to": "eyampasi@shp.pe",
+      "status": "sent"
+    },
+    {
+      "to": "hquinteros@volcan.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "hmejia@comsigua.com.ve",
+      "status": "sent"
+    },
+    {
+      "to": "orodriguezh@southernperu.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "compras@ferrosalt.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "danny.andia@mmg.com",
+      "status": "sent"
+    },
+    {
+      "to": "eduardoa@helios-cs.com",
+      "status": "sent"
+    },
+    {
+      "to": "Alexandra.laverdure@international.gc.ca ",
+      "status": "sent"
+    },
+    {
+      "to": "mlobato@shp.pe",
+      "status": "sent"
+    },
+    {
+      "to": "lchambiv@fmi.com",
+      "status": "sent"
+    },
+    {
+      "to": "ocastillo@chinalco.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "JULIO.CANORIO@miskimayo.com",
+      "status": "sent"
+    },
+    {
+      "to": "jpereza@southernperu.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "mpuemape@shp.pe",
+      "status": "sent"
+    },
+    {
+      "to": "jfelipac@fmi.com",
+      "status": "sent"
+    },
+    {
+      "to": "jmestas@lajoyamining.com",
+      "status": "sent"
+    },
+    {
+      "to": "sirtde@sidor.com",
+      "status": "sent"
+    },
+    {
+      "to": "maferdominguezz@hotmail.com",
+      "status": "sent"
+    },
+    {
+      "to": "sirffy@sidor.com",
+      "status": "sent"
+    },
+    {
+      "to": "rserra@cmc.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "erick.santamaria@miskimayo.com",
+      "status": "sent"
+    },
+    {
+      "to": "fnina@chinalco.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "sandro.arce@minsur.com",
+      "status": "sent"
+    },
+    {
+      "to": "jhuayhua@shp.pe",
+      "status": "sent"
+    },
+    {
+      "to": "LAM1@GRUMART.PE",
+      "status": "sent"
+    },
+    {
+      "to": "jterrones@chinalco.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "ahinostroza@canadaperu.org",
+      "status": "sent"
+    },
+    {
+      "to": "dpto.tecnico.pellas@gmail.com",
+      "status": "sent"
+    },
+    {
+      "to": "ycano@chinalco.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "liset.romero@mmg.com",
+      "status": "sent"
+    },
+    {
+      "to": "dkuwai@cosapi.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "jonathon@itrs.ca",
+      "status": "sent"
+    },
+    {
+      "to": "zvasquez@venprecar.com.ve",
+      "status": "sent"
+    },
+    {
+      "to": " Vladimir.Asto@minsur.com",
+      "status": "sent"
+    },
+    {
+      "to": "",
+      "status": "failed",
+      "error": "(-2147352567, 'Ocurrió una excepción.', (4096, 'Microsoft Outlook', 'Necesitamos saber a quién enviar esto. Asegúrese de que introducir al menos un nombre.', None, 0, -2147467259), None)"
+    },
+    {
+      "to": "dante.poquioma@minsur.com",
+      "status": "sent"
+    },
+    {
+      "to": "waldo.peralta@zafranal.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "maykel.bustamante@elbrocal.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "ignacio.melendez@int-elle.com",
+      "status": "sent"
+    },
+    {
+      "to": "raguirre@shp.pe",
+      "status": "sent"
+    },
+    {
+      "to": "sirryo@sidor.com",
+      "status": "sent"
+    },
+    {
+      "to": "hernan.carbajal@angloamerican.com",
+      "status": "sent"
+    },
+    {
+      "to": "gabriel@itrs.ca",
+      "status": "sent"
+    },
+    {
+      "to": "msilva@antamina.com",
+      "status": "sent"
+    },
+    {
+      "to": "hromanme@fmi.com",
+      "status": "sent"
+    },
+    {
+      "to": "jesquivel@poderosa.com",
+      "status": "sent"
+    },
+    {
+      "to": "Rafael.Castillo@international.gc.ca",
+      "status": "sent"
+    },
+    {
+      "to": "falburqueque@chinalco.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "Fcanoe@southernperu.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "mauricio.arbulu@buenaventura.pe",
+      "status": "sent"
+    },
+    {
+      "to": "mespanol@grenergy.eu",
+      "status": "sent"
+    },
+    {
+      "to": "randradeq@chinalco.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "fidelv@ferrominera.com",
+      "status": "sent"
+    },
+    {
+      "to": "francisco.rozas@zafranal.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "ecorrales@southernperu.com.pe ",
+      "status": "sent"
+    },
+    {
+      "to": "adiaz@cmc.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "rvasquezg@southernperu.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "ldedios@canadaperu.org",
+      "status": "sent"
+    },
+    {
+      "to": "jose.ortiz@angloamerican.com",
+      "status": "sent"
+    },
+    {
+      "to": "Julie.Fortin-Morin@invest-quebec.com",
+      "status": "sent"
+    },
+    {
+      "to": "cmartinez@canadaperu.org",
+      "status": "sent"
+    },
+    {
+      "to": "ealania@antamina.com",
+      "status": "sent"
+    },
+    {
+      "to": "rcamavilca@poderosa.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "christoff.kuhn@angloamerican.com ",
+      "status": "sent"
+    },
+    {
+      "to": "lrondon@comsigua.com.ve",
+      "status": "sent"
+    },
+    {
+      "to": "anaiz.navinta@spm.pe",
+      "status": "sent"
+    },
+    {
+      "to": "eparedes@antamina.com",
+      "status": "sent"
+    },
+    {
+      "to": "fsalazar1@fmi.com",
+      "status": "sent"
+    },
+    {
+      "to": "lsantiago@sidor.com",
+      "status": "sent"
+    },
+    {
+      "to": "ebustamante@sidor.com",
+      "status": "sent"
+    },
+    {
+      "to": "avillanueva@cmc.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "jroblesf@volcan.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "c.dawson@blexim.com",
+      "status": "sent"
+    },
+    {
+      "to": "rvargasv6@hotmail.com",
+      "status": "sent"
+    },
+    {
+      "to": "mvillegas@antamina.com",
+      "status": "sent"
+    },
+    {
+      "to": "eperezsa@fmi.com",
+      "status": "sent"
+    },
+    {
+      "to": "derly.vizcarra@mmg.com",
+      "status": "sent"
+    },
+    {
+      "to": "rcarolina@venprecar.com.ve",
+      "status": "sent"
+    },
+    {
+      "to": "sblotte@canadaperu.org",
+      "status": "sent"
+    },
+    {
+      "to": "yomalhiwdy@gmail.com",
+      "status": "sent"
+    },
+    {
+      "to": "mfigueroaq@southernperu.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "vcadenas@fmi.com ",
+      "status": "sent"
+    },
+    {
+      "to": "dnovario@poderosa.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "ppena@aasa.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "fcordova@higher-tech.com",
+      "status": "sent"
+    },
+    {
+      "to": "janorga@venprecar.com.ve",
+      "status": "sent"
+    },
+    {
+      "to": "aldocantafio0@gmail.com",
+      "status": "sent"
+    },
+    {
+      "to": "mporras@antamina.com",
+      "status": "sent"
+    },
+    {
+      "to": "jorge.galarza@glencore.com.pe ",
+      "status": "sent"
+    },
+    {
+      "to": "pbecerra@cosapi.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "marco.villalta@mmg.com",
+      "status": "sent"
+    },
+    {
+      "to": "jtello@cpsaa.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "emiranda@cpsaa.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "rolando.cruces@angloamerican.com",
+      "status": "sent"
+    },
+    {
+      "to": "juancarlos.salas@angloamerican.com",
+      "status": "sent"
+    },
+    {
+      "to": "jesus.chavez@angloamerican.com",
+      "status": "sent"
+    },
+    {
+      "to": "proyectos@mitraconsac.com, grupo.mitracon.peru@gmail.com",
+      "status": "failed",
+      "error": "(-2147352567, 'Ocurrió una excepción.', (4096, 'Microsoft Outlook', 'Outlook no reconoce alguno de los nombres. ', None, 0, -2147467259), None)"
+    },
+    {
+      "to": "",
+      "status": "failed",
+      "error": "(-2147352567, 'Ocurrió una excepción.', (4096, 'Microsoft Outlook', 'Necesitamos saber a quién enviar esto. Asegúrese de que introducir al menos un nombre.', None, 0, -2147467259), None)"
+    },
+    {
+      "to": "GBenavides@SouthernPeru.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "humbertoavendano@timaca.com.ve",
+      "status": "sent"
+    },
+    {
+      "to": "vmorales@mikasur.com",
+      "status": "sent"
+    },
+    {
+      "to": "suloincallc@gmail.com",
+      "status": "sent"
+    },
+    {
+      "to": "gerenciainsumoscvm@gmail.com",
+      "status": "sent"
+    },
+    {
+      "to": "Infraestructura.cvm@gmail.com",
+      "status": "sent"
+    },
+    {
+      "to": "fmocontrataciones2021@gmail.com",
+      "status": "sent"
+    },
+    {
+      "to": "fmocontrataciones2021@gmail.com",
+      "status": "sent"
+    },
+    {
+      "to": "csc.ing.olver.jesus@gmail.com",
+      "status": "sent"
+    },
+    {
+      "to": "veronica.monagas27@gmail.com",
+      "status": "sent"
+    },
+    {
+      "to": "nellysguzman@gmail.com",
+      "status": "sent"
+    },
+    {
+      "to": "",
+      "status": "failed",
+      "error": "(-2147352567, 'Ocurrió una excepción.', (4096, 'Microsoft Outlook', 'Necesitamos saber a quién enviar esto. Asegúrese de que introducir al menos un nombre.', None, 0, -2147467259), None)"
+    },
+    {
+      "to": "",
+      "status": "failed",
+      "error": "(-2147352567, 'Ocurrió una excepción.', (4096, 'Microsoft Outlook', 'Necesitamos saber a quién enviar esto. Asegúrese de que introducir al menos un nombre.', None, 0, -2147467259), None)"
+    },
+    {
+      "to": "ggcontratacionescvg@gmail.com",
+      "status": "sent"
+    },
+    {
+      "to": "admonminerven2024@gmail.com",
+      "status": "sent"
+    },
+    {
+      "to": "HerdysMoreno@gmail.com",
+      "status": "sent"
+    },
+    {
+      "to": "",
+      "status": "failed",
+      "error": "(-2147352567, 'Ocurrió una excepción.', (4096, 'Microsoft Outlook', 'Necesitamos saber a quién enviar esto. Asegúrese de que introducir al menos un nombre.', None, 0, -2147467259), None)"
+    },
+    {
+      "to": "",
+      "status": "failed",
+      "error": "(-2147352567, 'Ocurrió una excepción.', (4096, 'Microsoft Outlook', 'Necesitamos saber a quién enviar esto. Asegúrese de que introducir al menos un nombre.', None, 0, -2147467259), None)"
+    },
+    {
+      "to": "csncomprasdireccion@gmail.com",
+      "status": "sent"
+    },
+    {
+      "to": "franklincastro.csn@gmail.com",
+      "status": "sent"
+    },
+    {
+      "to": "finanzasbauxilum@gmail.com",
+      "status": "sent"
+    },
+    {
+      "to": "mrincones@comsigua.com.ve",
+      "status": "sent"
+    },
+    {
+      "to": "vortega@comsigua.com.ve",
+      "status": "sent"
+    },
+    {
+      "to": "",
+      "status": "failed",
+      "error": "(-2147352567, 'Ocurrió una excepción.', (4096, 'Microsoft Outlook', 'Necesitamos saber a quién enviar esto. Asegúrese de que introducir al menos un nombre.', None, 0, -2147467259), None)"
+    },
+    {
+      "to": "2121delsur@gmail.com",
+      "status": "sent"
+    },
+    {
+      "to": "andre.aguilar@buenaventura.pe",
+      "status": "sent"
+    },
+    {
+      "to": "pe.dominguezjosejuan@gmail.com",
+      "status": "sent"
+    },
+    {
+      "to": "jorge.cerda@mountar.com.mx",
+      "status": "sent"
+    },
+    {
+      "to": "Fredy.Dominguez@MMG.COM",
+      "status": "sent"
+    },
+    {
+      "to": "Fernando.Talavera@MMG.com",
+      "status": "sent"
+    },
+    {
+      "to": "ar.qvar55@gmail.com",
+      "status": "sent"
+    },
+    {
+      "to": "fredy.dominguez@mmg.com",
+      "status": "sent"
+    },
+    {
+      "to": "",
+      "status": "failed",
+      "error": "(-2147352567, 'Ocurrió una excepción.', (4096, 'Microsoft Outlook', 'Necesitamos saber a quién enviar esto. Asegúrese de que introducir al menos un nombre.', None, 0, -2147467259), None)"
+    },
+    {
+      "to": "Eder.Chiroque@MMG.com",
+      "status": "sent"
+    },
+    {
+      "to": "Javier.Sehuin@MMG.COM",
+      "status": "sent"
+    },
+    {
+      "to": "",
+      "status": "failed",
+      "error": "(-2147352567, 'Ocurrió una excepción.', (4096, 'Microsoft Outlook', 'Necesitamos saber a quién enviar esto. Asegúrese de que introducir al menos un nombre.', None, 0, -2147467259), None)"
+    },
+    {
+      "to": "",
+      "status": "failed",
+      "error": "(-2147352567, 'Ocurrió una excepción.', (4096, 'Microsoft Outlook', 'Necesitamos saber a quién enviar esto. Asegúrese de que introducir al menos un nombre.', None, 0, -2147467259), None)"
+    },
+    {
+      "to": "jonathan.gomez@mmg.com",
+      "status": "sent"
+    },
+    {
+      "to": "dinesh.kumar4@jindalsteel.com",
+      "status": "sent"
+    },
+    {
+      "to": "kenny.doymaint@gmail.com",
+      "status": "sent"
+    },
+    {
+      "to": "noel.rosario@ingenieria2882.com",
+      "status": "sent"
+    },
+    {
+      "to": "comercial@eps-corp.net",
+      "status": "sent"
+    },
+    {
+      "to": "Jefferson.Damian.Overall@MMG.com",
+      "status": "sent"
+    },
+    {
+      "to": "wcarpiod@antamina.com",
+      "status": "sent"
+    },
+    {
+      "to": "ffrisancho@antamina.com",
+      "status": "sent"
+    },
+    {
+      "to": "rrojasr@antamina.com",
+      "status": "sent"
+    },
+    {
+      "to": "rsalinas@antamina.com",
+      "status": "sent"
+    },
+    {
+      "to": "dominguez.josejuan@gmail.com",
+      "status": "sent"
+    },
+    {
+      "to": "jlondona@poderosa.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "hpaitamala@poderosa.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "aramos@poderosa.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "carlos.camacho@buenaventura.pe",
+      "status": "sent"
+    },
+    {
+      "to": "katherine.pinto@hudbayminerals.com",
+      "status": "sent"
+    },
+    {
+      "to": "piero.fuentes@hudbayminerals.com",
+      "status": "sent"
+    },
+    {
+      "to": "maximo.ibarra@hudbayminerals.com",
+      "status": "sent"
+    },
+    {
+      "to": "percy.landa@hudbayminerals.com",
+      "status": "sent"
+    },
+    {
+      "to": "allison.gallegos@hudbayminerals.com",
+      "status": "sent"
+    },
+    {
+      "to": "suyen.condori@hudbayminerals.com",
+      "status": "sent"
+    },
+    {
+      "to": "galo.sotomayor@hudbayminerals.com",
+      "status": "sent"
+    },
+    {
+      "to": "jordan.pianto@angloamerican.com",
+      "status": "sent"
+    },
+    {
+      "to": "eddyson.mendoza@zafranal.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "marco.salazar@zafranal.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "josias.gomez@zafranal.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "larazola@southernperu.com.pe",
+      "status": "sent"
+    },
+    {
+      "to": "mariolozada@timaca.com.ve",
+      "status": "sent"
+    },
+    {
+      "to": "andrycampos@hbitechgroup.com",
+      "status": "sent"
+    },
+    {
+      "to": "guillermoblanco@timaca.com.ve",
+      "status": "sent"
+    }
+  ]
+}

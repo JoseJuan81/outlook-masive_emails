@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masive Emails</title>
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, sans-serif;
+            background: #F5F5F7;
+            color: #1D1D1F;
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #86868B;
+            font-size: 15px;
+            margin-bottom: 32px;
+        }
+
+        /* Stepper */
+        .stepper {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 40px;
+        }
+
+        .step-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: #86868B;
+            transition: color 0.3s;
+        }
+
+        .step-indicator.active { color: #007AFF; }
+        .step-indicator.completed { color: #34C759; cursor: pointer; }
+        .step-indicator.completed:hover { opacity: 0.75; }
+
+        .step-dot {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #E5E5EA;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 600;
+            color: #86868B;
+            transition: all 0.3s;
+        }
+
+        .step-indicator.active .step-dot {
+            background: #007AFF;
+            color: white;
+        }
+
+        .step-indicator.completed .step-dot {
+            background: #34C759;
+            color: white;
+        }
+
+        .step-line {
+            width: 40px;
+            height: 2px;
+            background: #E5E5EA;
+            border-radius: 1px;
+            align-self: center;
+            transition: background 0.3s;
+        }
+
+        .step-line.active { background: #007AFF; }
+        .step-line.completed { background: #34C759; }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            padding: 32px;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        /* Step sections */
+        .step-section {
+            display: none;
+            animation: fadeIn 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .step-section.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Drop zone */
+        .drop-zone {
+            border: 2px dashed #D1D1D6;
+            border-radius: 16px;
+            padding: 48px 32px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.25s;
+            background: #FAFAFA;
+        }
+
+        .drop-zone:hover, .drop-zone.dragover {
+            border-color: #007AFF;
+            background: #F0F7FF;
+        }
+
+        .drop-zone-icon {
+            font-size: 40px;
+            margin-bottom: 12px;
+            opacity: 0.5;
+        }
+
+        .drop-zone-text {
+            font-size: 16px;
+            color: #1D1D1F;
+            margin-bottom: 4px;
+        }
+
+        .drop-zone-hint {
+            font-size: 13px;
+            color: #86868B;
+        }
+
+        .file-input { display: none; }
+
+        /* Upload result */
+        .upload-result {
+            display: none;
+            margin-top: 20px;
+            padding: 16px 20px;
+            background: #F0FFF4;
+            border-radius: 12px;
+            border: 1px solid #C6F6D5;
+        }
+
+        .upload-result .filename {
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .upload-result .meta {
+            font-size: 13px;
+            color: #48BB78;
+            margin-top: 4px;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 10px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: #007AFF;
+            color: white;
+        }
+
+        .btn-primary:hover { background: #0066D6; }
+        .btn-primary:disabled { background: #B0B0B5; cursor: not-allowed; }
+
+        .btn-secondary {
+            background: #E5E5EA;
+            color: #1D1D1F;
+        }
+
+        .btn-secondary:hover { background: #D1D1D6; }
+
+        .btn-danger {
+            background: #FF3B30;
+            color: white;
+        }
+
+        .btn-danger:hover { background: #D63028; }
+
+        .btn-row {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            justify-content: flex-end;
+        }
+
+        /* Preview iframe */
+        .preview-frame {
+            width: 100%;
+            min-height: 500px;
+            border: 1px solid #E5E5EA;
+            border-radius: 12px;
+            background: white;
+        }
+
+        /* Source cards */
+        .sources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .source-card {
+            padding: 20px;
+            border: 2px solid #E5E5EA;
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: white;
+        }
+
+        .source-card:hover { border-color: #007AFF; background: #F0F7FF; }
+        .source-card.selected { border-color: #007AFF; background: #F0F7FF; }
+
+        .source-card .source-name {
+            font-size: 15px;
+            font-weight: 500;
+            margin-top: 8px;
+        }
+
+        .source-icon {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+        }
+
+        .source-icon-emoji {
+            font-size: 28px;
+        }
+
+        /* Views selector */
+        .views-section {
+            display: none;
+            margin-bottom: 20px;
+        }
+
+        .views-section.visible { display: block; }
+
+        select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #D1D1D6;
+            border-radius: 10px;
+            font-size: 15px;
+            font-family: inherit;
+            background: white;
+            color: #1D1D1F;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%2386868B' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            cursor: pointer;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: #86868B;
+            margin-bottom: 6px;
+        }
+
+        /* Contacts table */
+        .contacts-section {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .contacts-section.visible { display: block; }
+
+        .contacts-summary {
+            font-size: 14px;
+            color: #86868B;
+            margin-bottom: 12px;
+        }
+
+        .contacts-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        .contacts-table th {
+            text-align: left;
+            padding: 10px 14px;
+            background: #F5F5F7;
+            font-weight: 500;
+            color: #86868B;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .contacts-table td {
+            padding: 10px 14px;
+            border-bottom: 1px solid #F0F0F2;
+        }
+
+        .contacts-table tr:nth-child(even) td { background: #FAFAFA; }
+
+        .contacts-table-wrapper {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #E5E5EA;
+            border-radius: 12px;
+        }
+
+        /* Send metrics */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .metric-card {
+            background: #F5F5F7;
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .metric-label {
+            font-size: 12px;
+            color: #86868B;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .metric-card.processing .metric-value { color: #FF9500; }
+        .metric-card.outbox .metric-value { color: #007AFF; }
+        .metric-card.sent .metric-value { color: #34C759; }
+        .metric-card.failed .metric-value { color: #FF3B30; }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 6px;
+            background: #E5E5EA;
+            border-radius: 3px;
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: #007AFF;
+            border-radius: 3px;
+            transition: width 0.4s ease;
+            width: 0%;
+        }
+
+        .progress-text {
+            text-align: center;
+            font-size: 14px;
+            color: #86868B;
+            margin-bottom: 20px;
+        }
+
+        .current-email {
+            text-align: center;
+            font-size: 13px;
+            color: #86868B;
+            margin-bottom: 8px;
+            font-style: italic;
+        }
+
+        /* Send result */
+        .send-result {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .send-result .result-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .send-result .result-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .send-result .result-message {
+            color: #86868B;
+            font-size: 15px;
+            max-width: 400px;
+            margin: 0 auto 24px;
+        }
+
+        /* Loading spinner */
+        .spinner {
+            display: none;
+            width: 32px;
+            height: 32px;
+            border: 3px solid #E5E5EA;
+            border-top-color: #007AFF;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            margin: 20px auto;
+        }
+
+        .spinner.visible { display: block; }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(80px);
+            background: #1D1D1F;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 14px;
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            max-width: 90%;
+        }
+
+        .toast.visible { transform: translateX(-50%) translateY(0); }
+
+        @media (max-width: 600px) {
+            .container { padding: 20px 16px; }
+            .card { padding: 20px; }
+            .stepper { gap: 4px; }
+            .step-indicator span:not(.step-dot) { display: none; }
+            .step-line { width: 24px; }
+            .sources-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Masive Emails</h1>
+        <p class="subtitle">Envío masivo de correos electrónicos</p>
+
+        <!-- Stepper -->
+        <div class="stepper">
+            <div class="step-indicator active" data-step="1">
+                <span class="step-dot">1</span>
+                <span>Cargar</span>
+            </div>
+            <div class="step-line" data-line="1"></div>
+            <div class="step-indicator" data-step="2">
+                <span class="step-dot">2</span>
+                <span>Preview</span>
+            </div>
+            <div class="step-line" data-line="2"></div>
+            <div class="step-indicator" data-step="3">
+                <span class="step-dot">3</span>
+                <span>Contactos</span>
+            </div>
+            <div class="step-line" data-line="3"></div>
+            <div class="step-indicator" data-step="4">
+                <span class="step-dot">4</span>
+                <span>Enviar</span>
+            </div>
+        </div>
+
+        <!-- Step 1: Upload EML -->
+        <div class="step-section active" id="step-1">
+            <div class="card">
+                <h2 class="card-title">Cargar archivo de correo</h2>
+                <div class="drop-zone" id="dropZone">
+                    <div class="drop-zone-icon">📧</div>
+                    <div class="drop-zone-text">Arrastra tu archivo .eml aquí</div>
+                    <div class="drop-zone-hint">o haz clic para seleccionar</div>
+                    <input type="file" class="file-input" id="fileInput" accept=".eml,.msg">
+                </div>
+                <div class="upload-result" id="uploadResult">
+                    <div class="filename" id="uploadFilename"></div>
+                    <div class="meta" id="uploadMeta"></div>
+                </div>
+                <div class="spinner" id="uploadSpinner"></div>
+                <div class="btn-row">
+                    <button class="btn btn-primary" id="btnToPreview" disabled>Continuar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 2: Preview -->
+        <div class="step-section" id="step-2">
+            <div class="card">
+                <h2 class="card-title">Vista previa del correo</h2>
+                <p style="font-size: 13px; color: #86868B; margin-bottom: 12px;">
+                    Asunto: <strong id="previewSubject"></strong>
+                </p>
+                <iframe class="preview-frame" id="previewFrame" sandbox="allow-same-origin"></iframe>
+                <div class="spinner" id="previewSpinner"></div>
+                <div class="btn-row">
+                    <button class="btn btn-secondary" onclick="goToStep(1)">Volver</button>
+                    <button class="btn btn-primary" id="btnToContacts">Aprobar y continuar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 3: Select contacts -->
+        <div class="step-section" id="step-3">
+            <div class="card">
+                <h2 class="card-title">Seleccionar contactos</h2>
+
+                <div class="sources-grid" id="sourcesGrid"></div>
+
+                <div class="views-section" id="viewsSection">
+                    <label for="viewSelect">Selecciona una vista</label>
+                    <select id="viewSelect">
+                        <option value="">Cargando vistas...</option>
+                    </select>
+                </div>
+
+                <div class="btn-row" style="justify-content: flex-start; margin-top: 12px;">
+                    <button class="btn btn-primary" id="btnLoadContacts" disabled>Cargar contactos</button>
+                </div>
+
+                <div class="spinner" id="contactsSpinner"></div>
+
+                <div class="contacts-section" id="contactsSection">
+                    <p class="contacts-summary" id="contactsSummary"></p>
+                    <div class="contacts-table-wrapper">
+                        <table class="contacts-table">
+                            <thead>
+                                <tr><th>#</th><th>Nombre</th><th>Email</th></tr>
+                            </thead>
+                            <tbody id="contactsBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="btn-row">
+                    <button class="btn btn-secondary" onclick="goToStep(2)">Volver</button>
+                    <button class="btn btn-primary" id="btnSend" disabled>Enviar a <span id="sendCount">0</span> contactos</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 4: Send progress & result -->
+        <div class="step-section" id="step-4">
+            <div class="card">
+                <h2 class="card-title" id="step4Title">Enviando correos...</h2>
+
+                <div id="progressSection">
+                    <div class="current-email" id="currentEmail"></div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" id="progressBar"></div>
+                    </div>
+                    <div class="progress-text" id="progressText">Iniciando envío...</div>
+
+                    <div class="metrics-grid" style="grid-template-columns: repeat(4, 1fr);">
+                        <div class="metric-card processing">
+                            <div class="metric-value" id="metricProcessing">0</div>
+                            <div class="metric-label">En ejecución</div>
+                        </div>
+                        <div class="metric-card outbox">
+                            <div class="metric-value" id="metricPending">0</div>
+                            <div class="metric-label">Pendientes</div>
+                        </div>
+                        <div class="metric-card sent">
+                            <div class="metric-value" id="metricSent">0</div>
+                            <div class="metric-label">Confirmados</div>
+                        </div>
+                        <div class="metric-card failed">
+                            <div class="metric-value" id="metricFailed">0</div>
+                            <div class="metric-label">Fallidos</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="send-result" id="sendResult" style="display: none;">
+                    <div class="result-icon" id="resultIcon"></div>
+                    <div class="result-title" id="resultTitle"></div>
+                    <div class="result-message" id="resultMessage"></div>
+
+                    <div class="metrics-grid" style="margin-top: 20px; grid-template-columns: repeat(3, 1fr);">
+                        <div class="metric-card sent">
+                            <div class="metric-value" id="finalSent">0</div>
+                            <div class="metric-label">Confirmados</div>
+                        </div>
+                        <div class="metric-card outbox">
+                            <div class="metric-value" id="finalPending">0</div>
+                            <div class="metric-label">Pendientes</div>
+                        </div>
+                        <div class="metric-card failed">
+                            <div class="metric-value" id="finalFailed">0</div>
+                            <div class="metric-label">Fallidos</div>
+                        </div>
+                    </div>
+
+                    <div class="btn-row" style="justify-content: center;">
+                        <button class="btn btn-primary" onclick="resetApp()">Nuevo envío</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        let currentStep = 1;
+        let selectedSource = null;
+        let selectedView = null;
+        let contactsCount = 0;
+
+        // --- Navigation ---
+
+        function goToStep(step) {
+            document.querySelectorAll('.step-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(`step-${step}`).classList.add('active');
+
+            document.querySelectorAll('.step-indicator').forEach(ind => {
+                const s = parseInt(ind.dataset.step);
+                ind.classList.remove('active', 'completed');
+                if (s === step) ind.classList.add('active');
+                else if (s < step) ind.classList.add('completed');
+            });
+
+            document.querySelectorAll('.step-line').forEach(line => {
+                const l = parseInt(line.dataset.line);
+                line.classList.remove('active', 'completed');
+                if (l < step) line.classList.add('completed');
+                else if (l === step) line.classList.add('active');
+            });
+
+            currentStep = step;
+
+            if (step === 2) loadPreview();
+            if (step === 3) loadSources();
+        }
+
+        // Clickable stepper: allow navigating back to completed steps
+        document.querySelectorAll('.step-indicator').forEach(ind => {
+            ind.addEventListener('click', () => {
+                const step = parseInt(ind.dataset.step);
+                if (ind.classList.contains('completed')) goToStep(step);
+            });
+        });
+
+        // --- Toast ---
+
+        function showToast(msg, duration = 3000) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.classList.add('visible');
+            setTimeout(() => t.classList.remove('visible'), duration);
+        }
+
+        // --- Step 1: Upload ---
+
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+
+        dropZone.addEventListener('click', () => fileInput.click());
+
+        dropZone.addEventListener('dragover', e => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        });
+
+        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+
+        dropZone.addEventListener('drop', e => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            if (e.dataTransfer.files.length) uploadFile(e.dataTransfer.files[0]);
+        });
+
+        fileInput.addEventListener('change', () => {
+            if (fileInput.files.length) uploadFile(fileInput.files[0]);
+        });
+
+        async function uploadFile(file) {
+            const ext = file.name.split('.').pop().toLowerCase();
+            if (!['eml', 'msg'].includes(ext)) {
+                showToast('Solo archivos .eml o .msg');
+                return;
+            }
+
+            document.getElementById('uploadSpinner').classList.add('visible');
+            document.getElementById('uploadResult').style.display = 'none';
+            document.getElementById('btnToPreview').disabled = true;
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const res = await fetch('/api/upload-eml', { method: 'POST', body: formData });
+                if (!res.ok) {
+                    const err = await res.json();
+                    throw new Error(err.detail || 'Error uploading file');
+                }
+                const data = await res.json();
+
+                document.getElementById('uploadFilename').textContent = data.filename;
+                document.getElementById('uploadMeta').textContent =
+                    `Asunto: ${data.subject} · ${data.images_count} imagen(es)`;
+                document.getElementById('uploadResult').style.display = 'block';
+                document.getElementById('btnToPreview').disabled = false;
+            } catch (err) {
+                showToast(err.message);
+            } finally {
+                document.getElementById('uploadSpinner').classList.remove('visible');
+            }
+        }
+
+        document.getElementById('btnToPreview').addEventListener('click', () => goToStep(2));
+
+        // --- Step 2: Preview ---
+
+        async function loadPreview() {
+            const spinner = document.getElementById('previewSpinner');
+            spinner.classList.add('visible');
+
+            try {
+                const res = await fetch('/api/preview');
+                if (!res.ok) throw new Error('Error loading preview');
+                const data = await res.json();
+
+                document.getElementById('previewSubject').textContent = data.subject;
+                const frame = document.getElementById('previewFrame');
+                frame.srcdoc = data.html;
+            } catch (err) {
+                showToast(err.message);
+            } finally {
+                spinner.classList.remove('visible');
+            }
+        }
+
+        document.getElementById('btnToContacts').addEventListener('click', () => goToStep(3));
+
+        // --- Step 3: Contacts ---
+
+        async function loadSources() {
+            try {
+                const res = await fetch('/api/sources');
+                const sources = await res.json();
+                const grid = document.getElementById('sourcesGrid');
+
+                if (grid.children.length > 0) return;
+
+                const logos = {
+                    airtable: '/static/logos/airtable.png',
+                    notion: '/static/logos/notion.png',
+                    supabase: '/static/logos/supabase.png',
+                };
+
+                sources.forEach(src => {
+                    const card = document.createElement('div');
+                    card.className = 'source-card';
+                    card.dataset.id = src.id;
+                    card.dataset.hasViews = src.has_views;
+                    const iconHtml = logos[src.id]
+                        ? `<img class="source-icon" src="${logos[src.id]}" alt="${src.name}">`
+                        : `<div class="source-icon-emoji">📁</div>`;
+                    card.innerHTML = `
+                        ${iconHtml}
+                        <div class="source-name">${src.name}</div>
+                    `;
+                    card.addEventListener('click', () => selectSource(src));
+                    grid.appendChild(card);
+                });
+            } catch (err) {
+                showToast('Error loading sources');
+            }
+        }
+
+        async function selectSource(src) {
+            selectedSource = src.id;
+            selectedView = null;
+
+            document.querySelectorAll('.source-card').forEach(c => c.classList.remove('selected'));
+            document.querySelector(`.source-card[data-id="${src.id}"]`).classList.add('selected');
+
+            const viewsSection = document.getElementById('viewsSection');
+            const btnLoad = document.getElementById('btnLoadContacts');
+
+            document.getElementById('contactsSection').classList.remove('visible');
+
+            if (src.has_views) {
+                viewsSection.classList.add('visible');
+                btnLoad.disabled = true;
+
+                try {
+                    const res = await fetch(`/api/sources/${src.id}/views`);
+                    const views = await res.json();
+                    const select = document.getElementById('viewSelect');
+                    select.innerHTML = '<option value="">Selecciona una vista...</option>';
+                    views.forEach(v => {
+                        const opt = document.createElement('option');
+                        opt.value = v.id;
+                        opt.textContent = v.name;
+                        select.appendChild(opt);
+                    });
+                } catch (err) {
+                    showToast('Error loading views');
+                }
+            } else {
+                viewsSection.classList.remove('visible');
+                btnLoad.disabled = false;
+            }
+        }
+
+        document.getElementById('viewSelect').addEventListener('change', function() {
+            selectedView = this.value;
+            document.getElementById('btnLoadContacts').disabled = !this.value;
+        });
+
+        document.getElementById('btnLoadContacts').addEventListener('click', loadContacts);
+
+        async function loadContacts() {
+            const spinner = document.getElementById('contactsSpinner');
+            spinner.classList.add('visible');
+            document.getElementById('contactsSection').classList.remove('visible');
+
+            let url = `/api/sources/${selectedSource}/contacts`;
+            if (selectedView) url += `?view=${encodeURIComponent(selectedView)}`;
+
+            try {
+                const res = await fetch(url);
+                if (!res.ok) {
+                    const err = await res.json();
+                    throw new Error(err.detail || 'Error loading contacts');
+                }
+                const data = await res.json();
+
+                contactsCount = data.total;
+                document.getElementById('contactsSummary').textContent =
+                    `${data.total} contacto(s) encontrado(s)`;
+                document.getElementById('sendCount').textContent = data.total;
+
+                const tbody = document.getElementById('contactsBody');
+                tbody.innerHTML = '';
+                data.contacts.forEach((c, i) => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `<td>${i + 1}</td><td>${esc(c.name)}</td><td>${esc(c.email)}</td>`;
+                    tbody.appendChild(tr);
+                });
+
+                document.getElementById('contactsSection').classList.add('visible');
+                document.getElementById('btnSend').disabled = false;
+            } catch (err) {
+                showToast(err.message);
+            } finally {
+                spinner.classList.remove('visible');
+            }
+        }
+
+        function esc(str) {
+            const d = document.createElement('div');
+            d.textContent = str;
+            return d.innerHTML;
+        }
+
+        // --- Step 4: Send ---
+
+        document.getElementById('btnSend').addEventListener('click', sendEmails);
+
+        let pollInterval = null;
+
+        async function sendEmails() {
+            goToStep(4);
+            document.getElementById('progressSection').style.display = 'block';
+            document.getElementById('sendResult').style.display = 'none';
+            document.getElementById('step4Title').textContent = 'Enviando correos...';
+            document.getElementById('progressBar').style.width = '0%';
+            document.getElementById('progressText').textContent = 'Iniciando envío...';
+            document.getElementById('currentEmail').textContent = '';
+
+            try {
+                const res = await fetch('/api/send', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        source: selectedSource,
+                        view: selectedView,
+                    }),
+                });
+
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.detail || 'Error starting send');
+
+                pollInterval = setInterval(pollProgress, 1000);
+
+            } catch (err) {
+                showSendError(err.message);
+            }
+        }
+
+        async function pollProgress() {
+            try {
+                const res = await fetch('/api/send/progress');
+                const p = await res.json();
+
+                if (p.status === 'waiting') return;
+
+                const total = p.total || 1;
+                const current = p.current || 0;
+                const pct = Math.round((current / total) * 100);
+
+                document.getElementById('progressBar').style.width = pct + '%';
+                document.getElementById('progressText').textContent =
+                    `Procesando ${current} de ${total} correos`;
+
+                if (p.current_to) {
+                    document.getElementById('currentEmail').textContent =
+                        `Enviando a: ${p.current_to}`;
+                }
+
+                const phase = p.phase || '';
+                const isDispatching = phase === 'dispatching' && p.current_to;
+                const isWaiting = phase === 'waiting_confirmation';
+
+                document.getElementById('metricProcessing').textContent =
+                    (isDispatching || isWaiting) ? 1 : 0;
+                document.getElementById('metricPending').textContent = p.pending || 0;
+                document.getElementById('metricSent').textContent = p.sent || 0;
+                document.getElementById('metricFailed').textContent = p.failed || 0;
+
+                if (isWaiting) {
+                    document.getElementById('currentEmail').textContent =
+                        `Esperando confirmación: ${p.current_to}`;
+                }
+
+                if (p.status === 'complete') {
+                    clearInterval(pollInterval);
+                    pollInterval = null;
+                    showSendComplete(p);
+                }
+
+            } catch (err) {
+                // Keep polling
+            }
+        }
+
+        function showSendComplete(p) {
+            document.getElementById('progressSection').style.display = 'none';
+            document.getElementById('step4Title').textContent = 'Envío completado';
+
+            const failed = p.failed || 0;
+            const sent = p.sent || 0;
+            const total = p.total || 0;
+            const pending = p.pending || 0;
+
+            if (failed === 0 && pending === 0) {
+                document.getElementById('resultIcon').textContent = '✅';
+                document.getElementById('resultTitle').textContent =
+                    `${sent}/${total} correo(s) enviados y confirmados`;
+                document.getElementById('resultMessage').textContent =
+                    'Todos los correos fueron aceptados por el servidor.';
+            } else if (failed === 0 && pending > 0) {
+                document.getElementById('resultIcon').textContent = '⚠️';
+                document.getElementById('resultTitle').textContent =
+                    `${sent} confirmados, ${pending} pendiente(s)`;
+                document.getElementById('resultMessage').textContent =
+                    `${pending} correo(s) fueron enviados pero no se confirmó su salida del Outbox.`;
+            } else {
+                document.getElementById('resultIcon').textContent = '⚠️';
+                document.getElementById('resultTitle').textContent =
+                    `${sent} confirmados, ${failed} fallido(s)`;
+                document.getElementById('resultMessage').textContent =
+                    `${pending > 0 ? pending + ' pendiente(s). ' : ''}${failed} correo(s) no se pudieron enviar.`;
+            }
+
+            document.getElementById('finalSent').textContent = sent;
+            document.getElementById('finalPending').textContent = pending;
+            document.getElementById('finalFailed').textContent = failed;
+
+            document.getElementById('sendResult').style.display = 'block';
+        }
+
+        function showSendError(message) {
+            document.getElementById('progressSection').style.display = 'none';
+            document.getElementById('step4Title').textContent = 'Error en el envío';
+            document.getElementById('resultIcon').textContent = '❌';
+            document.getElementById('resultTitle').textContent = 'Error';
+            document.getElementById('resultMessage').textContent = message;
+            document.getElementById('finalSent').textContent = '0';
+            document.getElementById('finalOutbox').textContent = '-';
+            document.getElementById('finalFailed').textContent = '-';
+            document.getElementById('sendResult').style.display = 'block';
+        }
+
+        // --- Reset ---
+
+        function resetApp() {
+            selectedSource = null;
+            selectedView = null;
+            contactsCount = 0;
+            document.getElementById('uploadResult').style.display = 'none';
+            document.getElementById('btnToPreview').disabled = true;
+            document.getElementById('contactsSection').classList.remove('visible');
+            document.getElementById('viewsSection').classList.remove('visible');
+            document.getElementById('sourcesGrid').innerHTML = '';
+            fileInput.value = '';
+            goToStep(1);
+        }
+    </script>
+</body>
+</html>
