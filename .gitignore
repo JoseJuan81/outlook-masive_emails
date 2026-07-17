@@ -1,2 +1,30 @@
+# Secrets
 .env
 logs/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pdb
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# Local staging/tracking state
+staging/failed/
+tracking/
+preview/email_preview.html
+
+# IDE
+.idea/
+.vscode/
+*.swp
+.DS_Store
