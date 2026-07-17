@@ -19,7 +19,8 @@ htmlcov/
 *.ipynb_checkpoints
 
 # Local staging/tracking state
-staging/failed/
+staging/
+!staging/.gitkeep
 tracking/
 preview/email_preview.html
 

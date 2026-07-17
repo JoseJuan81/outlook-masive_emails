@@ -242,6 +242,53 @@ _PROGRESS_FILE = _PROJECT_ROOT / "staging" / "send_progress.json"
 _send_process = None
 
 
+def _resolve_windows_python() -> str | None:
+    """Resuelve la ruta al intérprete Python de Windows con pywin32 instalado.
+
+    Orden de resolución:
+      1. Variable de entorno ``WINDOWS_PYTHON_PATH`` (override explícito).
+      2. Rutas comunes de instalación en el mount ``/mnt/c`` de WSL2.
+
+    Devuelve ``None`` si no encuentra ningún candidato válido.
+    """
+    explicit = os.getenv("WINDOWS_PYTHON_PATH")
+    if explicit and Path(explicit).is_file():
+        return explicit
+
+    candidates = [
+        # Instalaciones "para todos los usuarios" en C:\ raíz
+        "/mnt/c/Python313/python.exe",
+        "/mnt/c/Python312/python.exe",
+        "/mnt/c/Python311/python.exe",
+        "/mnt/c/Python310/python.exe",
+        "/mnt/c/Python39/python.exe",
+        # Anaconda / Miniconda a nivel de sistema
+        "/mnt/c/ProgramData/Anaconda3/python.exe",
+        "/mnt/c/ProgramData/miniconda3/python.exe",
+        "/mnt/c/Anaconda3/python.exe",
+        # Instalaciones por usuario bajo AppData
+        "/mnt/c/Users/USER/AppData/Local/Programs/Python/Python313/python.exe",
+        "/mnt/c/Users/USER/AppData/Local/Programs/Python/Python312/python.exe",
+        "/mnt/c/Users/USER/AppData/Local/Programs/Python/Python311/python.exe",
+        "/mnt/c/Users/USER/AppData/Local/Programs/Python/Python310/python.exe",
+        "/mnt/c/Users/USER/AppData/Local/Programs/Python/Python39/python.exe",
+        # Anaconda/miniconda por usuario
+        "/mnt/c/Users/USER/Anaconda3/python.exe",
+        "/mnt/c/Users/USER/miniconda3/python.exe",
+    ]
+
+    # Reemplazar el placeholder USER con el usuario WSL actual
+    user = os.getenv("USER") or ""
+    if user:
+        candidates = [c.replace("/USER/", f"/{user}/") for c in candidates]
+
+    for path in candidates:
+        if Path(path).is_file():
+            return path
+
+    return None
+
+
 @app.post("/api/send")
 async def send_emails(payload: dict):
     global _send_process
@@ -300,11 +347,31 @@ async def send_emails(payload: dict):
 
     logger.info("Staging ready -> %d emails, launching send process", len(emails))
 
+    win_python = _resolve_windows_python()
+    if not win_python:
+        logger.error(
+            "No se encontró un Python de Windows con pywin32. "
+            "Configura WINDOWS_PYTHON_PATH en .env con la ruta al python.exe."
+        )
+        raise HTTPException(
+            status_code=500,
+            detail=(
+                "No se encontró un intérprete Python de Windows con pywin32 "
+                "instalado. Definí la variable de entorno WINDOWS_PYTHON_PATH "
+                "en tu .env apuntando al python.exe de Windows (ej: "
+                "WINDOWS_PYTHON_PATH=/mnt/c/Users/TU_USUARIO/AppData/Local/"
+                "Programs/Python/Python313/python.exe). El Microsoft Store "
+                "stub (WindowsApps/python.exe) no sirve: necesita ser un "
+                "Python real con `pip install pywin32`."
+            ),
+        )
+
     send_script = _PROJECT_ROOT / "send_from_staging.py"
-    win_python = "/mnt/c/Python313/python.exe"
     win_script = subprocess.run(
         ["wslpath", "-w", str(send_script)], capture_output=True, text=True
     ).stdout.strip()
+
+    logger.info("Lanzando send_from_staging.py con Python: %s", win_python)
 
     _send_process = subprocess.Popen(
         [win_python, win_script],

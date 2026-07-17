@@ -136,6 +136,11 @@ OUTLOOK_SENDER_EMAIL=tu@empresa.com
 
 PREVIEW_EMAIL_BEFORE_SEND=true
 PREVIEW_OPEN_IN_BROWSER=true
+
+# Opcional: ruta al python.exe de Windows cuando corrés desde WSL2.
+# Solo necesaria si la auto-detección falla. Ejemplo:
+# WINDOWS_PYTHON_PATH=/mnt/c/Users/TU_USUARIO/AppData/Local/Programs/Python/Python313/python.exe
+# WINDOWS_PYTHON_PATH=
 ```
 
 ---
