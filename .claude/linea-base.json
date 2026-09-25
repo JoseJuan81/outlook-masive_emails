@@ -1,0 +1,8 @@
+{
+  "_comentario": "Errores de lint heredados POR ARCHIVO. Generado midiendo este repo, nunca copiado. Un archivo ausente tiene presupuesto CERO. Solo se regenera a la baja y por decisión del usuario: node .claude/hooks/linea-base.mjs generar",
+  "generado": "2025-09-25T00:00:00.000Z",
+  "comando": "uv run ruff check . -f json -o .claude/cache/eslint-informe.json",
+  "totalErrores": 0,
+  "archivos": {},
+  "_nota_inicial": "ruff no está agregado todavía al pyproject.toml. Cuando se agregue con 'uv add --dev ruff', regenerar este archivo con: node .claude/hooks/linea-base.mjs generar. La verificación automática de la puerta de calidad no se activará hasta entonces (verificacion.json tiene 'obligatorio: false' para lint)."
+}
