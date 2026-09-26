@@ -129,6 +129,11 @@ def _item_in_outbox(ns, mail):
     Conservative semantics: if the mail item lacks an EntryID (transient
     state right after ``CreateItem``) or if any COM call raises, returns
     True so we never misreport a successful delivery.
+
+    ``pywintypes.com_error`` (e.g. ``MAPI_E_OBJECT_DELETED`` 0x80040108)
+    is treated specifically: the item has been recycled by Outlook, so
+    we return False (out of the Outbox). Generic ``Exception`` keeps
+    the conservative True fallback for transient errors.
     """
     entry_id = getattr(mail, "EntryID", None)
     if not entry_id:
@@ -138,6 +143,12 @@ def _item_in_outbox(ns, mail):
         for existing in outbox.Items:
             if getattr(existing, "EntryID", None) == entry_id:
                 return True
+    except pywintypes.com_error as exc:
+        logger.warning(
+            "_item_in_outbox: MAPI_E_OBJECT_DELETED al iterar Outbox; "
+            "item reciclado, tratando como fuera: %s", exc,
+        )
+        return False
     except Exception as exc:
         logger.warning("_item_in_outbox probe failed: %s", exc)
         return True
@@ -152,11 +163,22 @@ def wait_for_outbox_clear(ns, outbox_before, mail, timeout):
     aggregate-count comparisons; the authoritative signal today is the
     per-item probe combined with the SentOn timestamp assigned by the
     SMTP server.
+
+    ``mail.SentOn`` access is wrapped in a ``pywintypes.com_error``
+    guard so a recycled item (MAPI_E_OBJECT_DELETED) is treated as
+    ``SentOn=None`` instead of propagating the COM error.
     """
     del outbox_before  # Reserved for future aggregate-count comparisons.
     start = time.time()
     while time.time() - start < timeout:
-        sent_on = getattr(mail, "SentOn", None)
+        try:
+            sent_on = getattr(mail, "SentOn", None)
+        except pywintypes.com_error as exc:
+            logger.warning(
+                "wait_for_outbox_clear: SentOn no accesible (MAPI_E_OBJECT_DELETED); "
+                "tratando como None: %s", exc,
+            )
+            sent_on = None
         still_in_outbox = _item_in_outbox(ns, mail)
         if sent_on and not still_in_outbox:
             return True
@@ -401,28 +423,6 @@ def main():
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         try:
             mail = outlook.CreateItem(0)
             if account:
@@ -502,11 +502,28 @@ def main():
                 timeout=MAX_WAIT,
             )
 
+            # Fallback agresivo: cuando el gate per-item no confirmó (MAPI_E_OBJECT_DELETED
+            # sobre ``mail`` antes de leer EntryID/SentOn) pero Sent Items ya creció,
+            # el item fue reciclado por Outlook tras marcarlo como enviado. Se cuenta
+            # como sent y se deja ``delivery_method`` diagnóstico para distinguirlo del
+            # "timeout" real.
+            if delivered:
+                delivery_method = "outbox_clear+senton"
+            elif sent_items_grew:
+                delivery_method = "object_deleted_uncertain"
+                delivered = True
+                logger.warning(
+                    "delivery_method=object_deleted_uncertain: Sent Items subió "
+                    "pero el item fue reciclado antes de leer EntryID/SentOn"
+                )
+            else:
+                delivery_method = "timeout"
+
             _record_iteration_telemetry(
                 iteration_index=i,
                 recipient=item["to"],
                 delivery_confirmed=delivered,
-                delivery_method=("outbox_clear+senton" if delivered else "timeout"),
+                delivery_method=delivery_method,
                 sent_items_grew=sent_items_grew,
                 outbox_before=sent_before,
                 outbox_after=get_folder_count(namespace, 4),
@@ -533,7 +550,7 @@ def main():
                 outbox_initial=outbox_initial,
                 sent_folder_initial=sent_initial,
                 delivery_confirmed=delivered,
-                delivery_method=("outbox_clear+senton" if delivered else "timeout"),
+                delivery_method=delivery_method,
             ))
 
         except Exception as e:

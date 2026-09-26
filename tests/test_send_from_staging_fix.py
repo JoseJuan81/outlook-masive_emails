@@ -540,3 +540,203 @@ def test_dispatch_block_keeps_mapi_subject_before_mail_subject_attr():
         f"MAPI PR_SUBJECT (offset {proptag}) must be set BEFORE "
         f"mail.Subject = ... (offset {subject_setter})"
     )
+
+
+# ---------------------------------------------------------------------------
+# T2 - fix-mapi-object-deleted: MAPI_E_OBJECT_DELETED coverage
+# ---------------------------------------------------------------------------
+#
+# Outlook can recycle a mail item (MAPI_E_OBJECT_DELETED, 0x80040108)
+# immediately after ``mail.Send()`` when the SMTP server / Exchange moves
+# the item to Sent Items faster than ``wait_for_outbox_clear`` can probe it.
+# The contract change for this cycle:
+#
+#   * ``_item_in_outbox`` must treat ``pywintypes.com_error`` as
+#     "item was recycled, treat as out of the Outbox" → return False.
+#     The generic ``Exception`` branch still returns True (conservative),
+#     which is what ``test_item_in_outbox_returns_true_on_exception`` guards.
+#   * ``wait_for_outbox_clear`` must protect ``mail.SentOn`` against the
+#     same error: when the property access raises, treat it as SentOn=None
+#     instead of propagating.
+#   * The caller (lines ~497-552 in ``send_from_staging.py``) must mark
+#     the iteration as ``sent`` with ``delivery_method='object_deleted_uncertain'``
+#     when ``wait_for_outbox_clear`` returned False but ``wait_for_sent``
+#     already observed that Sent Items grew.
+
+
+def test_item_in_outbox_returns_false_on_pywintypes_com_error():
+    """``_item_in_outbox`` must return False on ``pywintypes.com_error``.
+
+    Scenario: Outlook recycled the item and ``ns.GetDefaultFolder(4)`` raises
+    ``MAPI_E_OBJECT_DELETED`` (0x80040108). The conservative branch for
+    generic ``Exception`` returns True (don't lose the mail), but this
+    specific COM error means the item is no longer accessible in the store,
+    so we report "out of the Outbox" and let the caller decide.
+    """
+    ns = MagicMock()
+    ns.GetDefaultFolder = MagicMock(
+        side_effect=sfs.pywintypes.com_error("MAPI_E_OBJECT_DELETED"),
+    )
+
+    # Must NOT propagate, must NOT take the conservative True branch.
+    assert sfs._item_in_outbox(ns, MockMail()) is False
+
+
+def test_item_in_outbox_returns_false_on_items_iteration_error():
+    """``_item_in_outbox`` must return False when ``outbox.Items`` raises
+    ``pywintypes.com_error`` mid-iteration.
+
+    Models the "aggressive" mode where Outlook recycled the folder itself
+    while we were iterating. Same semantic: item no longer accessible →
+    treat as out of the Outbox.
+    """
+
+    class _BombingItems:
+        """Iterable that raises ``pywintypes.com_error`` on first __iter__."""
+
+        def __iter__(self):
+            raise sfs.pywintypes.com_error("MAPI_E_OBJECT_DELETED")
+
+        def __bool__(self):  # MagicMock convenience, not strictly needed.
+            return True
+
+    outbox = MockFolder(mails=_BombingItems())
+    ns = MagicMock()
+    ns.GetDefaultFolder = lambda fid: outbox
+
+    assert sfs._item_in_outbox(ns, MockMail(entry_id="EID-2")) is False
+
+
+def test_wait_for_outbox_clear_returns_false_when_senton_raises_com_error(monkeypatch):
+    """``wait_for_outbox_clear`` must not propagate ``pywintypes.com_error``
+    from ``mail.SentOn``.
+
+    When the property access itself raises (the item was recycled), the
+    function must treat it as SentOn=None and keep polling. With the item
+    still in the Outbox and no SentOn available, the loop runs out the
+    timeout and returns False (no delivery confirmation possible).
+    """
+
+    class _RaisingSentOn:
+        """Mail-like object whose ``SentOn`` raises every access."""
+
+        EntryID = "EID-RAISE"
+
+        @property
+        def SentOn(self):
+            raise sfs.pywintypes.com_error("MAPI_E_OBJECT_DELETED")
+
+    mail = _RaisingSentOn()
+    outbox_folder = MockFolder(mails=[mail])  # mail stays in Outbox forever
+
+    ns = MagicMock()
+    ns.GetDefaultFolder = lambda fid: outbox_folder
+
+    # Force the timeout branch to fire on the first poll so the test is fast.
+    counter = {"t": 0.0}
+
+    def fake_time():
+        counter["t"] += 100  # jump past timeout immediately
+        return counter["t"]
+
+    monkeypatch.setattr(sfs.time, "time", fake_time)
+    monkeypatch.setattr(sfs.time, "sleep", lambda _: None)
+
+    # Must NOT propagate the pywintypes.com_error to the caller.
+    assert sfs.wait_for_outbox_clear(ns, outbox_before=0, mail=mail, timeout=5) is False
+
+
+def test_wait_for_outbox_clear_true_when_senton_set_and_item_deleted(monkeypatch):
+    """``wait_for_outbox_clear`` must return True when ``mail.SentOn`` is set
+    AND ``_item_in_outbox`` reports the item is gone (MAPI_E_OBJECT_DELETED
+    case from the iteration).
+
+    This is the canonical "Exchange moved the item already" scenario: by
+    the time the gate runs, the SMTP server has stamped SentOn and the
+    folder iteration raises ``MAPI_E_OBJECT_DELETED`` because the item was
+    recycled. The combined signal (SentOn set + still_in_outbox False)
+    must produce True.
+    """
+
+    class _SentMail:
+        EntryID = "EID-DEL"
+        SentOn = "2026-07-10 12:00:00"
+
+    mail = _SentMail()
+
+    # Simulate the folder raising pywintypes.com_error when iterating:
+    # _item_in_outbox should swallow that and return False.
+
+    class _BombingItems:
+        def __iter__(self):
+            raise sfs.pywintypes.com_error("MAPI_E_OBJECT_DELETED")
+
+    outbox_folder = MockFolder(mails=_BombingItems())
+    ns = MagicMock()
+    ns.GetDefaultFolder = lambda fid: outbox_folder
+
+    monkeypatch.setattr(sfs.time, "sleep", lambda _: None)
+    monkeypatch.setattr(sfs.time, "time", lambda: 0.0)  # never advances
+
+    # First poll: SentOn set + still_in_outbox False → returns True.
+    assert sfs.wait_for_outbox_clear(ns, outbox_before=0, mail=mail, timeout=5) is True
+
+
+def test_caller_uses_sent_items_grew_as_fallback_for_object_deleted():
+    """Static guard on the caller block: when ``wait_for_outbox_clear`` returns
+    False but ``sent_items_grew`` is True, the iteration must be marked as
+    delivered with ``delivery_method='object_deleted_uncertain'``.
+
+    We locate the dispatch block between ``wait_for_outbox_clear(`` and the
+    next ``if delivered:`` and assert the three structural requirements:
+
+      1. ``sent_items_grew`` is consulted in the path where ``delivered`` is
+         False (``elif sent_items_grew:`` or equivalent).
+      2. ``delivery_method = "object_deleted_uncertain"`` appears in that
+         branch.
+      3. The branch sets ``delivered = True`` (so the iteration counts as
+         sent, not pending). This is what flips the result entry from
+         ``"sent_pending"`` to ``"sent"`` downstream.
+    """
+    from pathlib import Path
+    src_path = Path(__file__).resolve().parent.parent / "send_from_staging.py"
+    src = src_path.read_text(encoding="utf-8")
+
+    # Locate the call site: ``delivered = wait_for_outbox_clear(`` in main().
+    # We skip over the function definition by searching only for the
+    # assignment form, which is unique to the call site.
+    call_idx = src.find("delivered = wait_for_outbox_clear(")
+    assert call_idx > 0, (
+        "call site 'delivered = wait_for_outbox_clear(' not found in production"
+    )
+
+    # Find ALL occurrences of "if delivered:" after the call site and use
+    # the LAST one: that's the ``if delivered: results.append({'status':
+    # 'sent'})`` block that flips the counter, past which the new
+    # ``elif sent_items_grew:`` branch lives.
+    candidates = []
+    search_from = call_idx
+    while True:
+        idx = src.find("if delivered:", search_from)
+        if idx == -1:
+            break
+        candidates.append(idx)
+        search_from = idx + 1
+    assert candidates, "'if delivered:' branch not found after wait_for_outbox_clear("
+    # Use the last occurrence as the lower bound so the captured block
+    # includes the new ``elif sent_items_grew:`` branch.
+    if_delivered_idx = candidates[-1]
+
+    block = src[call_idx:if_delivered_idx]
+    assert "sent_items_grew" in block, (
+        "caller must consult sent_items_grew as a fallback signal in the "
+        f"block between wait_for_outbox_clear( and 'if delivered:'\n{block}"
+    )
+    assert "object_deleted_uncertain" in block, (
+        "caller must assign delivery_method='object_deleted_uncertain' in "
+        f"the sent_items_grew fallback branch\n{block}"
+    )
+    assert "delivered = True" in block, (
+        "caller must flip delivered=True when sent_items_grew=True so the "
+        f"item counts as sent (not pending)\n{block}"
+    )
