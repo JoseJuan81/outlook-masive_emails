@@ -18,6 +18,7 @@ The three fixes under test are:
 
 from __future__ import annotations
 
+import json
 import logging
 from types import SimpleNamespace
 from unittest.mock import MagicMock
@@ -327,3 +328,215 @@ def test_module_compiles_and_has_expected_exports():
     assert callable(sfs.find_account)
     # wait_for_sent remains (now informational)
     assert callable(sfs.wait_for_sent)
+
+
+# ---------------------------------------------------------------------------
+# Edge cases — bugs originales que no estaban cubiertos
+# ---------------------------------------------------------------------------
+
+def test_wait_for_outbox_clear_senton_appears_on_last_poll(monkeypatch):
+    """Boundary: SentOn transitions from None to a real timestamp on the final
+    poll before the timeout. The gate must accept this and return True.
+
+    Simulates by advancing time on each ``time.time()`` call so the loop
+    visits exactly N polls; the N-th poll observes SentOn set AND the item
+    already out of the Outbox.
+    """
+
+    class _MutableSentOn:
+        """Mail-like object whose SentOn flips from None mid-loop."""
+
+        def __init__(self):
+            self.EntryID = "BOUND"
+            self._sent_on = None
+
+        @property
+        def SentOn(self):
+            return self._sent_on
+
+    mail = _MutableSentOn()
+
+    # _item_in_outbox returns True on the first probe (item still in
+    # flight), False thereafter (item has left the Outbox).
+    calls = {"n": 0}
+
+    def fake_in_outbox(_ns, _m):
+        calls["n"] += 1
+        # First probe: flip SentOn AFTER the probe returns, modelling
+        # the SMTP server stamping the timestamp exactly between polls.
+        if calls["n"] == 1:
+            mail._sent_on = "2026-07-10 10:00:00"
+        return False  # always out of Outbox on the second probe
+
+    # First probe (n==1) returns True (item still there), then flips SentOn.
+    # Second probe (n==2) returns False (item left) and SentOn is now set.
+    def fake_in_outbox_two_step(_ns, _m):
+        calls["n"] += 1
+        if calls["n"] == 1:
+            mail._sent_on = "2026-07-10 10:00:00"
+            return True
+        return False
+
+    clock = {"t": 0.0}
+
+    def fake_time():
+        clock["t"] += 1.0
+        return clock["t"]
+
+    monkeypatch.setattr(sfs, "_item_in_outbox", fake_in_outbox_two_step)
+    monkeypatch.setattr(sfs.time, "time", fake_time)
+    monkeypatch.setattr(sfs.time, "sleep", lambda _: None)
+
+    ns = MagicMock()
+    # timeout=10, well above the time-jumps we do, so the boundary succeeds.
+    assert sfs.wait_for_outbox_clear(ns, outbox_before=0, mail=mail, timeout=10) is True
+
+
+def test_wait_for_outbox_clear_when_item_never_in_outbox(monkeypatch):
+    """If the item never appeared in Outbox (sync finished before the gate
+    started), the gate must still return True when SentOn is populated.
+
+    This models a fast Exchange server where the mail is sent synchronously
+    and SentOn is set before ``wait_for_outbox_clear`` is even called.
+    """
+    mail = MockMail(entry_id="FAST", sent_on="2026-07-10 09:00:00")
+
+    # _item_in_outbox always returns False: the item is already gone.
+    monkeypatch.setattr(sfs, "_item_in_outbox", lambda ns, m: False)
+    monkeypatch.setattr(sfs.time, "sleep", lambda _: None)
+    monkeypatch.setattr(sfs.time, "time", lambda: 0.0)  # never advances
+
+    ns = MagicMock()
+    assert sfs.wait_for_outbox_clear(ns, outbox_before=0, mail=mail, timeout=5) is True
+
+
+def test_ensure_sender_account_raises_when_no_match(monkeypatch):
+    """When OUTLOOK_SENDER_EMAIL is set but no Outlook account matches,
+    ``_ensure_sender_account`` must raise RuntimeError so the run aborts.
+
+    The dispatch loop's except-block catches RuntimeError, calls
+    ``_abort_run`` and exits with progress status='error'.
+    """
+    outlook = MagicMock()
+    outlook.Session.Accounts = iter(
+        [SimpleNamespace(SmtpAddress="someone-else@example.com")]
+    )
+
+    with pytest.raises(RuntimeError) as exc_info:
+        sfs._ensure_sender_account(outlook, "sender@example.com")
+
+    # The error message must reference the misconfigured sender so the
+    # operator can fix it.
+    assert "sender@example.com" in str(exc_info.value)
+    assert "no matchea" in str(exc_info.value)
+
+
+def test_ensure_sender_account_returns_none_when_unset():
+    """When OUTLOOK_SENDER_EMAIL is not configured, the helper returns None
+    and lets main() fall back to the default Outlook account.
+    """
+    outlook = MagicMock()
+    # Empty/None sender_email: do not even probe Accounts.
+    assert sfs._ensure_sender_account(outlook, "") is None
+    assert sfs._ensure_sender_account(outlook, None) is None
+
+
+def test_abort_run_writes_status_error(monkeypatch, tmp_path, capsys):
+    """_abort_run persists a progress file with status='error' and prints a
+    JSON failure summary. main()'s except branch uses this to fail fast when
+    _ensure_sender_account raises.
+    """
+    # Redirect _PROGRESS_FILE to a temp path.
+    progress = tmp_path / "send_progress.json"
+    monkeypatch.setattr(sfs, "_PROGRESS_FILE", progress)
+
+    reason = "OUTLOOK_SENDER_EMAIL='x@example.com' no matchea ninguna cuenta de Outlook"
+    rc = sfs._abort_run(reason)
+    assert rc == 1
+
+    # File must exist with status='error' and the right shape.
+    payload = json.loads(progress.read_text(encoding="utf-8"))
+    assert payload["status"] == "error"
+    assert payload["error"] == reason
+    # Counts must be zero, not unknown.
+    assert payload["total"] == 0
+    assert payload["sent"] == 0
+    assert payload["failed"] == 0
+    assert payload["current"] == 0
+    assert payload["pending"] == 0
+
+    # JSON failure summary printed to stdout for the operator.
+    out = capsys.readouterr().out
+    parsed = json.loads(out.strip())
+    assert parsed == {"ok": False, "error": reason}
+
+
+def test_trigger_sync_with_empty_sync_objects_does_not_call_item(monkeypatch):
+    """trigger_sync on an Outlook with zero configured SyncObjects must
+    silently no-op without calling .Item() on an empty collection.
+
+    The bug being guarded against: prior versions iterated ``range(1, count+1)``
+    without the bound check and would index into an unindexable collection,
+    or trigger a different exception path. With Count==0 the loop body never
+    executes.
+    """
+    item_calls = {"n": 0}
+
+    class _EmptySyncObjects:
+        Count = 0
+
+        def Item(self, _idx):
+            item_calls["n"] += 1
+            raise AssertionError("Item() must not be called when Count==0")
+
+    class _Ns:
+        SyncObjects = _EmptySyncObjects()
+
+    class _Outlook:
+        def GetNamespace(self, _kind):
+            return _Ns()
+
+    # trigger_sync may log a warning, that's fine. Must not raise.
+    sfs.trigger_sync(_Outlook())
+    assert item_calls["n"] == 0
+
+
+def test_trigger_sync_when_getnamespace_itself_raises(caplog, monkeypatch):
+    """If ``outlook.GetNamespace`` itself raises (not just the loop body),
+    trigger_sync must log a warning, not swallow the exception silently.
+
+    Distinguish this from test_trigger_sync_logs_warning_on_exception: that
+    test fails inside GetNamespace. This test fails at a different layer to
+    exercise that the outer try/except covers the whole function call, not
+    just the inner iteration.
+    """
+    class _Outlook:
+        def GetNamespace(self, _kind):
+            raise _ComError("MAPI subsystem offline")
+
+    caplog.set_level(logging.WARNING, logger="send_from_staging")
+    sfs.trigger_sync(_Outlook())
+
+    warnings = [r for r in caplog.records if r.levelno == logging.WARNING]
+    assert any("trigger_sync" in r.getMessage() for r in warnings)
+
+
+def test_dispatch_block_keeps_mapi_subject_before_mail_subject_attr():
+    """Static guard: the MAPI PR_SUBJECT workaround must be applied BEFORE
+    ``mail.Subject = item['subject']`` in the dispatch block.
+
+    This protects the ordering invariant the watcher test
+    ``test_outlook_dispatch_sets_subject_via_mapi_first`` relies on: an
+    Exchange server that reads subject from the MAPI property must see the
+    intended subject even if the COM Subject wrapper gets recycled.
+    """
+    from pathlib import Path
+    src = (Path(__file__).resolve().parent.parent / "send_from_staging.py").read_text()
+    proptag = src.find("proptag/0x0037001F")
+    subject_setter = src.find("mail.Subject = item")
+    assert proptag > 0, "MAPI PR_SUBJECT workaround not present in production"
+    assert subject_setter > 0, "mail.Subject setter not found"
+    assert proptag < subject_setter, (
+        f"MAPI PR_SUBJECT (offset {proptag}) must be set BEFORE "
+        f"mail.Subject = ... (offset {subject_setter})"
+    )
