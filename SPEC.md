@@ -161,6 +161,9 @@ Windows se llama literalmente `USER`, la ruta real quedaba inalcanzable y la
 resolución devolvía `None` sin `WINDOWS_PYTHON_PATH`. Ahora la lista de
 candidatos vive en la función pura `_candidate_windows_python_paths()`, que
 devuelve **las dos** variantes (literal y sustituida, sin duplicados).
+Cerrado en `e31d097`, con 14 tests deterministas
+(`tests/test_windows_python_resolution.py`) que fallan (9 de 14) contra el
+código con el bug.
 
 ## Ciclo 2 — `MAPI_E_OBJECT_DELETED` en el gate de entrega · CERRADO
 
