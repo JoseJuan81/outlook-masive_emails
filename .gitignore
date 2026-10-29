@@ -29,3 +29,9 @@ preview/email_preview.html
 .vscode/
 *.swp
 .DS_Store
+
+# Claude Code
+.claude/cache/
+.claude/worktrees/
+.claude/settings.local.json
+.claude/planes/

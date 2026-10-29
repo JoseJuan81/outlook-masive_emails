@@ -5,15 +5,31 @@ from __future__ import annotations
 import argparse
 import email
 import email.header
+import os
 import re
 from pathlib import Path
 
+from env import load_project_env
+
+load_project_env()
 
 _PROJECT_ROOT = Path(__file__).resolve().parent
 BODY_TEMPLATE = _PROJECT_ROOT / "html/templates/body_html.html"
 SUBJECT_FILE = _PROJECT_ROOT / "html/templates/subject.txt"
 IMAGES_DIR = _PROJECT_ROOT / "html/images/body"
-DOWNLOADS_DIR = Path("/mnt/c/Users/domin/Downloads")
+
+
+def _default_downloads_dir() -> Path:
+    """Carpeta de Descargas de Windows del usuario actual, con fallback local."""
+    user = os.environ.get("USER", "")
+    if user:
+        candidate = Path(f"/mnt/c/Users/{user}/Downloads")
+        if candidate.exists():
+            return candidate
+    return Path.home() / "Downloads"
+
+
+DOWNLOADS_DIR = Path(os.environ.get("DOWNLOADS_DIR") or _default_downloads_dir())
 
 
 def _decode_payload(payload: bytes, declared_charset: str | None) -> str:
@@ -181,7 +197,8 @@ def main() -> None:
         default=None,
         help=(
             "Ruta al archivo .eml o .msg. "
-            "Si se omite, se usa el más reciente de C:/Users/domin/Downloads/"
+            "Si se omite, se usa el más reciente de la carpeta de Descargas "
+            "(DOWNLOADS_DIR)"
         ),
     )
     args = parser.parse_args()
