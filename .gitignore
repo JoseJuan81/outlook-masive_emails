@@ -35,3 +35,6 @@ preview/email_preview.html
 .claude/worktrees/
 .claude/settings.local.json
 .claude/planes/
+# Variante por typo: el directorio real es .claude/planes/. Se ignora para que
+# un artefacto creado por error no ensucie el árbol (bórralo con: rm -rf .claude/plans)
+.claude/plans/
