@@ -360,6 +360,12 @@ def main():
     emails = json.loads(_STAGING_FILE.read_text(encoding="utf-8"))
     images = get_images()
 
+    subjects = [e.get("subject", "<sin subject>") for e in emails[:5]]
+    print(
+        f"[send_from_staging] staging cargado: count={len(emails)} "
+        f"subjects={subjects} images={len(images)}"
+    )
+
     import win32com.client as win32  # Windows-only import
     outlook = win32.Dispatch("outlook.application")
     namespace = outlook.GetNamespace("MAPI")
