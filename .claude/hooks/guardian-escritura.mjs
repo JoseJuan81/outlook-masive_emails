@@ -14,7 +14,7 @@
 //
 // INVARIANTE DE NO-COLISIÓN: este hook solo habla cuando el destino NO es una
 // ruta permitida. validar-plan.mjs solo habla cuando el destino SÍ es
-// .claude/plans/*.json, que es ruta permitida. Jamás hablan los dos en el
+// .claude/planes/*.json, que es ruta permitida. Jamás hablan los dos en el
 // mismo evento.
 import { readFileSync } from "node:fs";
 import {

@@ -311,7 +311,7 @@ function modoVerificar(ruta) {
   if (planes.length === 0) {
     console.log(
       "No aplica: no hay planes que comprobar.\n" +
-        "  Se esperan planes en .claude/plans/ (.md o .json), o una ruta alterna como argumento.",
+        "  Se esperan planes en .claude/planes/ (.md o .json), o una ruta alterna como argumento.",
     );
     process.exit(3);
   }
@@ -387,7 +387,7 @@ function modoHeuristico(ruta) {
   if (planes.length === 0) {
     console.log(
       "No aplica: no hay planes que revisar. Lista de candidatos no hallados: vacía (0).\n" +
-        "  Se esperan planes en .claude/plans/ (.md o .json), o una ruta alterna como argumento.",
+        "  Se esperan planes en .claude/planes/ (.md o .json), o una ruta alterna como argumento.",
     );
     process.exit(0);
   }

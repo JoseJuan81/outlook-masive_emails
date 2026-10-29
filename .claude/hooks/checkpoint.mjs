@@ -144,7 +144,7 @@ if (accion === "crear") {
       "El árbol tiene cambios sin commitear, no se puede crear el checkpoint:\n" +
         sucios.map((linea) => `  ${linea}`).join("\n") +
         "\n\nHaz commit o stash antes. Los ficheros sin versionar (.claude/cache/, " +
-        ".claude/plans/, …) no cuentan: son artefactos por diseño.",
+        ".claude/planes/, …) no cuentan: son artefactos por diseño.",
     );
     process.exit(1);
   }

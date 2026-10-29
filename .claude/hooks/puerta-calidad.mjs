@@ -94,14 +94,24 @@ function leerConfig() {
     ? resolve(RAIZ, process.env.PUERTA_VERIFICACION)
     : CONFIG_POR_DEFECTO;
   if (!existsSync(ruta)) {
-    console.error(`Puerta de calidad: falta ${ruta}. No hay nada que verificar.`);
-    process.exit(0);
+    console.error(
+      `PUERTA DE CALIDAD: BLOQUEADO — falta la configuración ${ruta}.\n` +
+        `Sin ella no hay ningún comando que ejecutar: la puerta no puede comprobar nada y no puede pasar en verde.\n` +
+        `Cómo arreglarlo: restaurá el fichero desde git (git checkout -- ${ruta}) o corregilo a mano. ` +
+        `Si lo que falta es el presupuesto de lint, regenerá la línea base con: node .claude/hooks/linea-base.mjs generar (solo el usuario).`,
+    );
+    process.exit(2);
   }
   try {
     return JSON.parse(readFileSync(ruta, "utf8"));
   } catch (error) {
-    console.error(`Puerta de calidad: ${ruta} no es JSON válido: ${error.message}`);
-    process.exit(0);
+    console.error(
+      `PUERTA DE CALIDAD: BLOQUEADO — ${ruta} no es JSON válido: ${error.message}\n` +
+        `Sin configuración legible la puerta no puede comprobar nada y no puede pasar en verde.\n` +
+        `Cómo arreglarlo: restaurá el fichero desde git (git checkout -- ${ruta}) o corregí el JSON. ` +
+        `Si lo que falla es el presupuesto de lint, regenerá la línea base con: node .claude/hooks/linea-base.mjs generar (solo el usuario).`,
+    );
+    process.exit(2);
   }
 }
 

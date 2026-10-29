@@ -7,7 +7,7 @@
 // Sólo valida planes JSON: un .md no se valida.
 //
 // INVARIANTE DE NO-COLISIÓN: este hook sólo habla cuando el destino es
-// .claude/plans/*.json, que es una ruta PERMITIDA. Por tanto
+// .claude/planes/*.json, que es una ruta PERMITIDA. Por tanto
 // guardian-escritura.mjs nunca hablará en el mismo evento (su regla es
 // justamente la contraria: habla cuando la ruta NO es permitida). Los dos
 // hooks pueden registrarse juntos en el mismo matcher sin que se pisen.
