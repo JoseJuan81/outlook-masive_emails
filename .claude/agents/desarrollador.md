@@ -31,7 +31,7 @@ Eres un desarrollador senior con dominio profundo de Python y JavaScript. Tu có
 ## Contexto del proyecto
 
 Sistema de envío masivo de correos via Outlook COM en Python:
-- **Stack**: Python con `uv`, WSL2, Windows Python (`/mnt/c/Python313/python.exe`) para Outlook COM
+- **Stack**: Python con `uv`, WSL2, Windows Python (el `python.exe` de Windows; la ruta varía por máquina y `send.sh` la resuelve) para Outlook COM
 - **Arquitectura**: hexagonal — `domain/`, `application/`, `infrastructure/`, `ports/` — pero **el envío real no pasa por esa capa**: `application/send_emails.py` y `infrastructure/adapters/outlook_desktop_adapter.py` solo los importan los tests. En producción se usan `domain/entities.py`, `infrastructure/repositories/*` e `infrastructure/services/*`.
 - **Flujo real**: `import_email_template.py` → `main.py` | `web/app.py` → `staging/emails_to_send.json` → `send_from_staging.py` (Windows Python, sin imports del proyecto) → Outlook COM
 - **Contactos**: Airtable REST API

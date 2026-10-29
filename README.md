@@ -88,7 +88,11 @@
 
 > ⚠️ **Importante:** `win32com` solo funciona en **Windows nativo**. En WSL2 necesitás invocar el Python de Windows directamente (ver [🤖 Envío por línea de comandos](#-envío-por-línea-de-comandos-cli)).
 
-> 📌 **Tip sobre WSL2:** invocá `/mnt/c/Python313/python.exe` para que `win32com` encuentre la instalación COM real de Outlook.
+> 📌 **Tip sobre WSL2:** el intérprete de Windows se resuelve solo. Definí
+> `WINDOWS_PYTHON_PATH` en el `.env` (o exportalo) y usá `bash send.sh`. **No
+> hardcodees la ruta**: `/mnt/c/Users/TU_USUARIO/AppData/Local/Programs/Python/Python313/python.exe`
+> es un ejemplo con marcador, y la ruta real depende de la carpeta de perfil de
+> Windows y de la versión de Python instalada en cada máquina.
 
 ---
 
@@ -143,7 +147,8 @@ PREVIEW_EMAIL_BEFORE_SEND=true
 PREVIEW_OPEN_IN_BROWSER=true
 
 # Opcional: ruta al python.exe de Windows cuando corrés desde WSL2.
-# Solo necesaria si la auto-detección falla. Ejemplo:
+# La usa `send.sh` y la UI web para localizar el intérprete de Outlook COM.
+# Poné la ruta REAL de tu máquina (esto es un ejemplo con marcador).
 # WINDOWS_PYTHON_PATH=/mnt/c/Users/TU_USUARIO/AppData/Local/Programs/Python/Python313/python.exe
 # WINDOWS_PYTHON_PATH=
 ```
@@ -232,7 +237,8 @@ en dos runtimes distintos**:
 uv run main.py --view "Mi vista de Airtable"
 
 # 2. En Windows → lee el staging y envía vía win32com
-/mnt/c/Python313/python.exe send_from_staging.py
+#    (ruta de ejemplo: usá la REAL de tu máquina, no esta)
+/mnt/c/Users/TU_USUARIO/AppData/Local/Programs/Python/Python313/python.exe send_from_staging.py
 ```
 
 > ⚠️ **`main.py` NO se lanza con el Python de Windows.** Importa
@@ -240,16 +246,32 @@ uv run main.py --view "Mi vista de Airtable"
 > el Python de Windows no los tiene. Solo `send_from_staging.py` se ejecuta
 > con `python.exe`.
 
-`send.sh` es el wrapper que encadena ambos pasos:
+`send.sh` es el wrapper que encadena ambos pasos **y resuelve solo el
+intérprete de Windows**, para que no tengas que hardcodear una ruta que
+depende de cada máquina. El orden de resolución es:
+
+1. `WINDOWS_PYTHON_PATH` del entorno.
+2. `WINDOWS_PYTHON_PATH` del `.env` de la raíz del proyecto.
+3. Instalaciones habituales bajo `/mnt/c` (mismo criterio que la UI web).
 
 ```bash
-#!/bin/bash
-uv run main.py "$@" && /mnt/c/Python313/python.exe send_from_staging.py
-```
-
-```bash
+# Envío real: uv run main.py → python.exe send_from_staging.py
 bash send.sh --view "Mi vista de Airtable"
 ```
+
+Antes de un envío real podés comprobar la máquina **sin enviar nada**:
+
+```bash
+bash send.sh --dry-run --view "Mi vista de Airtable"
+```
+
+El `--dry-run` resuelve el intérprete, imprime el `uv run main.py` que
+ejecutaría, la ruta del intérprete de Windows que encontró y el staging que
+generaría, y **no envía ningún correo**. Si no encuentra el intérprete, falla
+con un mensaje que dice exactamente qué definir y dónde.
+
+> Si tu Windows está montado en otro sitio que `/mnt/c`, definí
+> `WINDOWS_MOUNT_ROOT` (por defecto `/mnt/c`).
 
 > La interface web es la recomendada para el uso diario (`🖥️ Levantar la
 > interface web`), pero esta ruta por CLI es una de las dos entradas reales
@@ -283,7 +305,7 @@ masive_emails/
 ├── main.py                # Entry point CLI: arma el staging (producción)
 ├── preview.py             # Genera preview/email_preview.html
 ├── import_email_template.py  # Importa .eml/.msg → html/templates/body_html.html
-├── send.sh                # Wrapper bash: uv run main.py && python.exe send_from_staging.py
+├── send.sh                # Wrapper bash: resuelve el Python de Windows, staging + envío (--dry-run = simula)
 ├── pyproject.toml         # Dependencias (uv)
 └── requirements.txt       # Pip-compatible snapshot
 ```
@@ -300,7 +322,7 @@ masive_emails/
 - **Outlook no se abre / `win32com` falla** — verificá que `OUTLOOK_SENDER_EMAIL` esté configurada y que Outlook Desktop esté instalado. `win32com` solo funciona en **Windows nativo**, no en WSL2 ni Linux.
 - **Airtable devuelve 401** — el `AIRTABLE_TOKEN` expiró o no tiene scope `data.records:read`. Regeneralo en [airtable.com/create/tokens](https://airtable.com/create/tokens).
 - **Las imágenes no se ven en el correo recibido** — confirmá que `html/images/body/` contiene los archivos y que `body_html.html` usa `{images[N]}` en los `src`.
-- **WSL2 no encuentra Outlook** — invocá el script con `/mnt/c/Python313/python.exe` en lugar del Python de WSL2.
+- **WSL2 no encuentra Outlook** — el envío necesita el Python **nativo de Windows** (con `pywin32`), no el de WSL2. Definí `WINDOWS_PYTHON_PATH` en el `.env` con la ruta real de tu máquina y usá `bash send.sh` (que la resuelve solo) o `bash send.sh --dry-run` para verificar la máquina sin enviar nada.
 - **`uv sync` falla con `pywin32`** — es normal fuera de Windows. Las dependencias condicionales se saltean automáticamente.
 - **`uv sync` desinstaló pytest** — volvés a la línea anterior: `uv sync` a secas poda el grupo `test` de este repo. Usá `uv sync --all-groups` y verificá con `uv run --no-sync pytest`.
 - **`ModuleNotFoundError: domain` al correr `main.py`** — lo estás lanzando con el Python de Windows. `main.py` necesita el venv de **uv**: corré `uv run main.py` (WSL). El único script que va con `python.exe` es `send_from_staging.py`.

@@ -31,7 +31,8 @@ Spec de entrada: **$1** (si está vacío, `SPEC.md`).
 4. **Nunca commitees** hasta que el usuario lo pida explícitamente.
 5. **Ningún subagente lleva la herramienta `Agent`.** Solo vos delegás.
 6. **Restricción de plataforma:** este proyecto corre en WSL2 con Python para
-   Outlook COM ejecutándose en Windows Python (`/mnt/c/Python313/python.exe`).
+   Outlook COM ejecutándose en Windows Python (el `python.exe` de Windows; la
+   ruta concreta varía por máquina y `send.sh` la resuelve).
    `send_from_staging.py` debe permanecer **standalone** (sin imports del
    proyecto) para evitar cache de `.pyc` de Windows Python. Esta restricción se
    hereda de `CLAUDE.md` y es no negociable.

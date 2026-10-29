@@ -68,7 +68,9 @@ EML/MSG → import_email_template.py → html/templates/body_html.html
 ### Entorno de ejecución
 
 Este proyecto corre en **WSL2** para desarrollo, pero el envío real se hace
-con **Windows Python** (`/mnt/c/Python313/python.exe`) para acceder a
+con **Windows Python** (por ejemplo
+`/mnt/c/Users/TU_USUARIO/AppData/Local/Programs/Python/Python313/python.exe` —
+ruta de ejemplo con marcador: la real depende de cada máquina) para acceder a
 Outlook COM. El script `send_from_staging.py` se ejecuta desde Windows Python,
 NO desde WSL Python.
 
@@ -80,14 +82,19 @@ en el venv de **uv** (WSL). El Python de Windows no los tiene: por eso
 # En WSL: preparar el staging
 uv run main.py
 
-# En Windows: enviar
-/mnt/c/Python313/python.exe send_from_staging.py
+# En Windows: enviar (ruta de ejemplo; usá la real de tu máquina)
+/mnt/c/Users/TU_USUARIO/AppData/Local/Programs/Python/Python313/python.exe send_from_staging.py
 ```
 
-`send.sh` es el wrapper que encadena ambos pasos:
+`send.sh` es el wrapper que encadena ambos pasos **y resuelve el intérprete de
+Windows** (mismo criterio que `web/app.py::_candidate_windows_python_paths()`):
+`$WINDOWS_PYTHON_PATH` del entorno → `WINDOWS_PYTHON_PATH` del `.env` →
+instalaciones habituales bajo `/mnt/c`. Si no encuentra ninguno, falla con un
+mensaje accionable. `--dry-run` comprueba la máquina **sin enviar nada**.
 
 ```bash
-uv run main.py "$@" && /mnt/c/Python313/python.exe send_from_staging.py
+bash send.sh --dry-run --view "Mi vista de Airtable"   # simula: no envía
+bash send.sh --view "Mi vista de Airtable"              # envío real
 ```
 
 ## Comandos canónicos

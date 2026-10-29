@@ -174,8 +174,8 @@ Este proyecto tiene restricciones específicas que todo el equipo respeta.
 Cualquier violación es defecto crítico:
 
 1. **`send_from_staging.py` permanece standalone.** Sin imports del proyecto.
-   Razón: evitar cache de `.pyc` de Windows Python
-   (`/mnt/c/Python313/python.exe`).
+   Razón: evitar cache de `.pyc` de Windows Python (`python.exe` de Windows; la
+   ruta concreta varía por máquina — `send.sh` la resuelve).
 2. **Paths absolutos** con `Path(__file__).resolve().parent`. Razón: el
    directorio de trabajo del usuario no es predecible.
 3. **Filtrar archivos `.Identifier`** al listar imágenes. Razón: WSL ve

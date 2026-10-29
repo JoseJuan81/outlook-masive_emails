@@ -221,11 +221,12 @@ Específicas de `outlook-masive_emails`, no presentes en otros proyectos:
    archivos sin este filtro, es un defecto que se va a manifestar en WSL.
 4. **Subject desde `html/templates/subject.txt`**, nunca hardcodeado. Si la
    tarea tocó el envío, verificar.
-5. **Windows Python independiente:** `send_from_staging.py` se ejecuta con
-   `/mnt/c/Python313/python.exe` (Windows Python con `pywin32`), NO con el
-   Python de WSL. `send.sh` existe y encadena `uv run main.py "$@" &&`
-   `/mnt/c/Python313/python.exe send_from_staging.py`: verificá que la
-   documentación diga lo mismo.
+5. **Windows Python independiente:** `send_from_staging.py` se ejecuta con el
+   `python.exe` de Windows (con `pywin32`), NO con el Python de WSL. `send.sh`
+   existe, resuelve ese intérprete (`WINDOWS_PYTHON_PATH` del entorno o del
+   `.env`, y si no, los candidatos bajo `/mnt/c`) y encadena `uv run main.py
+   "$@" &&` el envío: verificá que la documentación diga lo mismo. `--dry-run`
+   comprueba la resolución **sin enviar**.
 
 ---
 
