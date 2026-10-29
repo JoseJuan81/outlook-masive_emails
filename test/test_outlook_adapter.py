@@ -53,6 +53,7 @@ class FakeMailItem:
         self.To = None
         self.SendUsingAccount = None
         self.SaveSentMessageFolder = None
+        self.ReadReceiptRequested = False
         self.OriginatorDeliveryReportRequested = False
         self.Attachments = FakeAttachments()
         self.EntryID = "entry-123"
@@ -77,6 +78,22 @@ class FakeOutlook:
         return item
 
 
+class FakeMailItemConReciboActivo(FakeMailItem):
+    """Item que llega con el aviso de lectura ya activado."""
+
+    def __init__(self):
+        super().__init__()
+        self.ReadReceiptRequested = True
+
+
+class FakeOutlookConReciboActivo(FakeOutlook):
+    def CreateItem(self, item_type):
+        assert item_type == 0
+        item = FakeMailItemConReciboActivo()
+        self.created_items.append(item)
+        return item
+
+
 def test_outlook_adapter_uses_matching_send_account(monkeypatch):
     monkeypatch.setenv("OUTLOOK_SENDER_EMAIL", "sender@example.com")
     fake_outlook = FakeOutlook([
@@ -94,8 +111,25 @@ def test_outlook_adapter_uses_matching_send_account(monkeypatch):
     mail = fake_outlook.created_items[0]
     assert mail.SendUsingAccount.SmtpAddress == "sender@example.com"
     assert mail.send_called is True
+    assert mail.ReadReceiptRequested is False
     assert mail.OriginatorDeliveryReportRequested is False
     assert isinstance(mail.SaveSentMessageFolder, FakeSentFolder)
+
+
+def test_outlook_adapter_desactiva_el_aviso_de_lectura(monkeypatch):
+    """El adaptador debe apagar el recibo de lectura aunque el item llegue activado."""
+    monkeypatch.setenv("OUTLOOK_SENDER_EMAIL", "")
+    fake_outlook = FakeOutlookConReciboActivo([])
+    adapter = OutlookDesktopAdapter(outlook_client=fake_outlook)
+
+    adapter.send(EmailMessage(
+        subject="Test",
+        to="target@example.com",
+        html_body="<p>Hi</p>",
+    ))
+
+    mail = fake_outlook.created_items[0]
+    assert mail.ReadReceiptRequested is False
 
 
 def test_outlook_adapter_send_with_tracking_returns_info(monkeypatch):

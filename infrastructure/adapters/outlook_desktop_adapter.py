@@ -46,22 +46,10 @@ class OutlookDesktopAdapter(EmailSenderPort):
 
         mail.Subject = email.subject
         mail.To = email.to
-        # Apaga TODOS los flags que hacen que Outlook nos devuelva un correo de
-        # notificación tras el envío. Sin esto, llegan como correo:
-        #   - Read receipt   -> mail.ReadReceiptRequested
-        #   - Delivery receipt (MAPI PR_MESSAGE_FLAGS, bit 0x02) -> PropertyAccessor
-        # mail.OriginatorDeliveryReportRequested es la versión legacy del delivery
-        # receipt vía COM; lo dejamos en False por las dudas.
+        # Apaga los recibos que Outlook devuelve como correo tras el envío
+        # (aviso de lectura y acuse de entrega) mediante el object model.
         mail.ReadReceiptRequested = False
         mail.OriginatorDeliveryReportRequested = False
-        delivery_flag_prop = "http://schemas.microsoft.com/mapi/proptag/0x0C040003"
-        try:
-            current_flags = mail.PropertyAccessor.GetProperty(delivery_flag_prop) or 0
-            mail.PropertyAccessor.SetProperty(
-                delivery_flag_prop, int(current_flags) & ~0x00000002
-            )
-        except Exception as err:
-            logger.debug("No se pudo limpiar PR_MESSAGE_FLAGS delivery bit -> %r", err)
         self._attach_body_images(mail)
         mail.HTMLBody = email.html_body
         logger.debug("Outlook send start -> to=%r, subject=%r", email.to, email.subject)

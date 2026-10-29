@@ -417,12 +417,6 @@ def main():
             sent_folder_initial=sent_initial,
         ))
 
-
-
-
-
-
-
         try:
             mail = outlook.CreateItem(0)
             if account:
@@ -444,8 +438,8 @@ def main():
             # Si SetProperty falla, el ``mail.Subject`` posterior actúa
             # como fallback y el envío continúa sin romperse.
             mail.To = item["to"]
+            mail.ReadReceiptRequested = False  # sin esto Outlook avisa "su mensaje ha sido leído"
             mail.OriginatorDeliveryReportRequested = False
-
             for idx, img_path in enumerate(images):
                 att = mail.Attachments.Add(str(img_path))
                 att.PropertyAccessor.SetProperty(_CID_PROP, f"image_{idx}")
