@@ -6,44 +6,62 @@
     "Para adaptar el sistema a otro stack, se cambia SOLO este archivo — el hook",
     ".claude/hooks/puerta-calidad.mjs no conoce ningún comando concreto.",
     "",
-    "Perfil 'rapida': se dispara en cada SubagentStop de los agentes que escriben",
-    "código (desarrollador, tester). Coste medido esperado: <60 s con caché caliente.",
-    "Perfil 'completa': solo al cerrar cada ola y al final del ciclo. Añade línea base",
-    "y cobertura, y usa los comandos SIN caché a propósito: es la comprobación final y",
-    "una caché corrupta no debe poder mentir en ella.",
+    "TODOS los comandos usan `uv run --no-sync`: la puerta NUNCA muta el entorno del",
+    "proyecto (no sincroniza, no poda grupos). Un `uv sync` a secas desinstala el grupo",
+    "`test` de este repo, que es donde vive pytest.",
     "",
-    "Dependencias dev del proyecto (uv sync --extra test):",
-    "  - pytest >= 8.0 (pyproject.toml)",
-    "  - ruff (se agrega con: uv add --dev ruff)",
-    "  - mypy (se agrega con: uv add --dev mypy)",
+    "SEMÁNTICA DE `obligatorio` (no significa «opcional»):",
+    "  obligatorio: true  → si la comprobación NO puede ejecutarse (herramienta no",
+    "    instalada) es un FALLO que bloquea, con motivo accionable. Un obligatorio",
+    "    saltado en silencio es el fail-open que hay que cerrar.",
+    "  obligatorio: false → si la herramienta no está, se marca SALTADO y no bloquea.",
+    "  En ambos casos: si la herramienta está y el comando falla, es un FALLO que bloquea.",
+    "    La disponibilidad de la herramienta nunca suaviza el resultado.",
     "",
-    "'obligatorio: false' hace que la puerta salte el comando si no existe en vez de",
-    "romperse.",
+    "Perfil 'rapida': se dispara en cada SubagentStop de los agentes vigilados",
+    "(desarrollador, tester). Presupuesto 300+120+120 = 540 s < 900 s del evento.",
+    "Perfil 'completa': lo invoca el Coordinator a mano al cerrar cada ola (su",
+    "presupuesto no cabe en el timeout del hook, así que no se registra como hook).",
     "",
-    "Nota sobre 'tests': uv run pytest es el comando canónico. La puerta lo invoca",
-    "desde la raíz del repo. Los tests viven en test/ y tests/ (configurados en",
+    "Herramientas ausentes hoy en el entorno:",
+    "  - mypy: no se pidió. `tipos` va con obligatorio: false y se salta.",
+    "",
+    "El check de `lint` NO es un `ruff check` crudo: mide la regresión contra la",
+    "línea base congelada (.claude/linea-base.json) con `node .claude/hooks/",
+    "linea-base.mjs verificar`. Ruff ya está en el pyproject.toml (ruff>=0.17.3),",
+    "así que `lint` no se salta: sale con 1 (FALLA) mientras la línea base",
+    "congelada siga vacía.",
+    "",
+    "cobertura: no está en el perfil 'completa' porque exige el plugin pytest-cov, que no",
+    "está instalado. Con la semántica de 'obligatorio', una comprobación disponible que falla",
+    "BLOQUEA, y 'pytest --cov' siempre falla sin el plugin. Se activa con: uv add --dev pytest-cov",
+    "",
+    "Códigos de salida de los comandos: 0 = pasa · 1 = falla · 2 = error de ejecución ·",
+    "3 = no aplica (convención compartida con linea-base.mjs y drift-detection.mjs).",
+    "",
+    "Nota sobre 'tests': `uv run --no-sync pytest` es el comando canónico. La puerta lo",
+    "invoca desde la raíz del repo. Los tests viven en test/ y tests/ (configurados en",
     "pyproject.toml [tool.pytest.ini_options]).",
     "",
-    "Nota sobre 'lint': ruff no está agregado todavía al pyproject.toml. La puerta",
-    "lo salta si no está instalado (obligatorio: false). Cuando se agregue con",
-    "'uv add --dev ruff', cambiar 'obligatorio' a true y añadir formato en línea"
+    "'drift.raices' vacío = auto-detección: drift-detection.mjs busca solo las carpetas",
+    "del repo que contienen .py. Si algún día hay que fijar el alcance, se listan aquí."
   ],
   "perfiles": {
     "rapida": [
       {
         "etiqueta": "tests",
-        "comando": "uv run pytest",
+        "comando": "uv run --no-sync pytest",
         "obligatorio": true
       },
       {
         "etiqueta": "lint",
-        "comando": "uv run ruff check .",
+        "comando": "node .claude/hooks/linea-base.mjs verificar",
         "obligatorio": false,
-        "_comentario": "Solo corre si ruff está instalado (uv add --dev ruff)"
+        "_comentario": "Regresiones de lint contra la línea base congelada. Sale con 3 (no aplica) mientras ruff no esté instalado (uv add --dev ruff)"
       },
       {
         "etiqueta": "tipos",
-        "comando": "uv run mypy .",
+        "comando": "uv run --no-sync mypy .",
         "obligatorio": false,
         "_comentario": "Solo corre si mypy está instalado (uv add --dev mypy)"
       }
@@ -51,32 +69,26 @@
     "completa": [
       {
         "etiqueta": "tests",
-        "comando": "uv run pytest",
+        "comando": "uv run --no-sync pytest",
         "obligatorio": true
       },
       {
         "etiqueta": "lint",
-        "comando": "uv run ruff check .",
+        "comando": "node .claude/hooks/linea-base.mjs verificar",
         "obligatorio": false,
-        "_comentario": "Solo corre si ruff está instalado"
+        "_comentario": "Regresiones de lint contra la línea base congelada. Sale con 3 (no aplica) mientras ruff no esté instalado"
       },
       {
         "etiqueta": "tipos",
-        "comando": "uv run mypy .",
+        "comando": "uv run --no-sync mypy .",
         "obligatorio": false,
         "_comentario": "Solo corre si mypy está instalado"
       },
       {
-        "etiqueta": "linea-base",
-        "comando": "node .claude/hooks/linea-base.mjs verificar",
+        "etiqueta": "drift",
+        "comando": "node .claude/hooks/drift-detection.mjs verificar",
         "obligatorio": false,
-        "_comentario": "Solo se activa cuando se agregue ruff como dependencia obligatoria y se genere la línea base"
-      },
-      {
-        "etiqueta": "cobertura",
-        "comando": "uv run pytest --cov=. --cov-report=term-missing",
-        "obligatorio": false,
-        "_comentario": "Requiere uv add --dev pytest-cov"
+        "_comentario": "Sale con 3 (no aplica) si no hay planes que comprobar"
       }
     ]
   },
@@ -85,13 +97,17 @@
     "tester"
   ],
   "maxBloqueosPorAgente": 3,
-  "timeoutPorComandoMs": 600000,
+  "timeoutPorComandoMs": 300000,
   "_comentario_timeout": "Timeouts por tipo de comprobación. Permiten reducir el global sin riesgo de que tests colgados.",
   "timeouts": {
     "tests": 300000,
     "lint": 120000,
-    "tipos": 300000,
+    "tipos": 120000,
     "linea-base": 120000,
+    "drift": 120000,
     "cobertura": 600000
+  },
+  "drift": {
+    "raices": []
   }
 }

@@ -1,0 +1,29 @@
+{
+  "hooks": {
+    "SubagentStop": [
+      {
+        "matcher": "desarrollador|tester",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR:-$PWD}\"/.claude/hooks/puerta-calidad.mjs rapida",
+            "timeout": 900,
+            "statusMessage": "Puerta de calidad: ejecutando las comprobaciones…"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR:-$PWD}\"/.claude/hooks/guardian-config.mjs",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}
