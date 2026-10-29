@@ -1,8 +1,14 @@
 #!/usr/bin/env node
-// Guardián de Bash — hook PreToolUse para los roles que producen documentos.
+// Guardián de Bash — hook PreToolUse.
 //
 // guardian-escritura.mjs solo mira Write/Edit/…: un `echo "x" > main.py`
 // pasa el gate por completo. Este hook cubre esa fuga.
+//
+// El hook tiene dos modos según el rol del evento:
+//   - documentos (planificador, disenador-web, revisor): allowlist estricta.
+//   - vigilado (desarrollador, tester): escribe código de producción, así
+//     que solo se le nieban las rutas de la configuración de la puerta y
+//     los comandos que destruyen el árbol de trabajo o el entorno.
 //
 // REGLA DE ORO: se deniega SOLO cuando se puede identificar con certeza una
 // escritura prohibida. Ante la duda, se permite. Un falso positivo manda al
@@ -12,8 +18,9 @@
 // inline opacos (código embebido que escribe en disco y cuyo destino no se
 // puede analizar con certeza).
 import { readFileSync } from "node:fs";
-import { basename } from "node:path";
+import { basename, join } from "node:path";
 import {
+  RAIZ,
   PERMITIDAS,
   ARCHIVOS_PERMITIDOS,
   aAbsoluto,
@@ -40,12 +47,66 @@ try {
 const comando = entrada?.tool_input?.command;
 if (typeof comando !== "string" || !comando.trim()) process.exit(0);
 
+/* ─────────────────────────────── modo del rol ────────────────────────────── */
+
+/**
+ * Configuración de la puerta: rutas intocables para los agentes vigilados.
+ * Es la misma lista que guardian-config.mjs aplica a Write/Edit; aquí se
+ * aplica a Bash, que era el hueco que quedaba abierto.
+ */
+const RUTAS_PROTEGIDAS = [
+  ".claude/hooks/",
+  ".claude/verificacion.json",
+  ".claude/linea-base.json",
+  ".claude/settings.json",
+  ".claude/settings.local.json",
+];
+
+const CONFIG = join(RAIZ, ".claude/verificacion.json");
+
+/** ¿El evento viene de un agente vigilado por la puerta (desarrollador, tester)? */
+function esAgenteVigilado() {
+  const agente = entrada?.agent_type;
+  if (typeof agente !== "string" || !agente) return false;
+  try {
+    const config = JSON.parse(readFileSync(CONFIG, "utf8"));
+    const vigilados = Array.isArray(config.agentesVigilados) ? config.agentesVigilados : [];
+    return vigilados.includes(agente);
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Dos modos, porque las reglas son distintas:
+ *
+ *  - "documentos": el rol solo produce documentos; se le aplica la
+ *    allowlist de permitidas.mjs.
+ *  - "vigilado": el rol escribe código de producción y sus comandos de
+ *    Bash son legítimos; lo único que no puede tocar es la configuración
+ *    que lo juzga, ni con Bash.
+ */
+const MODO = esAgenteVigilado() ? "vigilado" : "documentos";
+
 /* ────────────────────────────── helpers de ruta ───────────────────────────── */
+
+/** ¿La ruta es parte de la configuración de la puerta? */
+function esConfigProtegida(destino) {
+  const rel = aRelativo(destino);
+  if (!rel || rel.startsWith("../")) return false;
+  return RUTAS_PROTEGIDAS.some((ruta) =>
+    ruta.endsWith("/") ? rel.startsWith(ruta) : rel === ruta,
+  );
+}
 
 /** Devuelve la ruta si hay que bloquearla, o null si se permite. */
 function rutaBloqueante(destino) {
   if (typeof destino !== "string" || !destino.trim()) return null;
   if (esNeutro(destino)) return null;
+  if (MODO === "vigilado") {
+    // Escribe código de producción: solo se le niegan las rutas de la puerta.
+    return esConfigProtegida(destino) ? destino : null;
+  }
   if (esPermitido(destino)) return null;
   return destino;
 }
@@ -79,7 +140,17 @@ function esRutaIndeterminada(destino) {
 function analizar(texto, profundidad = 0) {
   // 1) Escritores inline opacos: código embebido que escribe en disco.
   const opaco = detectarEscritorInline(texto);
-  if (opaco) return motivoEscritorOpaco(texto, opaco);
+  if (opaco) {
+    if (MODO === "vigilado") {
+      // El destino no se puede determinar con certeza. Solo se bloquea si el
+      // texto nombra una ruta de la puerta; el resto de escrituras inline
+      // son parte del trabajo de un rol que escribe código.
+      const nombrada = RUTAS_PROTEGIDAS.find((ruta) => texto.includes(ruta));
+      if (nombrada) return motivoRuta(texto, nombrada, "un escritor inline");
+      return null;
+    }
+    return motivoEscritorOpaco(texto, opaco);
+  }
 
   // 2) Sustituciones de comando: `$(...)` y backticks se analizan aparte.
   const { limpio, sustituciones } = extraerSustituciones(texto);
@@ -440,6 +511,18 @@ function detectarEscritorInline(texto) {
 /* ─────────────────────────────── motivos de bloqueo ────────────────────────── */
 
 function motivoRuta(comandoOriginal, destino, origen) {
+  if (MODO === "vigilado") {
+    return (
+      `Guardián de Bash: comando bloqueado.\n\n` +
+      `  ${comandoOriginal}\n\n` +
+      `Escribe en «${mostrarRuta(destino)}» (${origen}), que es parte de la configuración de la ` +
+      `puerta de calidad: un agente vigilado no puede reescribir los comandos que lo juzgan, ` +
+      `ni siquiera por Bash.\n\n` +
+      `Rutas protegidas:\n${RUTAS_PROTEGIDAS.map((r) => `  - ${r}`).join("\n")}\n\n` +
+      `Si el cambio es necesario, descríbelo en tu entregable: corresponde al humano o al ` +
+      `Coordinador (sesión principal) aplicarlo.`
+    );
+  }
   return (
     `Guardián de Bash: comando bloqueado.\n\n` +
     `  ${comandoOriginal}\n\n` +
@@ -453,6 +536,16 @@ function motivoRuta(comandoOriginal, destino, origen) {
 }
 
 function motivoSiempre(comandoOriginal, explicacion) {
+  if (MODO === "vigilado") {
+    return (
+      `Guardián de Bash: comando bloqueado.\n\n` +
+      `  ${comandoOriginal}\n\n` +
+      `${explicacion}\n\n` +
+      `Este comando puede destruir el árbol de trabajo o el entorno del proyecto, y eso no lo ` +
+      `puede hacer un agente vigilado. Si tu tarea lo exige, descríbelo en tu entregable: lo ` +
+      `aplica el humano o el Coordinador (sesión principal).`
+    );
+  }
   return (
     `Guardián de Bash: comando bloqueado.\n\n` +
     `  ${comandoOriginal}\n\n` +

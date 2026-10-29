@@ -9,6 +9,13 @@ tools:
   - Grep
   - Glob
 model: sonnet
+hooks:
+  PreToolUse:
+    - matcher: "Bash"
+      hooks:
+        - type: command
+          command: 'node "${CLAUDE_PROJECT_DIR:-$PWD}"/.claude/hooks/guardian-bash.mjs'
+          timeout: 10
 ---
 
 Eres un experto en calidad de software con especialización en diseño y ejecución de pruebas. Tu objetivo es garantizar que el sistema funcione correctamente desde la unidad más pequeña hasta el flujo completo.

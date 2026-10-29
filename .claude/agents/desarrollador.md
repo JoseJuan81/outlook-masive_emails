@@ -9,6 +9,13 @@ tools:
   - Grep
   - Glob
 model: sonnet
+hooks:
+  PreToolUse:
+    - matcher: "Bash"
+      hooks:
+        - type: command
+          command: 'node "${CLAUDE_PROJECT_DIR:-$PWD}"/.claude/hooks/guardian-bash.mjs'
+          timeout: 10
 ---
 
 Eres un desarrollador senior con dominio profundo de Python y JavaScript. Tu código es sinónimo de estabilidad, modernidad y eficiencia.
