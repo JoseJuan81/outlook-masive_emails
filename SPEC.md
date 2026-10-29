@@ -20,6 +20,15 @@ arreglo del envío.** Cerrado en `a888fee` (rango `2d40b8d..a888fee`, publicado
 en `origin/main`). Los tres ciclos anteriores están cerrados: su código ya está
 en `main` y sus planes quedan en `.claude/planes/`.
 
+El ciclo 3 tuvo un **endurecimiento posterior (D7, D8, D9)** que cerró tres
+huecos que la propia auditoría dejó abiertos: los prompts de los roles ya no
+son reescribibles por un agente vigilado (D7), la puerta juzga el árbol en el
+que el agente realmente trabaja, incluido un worktree aislado (D8), y la
+resolución del intérprete de Python de Windows ya no descarta la ruta real
+cuando el nombre de la carpeta de perfil de Windows coincide con el
+placeholder (D9). Ver
+[Endurecimiento posterior](#endurecimiento-posterior-d7-d8-y-d9).
+
 **No hay ciclo activo.** Para abrir uno, sigue las instrucciones de la última
 sección de este archivo.
 
@@ -113,6 +122,45 @@ rm .claude/linea-base.json && node .claude/hooks/linea-base.mjs generar
 La otra vía es arreglar los 80 hallazgos. Con la línea base regenerada, la
 puerta queda en verde y `lint` puede pasar a `"obligatorio": true` en los dos
 perfiles de `.claude/verificacion.json`.
+
+### Endurecimiento posterior (D7, D8 y D9)
+
+Tres huecos que la auditoría del ciclo 3 dejó abiertos, cerrados después.
+
+**D7 — los prompts de los roles también están protegidos.** `guardian-config.mjs`
+protegía `.claude/hooks/`, `.claude/verificacion.json`,
+`.claude/linea-base.json` y los `settings.json`, pero **no** `.claude/agents/`.
+Los hooks de cada rol se registran en **su propio** frontmatter: un agente
+vigilado (`desarrollador`, `tester`) que pudiera reescribir `.claude/agents/`
+podía quitarse a sí mismo el bloque `hooks:` que lo protege y desarmar la
+puerta entera. La exclusión anterior («en una ola posterior hay que poder
+corregir la documentación de los agentes») no hace falta: el hook solo
+restringe a `agentesVigilados`, y la sesión principal (Coordinador) no está
+restringida y sigue pudiendo corregir los prompts por la vía correcta.
+
+La protección es **doble**: `guardian-config.mjs` la aplica a
+Write/Edit/NotebookEdit y `guardian-bash.mjs` la aplica a Bash en su modo
+«vigilado». Con solo una de las dos, el hueco seguiría abierto por la otra
+vía (`echo x > .claude/agents/desarrollador.md` era el mismo bypass por
+Bash).
+
+**D8 — la puerta juzga el árbol en el que se trabaja.** El evento
+`SubagentStop` trae `cwd` («current working directory when the hook is
+invoked»; si Claude entra en un worktree, es la raíz del worktree). Antes la
+puerta juzgaba siempre el checkout donde vive el script: un agente que
+trabajaba en un worktree aislado era evaluado contra un árbol **sin sus
+cambios**, así que la puerta le aprobaría todo. Ahora usa ese `cwd` como raíz
+de trabajo cuando contiene su propio `.claude/verificacion.json` (es decir,
+cuando es un checkout) y el checkout principal en cualquier otro caso.
+
+**D9 — la resolución del intérprete de Python de Windows.** En `web/app.py`,
+`_resolve_windows_python()` construía sus candidatos con el placeholder
+`/USER/` y lo sustituía **en sitio** (`c.replace("/USER/", f"/{user}/")`),
+descartando la variante literal. En una máquina donde la carpeta de perfil de
+Windows se llama literalmente `USER`, la ruta real quedaba inalcanzable y la
+resolución devolvía `None` sin `WINDOWS_PYTHON_PATH`. Ahora la lista de
+candidatos vive en la función pura `_candidate_windows_python_paths()`, que
+devuelve **las dos** variantes (literal y sustituida, sin duplicados).
 
 ## Ciclo 2 — `MAPI_E_OBJECT_DELETED` en el gate de entrega · CERRADO
 

@@ -353,8 +353,10 @@ Viven en el `hooks:` del frontmatter de los agentes:
 > configuración que los juzga: `guardian-config.mjs` solo cubre
 > `Write`/`Edit`/`NotebookEdit`.
 >
-> `guardian-config.mjs` protege también `.claude/agents/`. Los hooks de cada
-> rol se registran en **su propio** frontmatter: un agente vigilado que
+> `guardian-config.mjs` protege también `.claude/agents/`, y `guardian-bash.mjs`
+> lo niega en su modo «vigilado» por la misma vía (un `echo x >
+> .claude/agents/desarrollador.md` sería el mismo hueco por Bash). Los hooks de
+> cada rol se registran en **su propio** frontmatter: un agente vigilado que
 > pudiera reescribir `.claude/agents/` podría quitarse a sí mismo el bloque
 > `hooks:` que lo protege y desarmar la puerta entera. La sesión principal
 > (Coordinador) no está restringida y sigue pudiendo corregir los prompts de

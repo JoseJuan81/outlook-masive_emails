@@ -56,6 +56,11 @@ if (typeof comando !== "string" || !comando.trim()) process.exit(0);
  */
 const RUTAS_PROTEGIDAS = [
   ".claude/hooks/",
+  // Los hooks de cada rol se registran en SU frontmatter: si un agente
+  // vigilado puede reescribir `.claude/agents/`, puede quitarse a sí mismo el
+  // `hooks:` que lo protege y desarmar la puerta. Por eso esta ruta está en
+  // la lista de Write/Edit (guardian-config.mjs) y también en la de Bash.
+  ".claude/agents/",
   ".claude/verificacion.json",
   ".claude/linea-base.json",
   ".claude/settings.json",

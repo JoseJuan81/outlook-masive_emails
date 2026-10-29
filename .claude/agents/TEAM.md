@@ -130,8 +130,9 @@ principal en cualquier otro caso. Sin esto, un agente que trabaja en un
 worktree aislado sería juzgado contra el checkout principal, que no contiene
 sus cambios: la puerta le aprobaría todo.
 
-`.claude/agents/` está entre las rutas protegidas de `guardian-config.mjs`:
-los hooks de cada rol se registran en **su** frontmatter, así que un agente
+`.claude/agents/` está entre las rutas protegidas de `guardian-config.mjs`
+(Write/Edit) **y** de `guardian-bash.mjs` en su modo «vigilado» (Bash): los
+hooks de cada rol se registran en **su** frontmatter, así que un agente
 vigilado que pudiera reescribir `.claude/agents/` podría quitarse a sí mismo
 el `hooks:` que lo protege. La sesión principal (Coordinador) no está
 restringida y sigue pudiendo corregir los prompts de los roles.

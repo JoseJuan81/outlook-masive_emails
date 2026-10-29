@@ -544,7 +544,7 @@ El hook tiene **dos modos**, según el rol del evento. El modo se decide con
 | Modo | Roles | Regla |
 |---|---|---|
 | **documentos** | `planificador`, `disenador-web`, `revisor` | Allowlist estricta: solo se permite escribir en `.claude/planes/`, `.claude/disenos/`, `.claude/cache/`, `docs/` y `SPEC.md`. |
-| **vigilado** | `desarrollador`, `tester` | Escriben código de producción, así que sus comandos de Bash son legítimos: se les niegan **las rutas de la configuración de la puerta** (`.claude/hooks/`, `.claude/verificacion.json`, `.claude/linea-base.json`, los `settings.json`) y los comandos que destruyen el árbol o el entorno. |
+| **vigilado** | `desarrollador`, `tester` | Escriben código de producción, así que sus comandos de Bash son legítimos: se les niegan **las rutas de la configuración de la puerta** (`.claude/hooks/`, `.claude/agents/`, `.claude/verificacion.json`, `.claude/linea-base.json`, los `settings.json`) y los comandos que destruyen el árbol o el entorno. |
 
 Analiza el comando y **deniega** las escrituras prohibidas: redirecciones
 (`echo x > domain/entities.py`), `sed -i`, `rm -rf`, `git reset --hard`,
@@ -573,14 +573,20 @@ Impide que un agente vigilado reescriba la configuración de la puerta que lo
 juzga. Rutas protegidas:
 
 - `.claude/hooks/`
+- `.claude/agents/`
 - `.claude/verificacion.json`
 - `.claude/linea-base.json`
 - `.claude/settings.json`
 - `.claude/settings.local.json`
 
-`.claude/agents/` **no** está protegido a propósito: en una ola posterior hay
-que poder corregir la documentación de los agentes, incluidos sus hooks
-declarados.
+`.claude/agents/` **sí** está protegido. Antes no lo estaba, con una exclusión
+deliberada («en una ola posterior hay que poder corregir la documentación de
+los agentes»). El problema es que los hooks de cada rol se registran en **su**
+frontmatter: un agente vigilado que puede reescribir `.claude/agents/` puede
+quitarse a sí mismo el `hooks:` que lo protege y desarmar la puerta. La
+exclusión no hace falta: este hook solo restringe a `agentesVigilados`
+(`desarrollador`, `tester`); la sesión principal (Coordinador) no está
+restringida y sigue pudiendo corregir los prompts de los agentes.
 
 ### validar-plan.mjs
 
