@@ -19,6 +19,7 @@ load_project_env()
 
 _PROJECT_ROOT = Path(__file__).resolve().parent
 _SUBJECT_FILE = _PROJECT_ROOT / "html/templates/subject.txt"
+_BODY_FILE = _PROJECT_ROOT / "html/templates/body_html.html"
 _STAGING_FILE = _PROJECT_ROOT / "staging/emails_to_send.json"
 
 
@@ -27,6 +28,14 @@ def _load_subject() -> str:
         return _SUBJECT_FILE.read_text(encoding="utf-8").strip()
     raise SystemExit(
         "No se encontró el asunto. Ejecuta primero:\n  uv run import_email_template.py"
+    )
+
+
+def _load_body() -> str:
+    if _BODY_FILE.exists():
+        return _BODY_FILE.read_text(encoding="utf-8")
+    raise SystemExit(
+        "No se encontró el cuerpo del correo. Ejecuta primero:\n  uv run import_email_template.py"
     )
 
 
@@ -53,8 +62,7 @@ def run(airtable_view: str | None = None, test_email: str | None = None) -> None
     setup_logging()
 
     subject = _load_subject()
-    builder = HtmlEmailBuilder()
-    builder.build_email()
+    builder = HtmlEmailBuilder(_load_body())
 
     base_repo = MultiContactRepository([AirtableContactRepository(view=airtable_view)])
     repo = _TestEmailRepository(base_repo, test_email) if test_email else base_repo
