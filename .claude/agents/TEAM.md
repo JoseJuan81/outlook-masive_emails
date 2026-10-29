@@ -107,7 +107,7 @@ Los hooks se registran en **dos sitios distintos**, y por eso están separados.
 | Evento | Matcher | Hook | Qué hace |
 | ------ | ------- | ---- | -------- |
 | `SubagentStop` | `desarrollador\|tester` | `puerta-calidad.mjs rapida` | Ejecuta los comandos del perfil `rapida` y **bloquea** al subagente (código de salida 2 + motivo en stderr) si alguno falla |
-| `PreToolUse` | `Write\|Edit\|MultiEdit\|NotebookEdit` | `guardian-config.mjs` | Impide que un agente **vigilado** (`desarrollador`, `tester`) reescriba la configuración de la puerta que lo juzga: `.claude/hooks/`, `.claude/verificacion.json`, `.claude/linea-base.json`, `.claude/settings.json`, `.claude/settings.local.json` |
+| `PreToolUse` | `Write\|Edit\|MultiEdit\|NotebookEdit` | `guardian-config.mjs` | Impide que un agente **vigilado** (`desarrollador`, `tester`) reescriba la configuración de la puerta que lo juzga: `.claude/hooks/`, `.claude/agents/`, `.claude/verificacion.json`, `.claude/linea-base.json`, `.claude/settings.json`, `.claude/settings.local.json` |
 
 ### En el frontmatter del agente (aplican solo mientras ese agente está activo)
 
@@ -119,6 +119,22 @@ Los hooks se registran en **dos sitios distintos**, y por eso están separados.
 
 Los comandos `checkpoint.mjs`, `drift-detection.mjs` y `linea-base.mjs` **no son
 hooks**: son CLI que el Coordinador invoca a mano.
+
+### La puerta juzga el árbol en el que se trabaja
+
+El evento `SubagentStop` trae `cwd` («current working directory when the hook
+is invoked»; si Claude entra en un worktree, es la raíz del worktree). La
+puerta lo usa como raíz de trabajo cuando contiene su propio
+`.claude/verificacion.json` —es decir, cuando es un checkout— y el checkout
+principal en cualquier otro caso. Sin esto, un agente que trabaja en un
+worktree aislado sería juzgado contra el checkout principal, que no contiene
+sus cambios: la puerta le aprobaría todo.
+
+`.claude/agents/` está entre las rutas protegidas de `guardian-config.mjs`:
+los hooks de cada rol se registran en **su** frontmatter, así que un agente
+vigilado que pudiera reescribir `.claude/agents/` podría quitarse a sí mismo
+el `hooks:` que lo protege. La sesión principal (Coordinador) no está
+restringida y sigue pudiendo corregir los prompts de los roles.
 
 **Límite conocido — workspace trust**: los hooks de proyecto **NO se ejecutan**
 si la carpeta no es confiable en Claude Code. Sin trust, la puerta no bloquea

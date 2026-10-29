@@ -420,7 +420,21 @@ Dos eventos, dos hooks:
 | Evento | Matcher | Hook | Qué hace |
 | ------ | ------- | ---- | -------- |
 | `SubagentStop` | `desarrollador\|tester` | `puerta-calidad.mjs rapida` | Ejecuta los comandos del perfil `rapida` y bloquea si fallan |
-| `PreToolUse` | `Write\|Edit\|MultiEdit\|NotebookEdit` | `guardian-config.mjs` | Impide que un agente vigilado reescriba la configuración de la puerta |
+| `PreToolUse` | `Write\|Edit\|MultiEdit\|NotebookEdit` | `guardian-config.mjs` | Impide que un agente vigilado reescriba la configuración de la puerta (`.claude/hooks/`, `.claude/agents/`, `.claude/verificacion.json`, `.claude/linea-base.json`, `.claude/settings.json`, `.claude/settings.local.json`) |
+
+`.claude/agents/` está protegida a propósito: los hooks de cada rol se
+registran en **su propio** frontmatter, así que un agente vigilado que
+pudiera reescribir `.claude/agents/` podría quitarse a sí mismo el `hooks:` que
+lo protege y desarmar la puerta. La sesión principal (Coordinador) no está
+restringida y sigue pudiendo corregir los prompts de los roles.
+
+**La puerta juzga el árbol en el que se trabaja.** El evento `SubagentStop`
+trae `cwd` («current working directory when the hook is invoked»; si Claude
+entra en un worktree, es la raíz del worktree). La puerta lo usa como raíz de
+trabajo cuando contiene su propio `.claude/verificacion.json` —es decir,
+cuando es un checkout— y el checkout principal en cualquier otro caso. Sin
+esto, un agente que trabaja en un worktree aislado sería juzgado contra el
+checkout principal, que no contiene sus cambios: la puerta le aprobaría todo.
 
 **Perfiles (en `.claude/verificacion.json`)** — el hook no conoce ningún
 comando concreto: los lee de ahí. Ese fichero es la fuente de verdad.

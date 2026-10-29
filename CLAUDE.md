@@ -313,6 +313,14 @@ El perfil `rapida` suma 300 + 120 + 120 = **540 s**, dentro del timeout de
 900 s del evento. El perfil `completa` suma más y **no** se registra como
 hook: lo invoca el Coordinator a mano al cerrar cada ola.
 
+**La puerta juzga el árbol en el que se trabaja.** El evento trae `cwd`
+(«current working directory when the hook is invoked»; si Claude entra en un
+worktree, es la raíz del worktree). La puerta usa ese directorio como raíz de
+trabajo cuando contiene su propio `.claude/verificacion.json` —es decir, cuando
+es un checkout— y el checkout principal en cualquier otro caso. Sin esto, un
+agente que trabaja en un worktree aislado sería juzgado contra el checkout
+principal, que no contiene sus cambios: la puerta le aprobaría todo.
+
 ### Semántica de `obligatorio`
 
 No significa «opcional»:
@@ -344,6 +352,13 @@ Viven en el `hooks:` del frontmatter de los agentes:
 > —los roles vigilados por la puerta— podían reescribir **por Bash** la
 > configuración que los juzga: `guardian-config.mjs` solo cubre
 > `Write`/`Edit`/`NotebookEdit`.
+>
+> `guardian-config.mjs` protege también `.claude/agents/`. Los hooks de cada
+> rol se registran en **su propio** frontmatter: un agente vigilado que
+> pudiera reescribir `.claude/agents/` podría quitarse a sí mismo el bloque
+> `hooks:` que lo protege y desarmar la puerta entera. La sesión principal
+> (Coordinador) no está restringida y sigue pudiendo corregir los prompts de
+> los roles.
 
 ### CLI que el Coordinator invoca a mano
 

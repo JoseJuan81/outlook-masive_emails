@@ -9,7 +9,7 @@
 //   node .claude/hooks/puerta-calidad.mjs [rapida|completa]
 //
 // En hook, Claude Code pasa por stdin el JSON del evento (session_id, agent_id,
-// agent_type). Si stdin es una TTY no se lee nunca: el script se quedaría
+// agent_type, cwd). Si stdin es una TTY no se lee nunca: el script se quedaría
 // esperando datos que no llegan.
 //
 // Salidas: 0 = pasa (o se salta) · 2 = bloquea, con el motivo en stderr.
@@ -29,8 +29,8 @@ try {
   RAIZ = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 }
 
-const CONFIG_POR_DEFECTO = join(RAIZ, ".claude/verificacion.json");
-const DIR_ESTADO = join(RAIZ, ".claude/cache/bloqueos");
+let CONFIG_POR_DEFECTO = join(RAIZ, ".claude/verificacion.json");
+let DIR_ESTADO = join(RAIZ, ".claude/cache/bloqueos");
 
 /** Timeout del evento SubagentStop (segundos) declarado en .claude/settings.json. */
 const TIMEOUT_EVENTO_MS = 900_000;
@@ -382,6 +382,31 @@ Restricciones de plataforma que no se negocian:
 // ---------------------------------------------------------------------------
 
 const entrada = await leerEntrada();
+
+// Raíz de trabajo.
+//
+// RAIZ es el checkout donde vive la puerta. Si el agente trabaja en un
+// worktree aislado, el árbol que hay que juzgar es el del worktree: el
+// checkout principal no contiene sus cambios y el gate se los passaría todos.
+// El evento trae `cwd` («current working directory when the hook is invoked»;
+// si Claude entra en un worktree, es la raíz del worktree).
+//
+// Solo se acepta un `cwd` que contenga su propia `.claude/verificacion.json`:
+// eso lo delata como checkout. Cualquier otro directorio se ignora y se usa
+// RAIZ, como hasta ahora.
+const cwdEvento = typeof entrada.cwd === "string" ? entrada.cwd.trim() : "";
+if (cwdEvento) {
+  const raizAlternativa = resolve(cwdEvento);
+  if (
+    raizAlternativa !== RAIZ &&
+    existsSync(join(raizAlternativa, ".claude/verificacion.json"))
+  ) {
+    RAIZ = raizAlternativa;
+    CONFIG_POR_DEFECTO = join(RAIZ, ".claude/verificacion.json");
+    DIR_ESTADO = join(RAIZ, ".claude/cache/bloqueos");
+  }
+}
+
 const config = leerConfig();
 const perfil = process.argv[2] ?? "rapida";
 const comprobaciones = config.perfiles?.[perfil];

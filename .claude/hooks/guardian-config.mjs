@@ -9,10 +9,14 @@
 // Solo aplica a los agentes vigilados: la sesión principal y el resto de roles
 // pueden corregir la configuración de la puerta.
 //
-// EXCLUSIÓN DELIBERADA: .claude/agents/ NO está protegido. En una ola
-// posterior hay que poder corregir la documentación de los agentes (incluidos
-// sus prompts y sus hooks declarados); protegerlo dejaría el sistema
-// imposible de arreglar sin intervención manual.
+// `.claude/agents/` SÍ está protegido. Antes no lo estaba, con una exclusión
+// deliberada: «en una ola posterior hay que poder corregir la documentación de
+// los agentes». El problema es que los hooks de cada rol se registran en SU
+// frontmatter: un agente vigilado que puede reescribir `.claude/agents/` puede
+// quitarse a sí mismo el `hooks:` que lo protege y desarmar la puerta.
+// La exclusión no hace falta: este hook solo restringe a `agentesVigilados`
+// (`desarrollador`, `tester`). La sesión principal (Coordinador) NO está
+// restringida y sigue pudiendo corregir los prompts de los agentes.
 //
 // INVARIANTE DE NO-COLISIÓN: este hook y guardian-escritura.mjs pueden hablar
 // en el mismo evento, pero cada proceso imprime su propio JSON y Claude Code
@@ -28,6 +32,7 @@ const HERRAMIENTAS = ["Write", "Edit", "MultiEdit", "NotebookEdit"];
 /** Configuración de la puerta: rutas exactas (o carpetas) intocables. */
 const RUTAS_PROTEGIDAS = [
   ".claude/hooks/",
+  ".claude/agents/",
   ".claude/verificacion.json",
   ".claude/linea-base.json",
   ".claude/settings.json",
