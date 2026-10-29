@@ -96,8 +96,11 @@ def run(airtable_view: str | None = None, test_email: str | None = None) -> None
         first_name = contact.name.split()[0].title() if contact.name else "Estimado"
         emails.append({"to": contact.email, "subject": subject, "html": builder.build(first_name)})
 
-    _STAGING_FILE.parent.mkdir(exist_ok=True)
-    _STAGING_FILE.write_text(json.dumps(emails, ensure_ascii=False, indent=2), encoding="utf-8")
+    _STAGING_FILE.parent.mkdir(parents=True, exist_ok=True)
+    with open(_STAGING_FILE, "w", encoding="utf-8") as fh:
+        fh.write(json.dumps(emails, ensure_ascii=False, indent=2))
+        fh.flush()
+        os.fsync(fh.fileno())
     print(f"\n{len(emails)} correo(s) preparados. Ejecutando envío...")
 
 

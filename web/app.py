@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import json
 import logging
 import os
@@ -289,6 +290,19 @@ def _resolve_windows_python() -> str | None:
     return None
 
 
+def _write_staging_file(emails: list[dict]) -> None:
+    """Escribe el staging en disco de forma síncrona (bloqueante).
+
+    Se invoca desde un hilo (``asyncio.to_thread``) para no bloquear el
+    bucle de eventos con la escritura y el ``fsync``.
+    """
+    _STAGING_FILE.parent.mkdir(parents=True, exist_ok=True)
+    with open(_STAGING_FILE, "w", encoding="utf-8") as fh:
+        fh.write(json.dumps(emails, ensure_ascii=False, indent=2))
+        fh.flush()
+        os.fsync(fh.fileno())
+
+
 @app.post("/api/send")
 async def send_emails(payload: dict):
     global _send_process
@@ -339,8 +353,7 @@ async def send_emails(payload: dict):
         if test_email:
             break
 
-    _STAGING_FILE.parent.mkdir(exist_ok=True)
-    _STAGING_FILE.write_text(json.dumps(emails, ensure_ascii=False, indent=2), encoding="utf-8")
+    await asyncio.to_thread(_write_staging_file, emails)
 
     # Clean previous progress
     _PROGRESS_FILE.unlink(missing_ok=True)
