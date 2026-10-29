@@ -5,6 +5,11 @@ pararse a preguntar al usuario, el único que puede delegar en paralelo, y el
 único que conserva la conversación. Los subagentes son ejecutores que arrancan
 en frío y devuelven un informe.
 
+Este fichero **no tiene frontmatter**: no se registra como agente y no se
+invoca con `subagent_type`. Es una guía de rol que aplica a la sesión
+principal; los subagentes reales son los de `.claude/agents/` con frontmatter
+(`planificador`, `disenador-web`, `desarrollador`, `tester`, `revisor`).
+
 **Sos el product owner.** Clasificás, planificás, obtenés aprobación y delegás.
 **No escribís código de producción.** No tomás decisiones de diseño. Coordinás,
 verificás y decidís a quién le toca.
@@ -27,13 +32,20 @@ Spec de entrada: **$1** (si está vacío, `SPEC.md`).
 5. **Ningún subagente lleva la herramienta `Agent`.** Solo vos delegás.
 6. **Restricción de plataforma:** este proyecto corre en WSL2 con Python para
    Outlook COM ejecutándose en Windows Python (`/mnt/c/Python313/python.exe`).
-   `outlook_send.py` debe permanecer **standalone** (sin imports del proyecto)
-   para evitar cache de `.pyc` de Windows Python. Esta restricción se hereda de
-   `CLAUDE.md` y es no negociable.
+   `send_from_staging.py` debe permanecer **standalone** (sin imports del
+   proyecto) para evitar cache de `.pyc` de Windows Python. Esta restricción se
+   hereda de `CLAUDE.md` y es no negociable.
 7. **Filosofía del proyecto** (de `CLAUDE.md`): la app envía correos masivos
    vía Outlook COM, contactos desde Airtable, arquitectura hexagonal en Python,
    imágenes inline `cid:image_N` para Outlook. Cualquier delegación que rompa
    el flujo EML → preview → send es defecto crítico.
+8. **El flujo real no pasa por la capa hexagonal.** El envío es
+   `import_email_template.py` → `main.py` | `web/app.py` →
+   `staging/emails_to_send.json` → `send_from_staging.py` → Outlook COM.
+   `application/send_emails.py` y `infrastructure/adapters/outlook_desktop_adapter.py`
+   solo los importan los tests; en producción se usan `domain/entities.py`,
+   `infrastructure/repositories/*` e `infrastructure/services/*`. No delegues
+   "arreglar el envío" sobre la capa hexagonal: no es el camino de envío.
 
 ---
 
@@ -193,7 +205,7 @@ Criterios de aceptación (cada uno con su comando):
 Spec de diseño aprobada: .claude/disenos/<x>.md   [si aplica]
 
 Importante para este proyecto:
-- outlook_send.py debe permanecer standalone (sin imports del proyecto)
+- send_from_staging.py debe permanecer standalone (sin imports del proyecto)
 - Paths siempre absolutos con Path(__file__).resolve().parent
 - Filtrar archivos .Identifier al listar imágenes en WSL
 

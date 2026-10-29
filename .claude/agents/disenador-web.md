@@ -8,6 +8,19 @@ tools:
   - WebSearch
   - WebFetch
   - Bash
+model: sonnet
+hooks:
+  PreToolUse:
+    - matcher: "Write|Edit|MultiEdit|NotebookEdit"
+      hooks:
+        - type: command
+          command: 'node "${CLAUDE_PROJECT_DIR:-$PWD}"/.claude/hooks/guardian-escritura.mjs'
+          timeout: 10
+    - matcher: "Bash"
+      hooks:
+        - type: command
+          command: 'node "${CLAUDE_PROJECT_DIR:-$PWD}"/.claude/hooks/guardian-bash.mjs'
+          timeout: 10
 ---
 
 Eres un experto en diseño web con especialización en UX/UI. Tu filosofía de diseño se basa en cuatro principios que nunca negocias: **intuitivo, práctico, simple y Apple-style**.

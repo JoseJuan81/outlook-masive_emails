@@ -5,10 +5,21 @@ tools: Read, Grep, Glob, Bash, Write
 model: opus
 hooks:
   PreToolUse:
-    - matcher: "Write|Edit|NotebookEdit"
+    - matcher: "Write|Edit|MultiEdit|NotebookEdit"
       hooks:
         - type: command
-          command: node .claude/hooks/guardian-escritura.mjs
+          command: 'node "${CLAUDE_PROJECT_DIR:-$PWD}"/.claude/hooks/guardian-escritura.mjs'
+          timeout: 10
+    - matcher: "Bash"
+      hooks:
+        - type: command
+          command: 'node "${CLAUDE_PROJECT_DIR:-$PWD}"/.claude/hooks/guardian-bash.mjs'
+          timeout: 10
+    - matcher: "Write"
+      hooks:
+        - type: command
+          command: 'node "${CLAUDE_PROJECT_DIR:-$PWD}"/.claude/hooks/validar-plan.mjs'
+          timeout: 10
 ---
 
 # Planificador — outlook-masive_emails
@@ -75,10 +86,10 @@ descomposición:
   rutas y templates; dos tareas que modifiquen la misma ruta casi nunca van en
   la misma ola.
 - **`staging/`** es donde `main.py` deja el JSON de envío antes de que
-  `outlook_send.py` lo consuma. **Regla dura:** `outlook_send.py` debe
-  permanecer standalone (sin imports del proyecto) para evitar cache de
-  `.pyc` de Windows Python. Cualquier tarea que toque `outlook_send.py` debe
-  declarar que NO agrega imports del proyecto.
+  `send_from_staging.py` lo consuma. **Regla dura:** `send_from_staging.py`
+  debe permanecer standalone (sin imports del proyecto) para evitar cache de
+  `.pyc` de Windows Python. Cualquier tarea que toque `send_from_staging.py`
+  debe declarar que NO agrega imports del proyecto.
 - **`import_email_template.py`** es el parser de EML/MSG. Crítico: lo leen
   varios módulos. Si una tarea cambia su firma, las consumidoras van en la
   ola siguiente.
@@ -88,7 +99,7 @@ descomposición:
 
 ### Restricciones de plataforma (no negociables)
 
-1. **`outlook_send.py` standalone** — no debe tener `import` desde el proyecto
+1. **`send_from_staging.py` standalone** — no debe tener `import` desde el proyecto
    (`from domain...`, `from application...`, etc.). Solo stdlib + `win32com`.
 2. **Paths absolutos** — siempre `Path(__file__).resolve().parent` para evitar
    problemas con el directorio de trabajo.
@@ -191,7 +202,7 @@ Si sale código 1, tu plan está mal cortado. Arreglalo antes de entregar.
   test, y se pisarían.
 - **Si una tarea toca UI** (`web/`, `html/`, `Templates/`), el plan debe
   indicar que requiere spec de `disenador-web` antes de `desarrollador`.
-- **Si una tarea toca `outlook_send.py`**, el plan debe declarar
+- **Si una tarea toca `send_from_staging.py`**, el plan debe declarar
   explícitamente que NO agrega imports del proyecto.
 - **No decidas vos si el plan se ejecuta.** Lo entregás y el Coordinador lo
   lleva al usuario.
@@ -280,7 +291,7 @@ Escribís **dos** archivos:
 
 ## Riesgos y avisos
 
-- [Ej.: T4 toca `outlook_send.py` — la tarea debe declarar explícitamente que no agrega imports del proyecto.]
+- [Ej.: T4 toca `send_from_staging.py` — la tarea debe declarar explícitamente que no agrega imports del proyecto.]
 - [Ej.: T3 toca `web/templates/index.html` — requiere spec de `disenador-web` antes de `desarrollador`.]
 ````
 

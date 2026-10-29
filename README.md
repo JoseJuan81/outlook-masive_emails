@@ -23,7 +23,7 @@
 - [📨 Envío masivo desde la interface](#-envío-masivo-desde-la-interface)
 - [🧪 Previsualizar un correo antes de enviar](#-previsualizar-un-correo-antes-de-enviar)
 - [🗂️ Importar plantilla desde EML/MSG por CLI](#-importar-plantilla-desde-emlmsg-por-cli)
-- [🤖 Envío por línea de comandos (legacy)](#-envío-por-línea-de-comandos-legacy)
+- [🤖 Envío por línea de comandos (CLI)](#-envío-por-línea-de-comandos-cli)
 - [📁 Estructura del proyecto](#-estructura-del-proyecto)
 - [🔧 Solución de problemas](#-solución-de-problemas)
 - [📜 Licencia](#-licencia)
@@ -35,7 +35,7 @@
 | Flujo | Cuándo usarlo | Comando de entrada |
 |-------|---------------|--------------------|
 | **Web (recomendado)** | Uso diario, previsualización visual, monitoreo de progreso | `uv run web/run.py` → `http://localhost:8000` |
-| **CLI (avanzado / legacy)** | Scripts automatizados, pipelines, tareas batch sin UI | `main.py` o `send_from_staging.py` |
+| **CLI (avanzado)** | Scripts automatizados, pipelines, tareas batch sin UI | `main.py` o `send_from_staging.py` |
 
 > 📌 **Tip:** La interface web envuelve internamente los mismos scripts CLI. Para el 95% de los casos, usá la Web.
 
@@ -49,7 +49,7 @@
 - 👁️ **Previsualización real** con el nombre del destinatario sustituido.
 - 📤 **Envío masivo por Outlook Desktop** vía `win32com` (sin SMTP, sin servidores externos).
 - 📊 **Tracking** de cada corrida en `tracking/run_*.json` con totales, fallos y tiempos.
-- 🧱 **Arquitectura hexagonal** (domain / application / infrastructure / ports) fácil de extender.
+- 🧱 **Arquitectura hexagonal** (domain / application / infrastructure / ports) fácil de extender. Ojo: `application/`, `ports/` e `infrastructure/adapters/` son **capa en pruebas**; el envío real va por `domain/entities.py` + `infrastructure/repositories/` + `infrastructure/services/` → `send_from_staging.py`.
 
 ---
 
@@ -86,7 +86,7 @@
 | Outlook | Desktop instalado y configurado con la cuenta remitente |
 | Git | Para clonar el repositorio |
 
-> ⚠️ **Importante:** `win32com` solo funciona en **Windows nativo**. En WSL2 necesitás invocar el Python de Windows directamente (ver [🤖 Envío por línea de comandos](#-envío-por-línea-de-comandos-legacy)).
+> ⚠️ **Importante:** `win32com` solo funciona en **Windows nativo**. En WSL2 necesitás invocar el Python de Windows directamente (ver [🤖 Envío por línea de comandos](#-envío-por-línea-de-comandos-cli)).
 
 > 📌 **Tip sobre WSL2:** invocá `/mnt/c/Python313/python.exe` para que `win32com` encuentre la instalación COM real de Outlook.
 
@@ -95,10 +95,15 @@
 ## 🚀 Instalación
 
 ```bash
-git clone <repo>
-cd masive_emails
-uv sync                                       # instala todas las dependencias
+git clone URL_DEL_REPOSITORIO
+cd outlook-masive_emails
+uv sync --all-groups                          # instala todas las dependencias
 ```
+
+> ⚠️ **Importante:** usá `--all-groups`. Un `uv sync` a secas **desinstala
+> pytest**, porque uv poda el grupo `test` de este repo (verificado:
+> `uv sync --dry-run` → «Would uninstall 5 packages: iniconfig, packaging,
+> pluggy, pygments, pytest»). Sin ese grupo no hay forma de correr la suite.
 
 Si preferís `pip`:
 
@@ -106,7 +111,7 @@ Si preferís `pip`:
 pip install -r requirements.txt
 ```
 
-> 📌 **Tip:** `uv sync` baja automáticamente `fastapi`, `uvicorn[standard]`, `extract-msg`, `beautifulsoup4`, `requests`, `pandas`, `python-dotenv` y `pywin32` (solo en Windows).
+> 📌 **Tip:** `uv sync --all-groups` baja automáticamente `fastapi`, `uvicorn[standard]`, `extract-msg`, `beautifulsoup4`, `requests`, `pandas`, `python-dotenv` y `pywin32` (solo en Windows).
 
 ---
 
@@ -205,7 +210,7 @@ uv run import_email_template.py ruta/al/correo.eml
 El script:
 
 - Extrae el cuerpo HTML del correo.
-- Guarda las imágenes inline en `html/images/body/` con nombres `a.jpg`, `b.jpg`, etc.
+- Guarda las imágenes inline en `html/images/body/` con nombres `a.png`, `b.png`, … (la extensión se detecta del binario: `png`, `jpg` o `gif`; por defecto `png`).
 - Reemplaza las referencias de imagen por `{images[0]}`, `{images[1]}`, …
 - Escribe el resultado en `html/templates/body_html.html`.
 
@@ -217,16 +222,38 @@ El script:
 
 ---
 
-## 🤖 Envío por línea de comandos (legacy)
+## 🤖 Envío por línea de comandos (CLI)
 
-Flujo heredado, conservado para scripts automatizados y tareas avanzadas:
+Para scripts automatizados, pipelines y tareas batch sin UI. Son **dos pasos
+en dos runtimes distintos**:
 
 ```bash
-# WSL2 → necesita el Python de Windows en /mnt/c/
-/mnt/c/Python313/python.exe main.py --view "Mi vista de Airtable"
+# 1. En WSL2 → arma staging/emails_to_send.json
+uv run main.py --view "Mi vista de Airtable"
+
+# 2. En Windows → lee el staging y envía vía win32com
+/mnt/c/Python313/python.exe send_from_staging.py
 ```
 
-> Este flujo se conserva solo por compatibilidad. **El flujo recomendado es la interface web** (`🖥️ Levantar la interface web`).
+> ⚠️ **`main.py` NO se lanza con el Python de Windows.** Importa
+> `domain.entities` e `infrastructure.*`, que viven en el venv de **uv** (WSL);
+> el Python de Windows no los tiene. Solo `send_from_staging.py` se ejecuta
+> con `python.exe`.
+
+`send.sh` es el wrapper que encadena ambos pasos:
+
+```bash
+#!/bin/bash
+uv run main.py "$@" && /mnt/c/Python313/python.exe send_from_staging.py
+```
+
+```bash
+bash send.sh --view "Mi vista de Airtable"
+```
+
+> La interface web es la recomendada para el uso diario (`🖥️ Levantar la
+> interface web`), pero esta ruta por CLI es una de las dos entradas reales
+> al staging: la otra es `POST /api/send`.
 
 ---
 
@@ -238,27 +265,33 @@ masive_emails/
 │   ├── app.py             # Rutas /, /api/upload-eml, /api/send, /api/send/progress, ...
 │   ├── run.py             # Entry point: uvicorn.run(...)
 │   └── templates/         # index.html (UI)
-├── application/           # Casos de uso (hexagonal)
-│   └── send_emails.py
-├── domain/                # Entidades y reglas de negocio
+├── domain/                # Entidades y reglas de negocio  ✅ PRODUCCIÓN
 │   ├── entities.py
 │   └── types.py
-├── ports/                 # Interfaces (contact_repository, email_sender, signature_provider)
 ├── infrastructure/        # Adaptadores
-│   ├── repositories/      # airtable, notion, csv, supabase, multi
-│   ├── providers/         # extractores EML/MSG
-│   └── services/          # html_email_builder, send_tracker, html_preview, logging
+│   ├── repositories/      # airtable, notion, csv, supabase, multi   ✅ PRODUCCIÓN
+│   ├── services/          # html_email_builder, send_tracker, html_preview, logging  ✅ PRODUCCIÓN
+│   ├── providers/         # (vacío por ahora: solo __init__.py)
+│   └── adapters/          # outlook_desktop_adapter  ⚠️ capa en pruebas
+├── application/           # Casos de uso (hexagonal)   ⚠️ capa en pruebas
+│   └── send_emails.py
+├── ports/                 # Interfaces (contact_repository, email_sender, signature_provider)  ⚠️ capa en pruebas
 ├── html/templates/        # body_html.html, base_html.html, sign__html.html, subject.txt
 ├── staging/               # Payloads pre-ensamblados por la UI
 ├── tracking/              # Logs por corrida: run_YYYY-MM-DD_HH-MM-SS.json
-├── send_from_staging.py   # Worker que la UI invoca para enviar vía win32com
-├── main.py                # Entry point CLI legacy
+├── send_from_staging.py   # Envío real vía win32com (standalone, sin imports del proyecto)
+├── main.py                # Entry point CLI: arma el staging (producción)
 ├── preview.py             # Genera preview/email_preview.html
 ├── import_email_template.py  # Importa .eml/.msg → html/templates/body_html.html
-├── send.sh                # Wrapper bash para envío CLI
+├── send.sh                # Wrapper bash: uv run main.py && python.exe send_from_staging.py
 ├── pyproject.toml         # Dependencias (uv)
 └── requirements.txt       # Pip-compatible snapshot
 ```
+
+> ⚠️ **Lo hexagonal no es todo el camino de envío.** El envío real es:
+> `main.py` (o `web/app.py` vía `POST /api/send`) → `staging/emails_to_send.json`
+> → `send_from_staging.py` → Outlook COM. `application/`, `ports/` e
+> `infrastructure/adapters/` los usan los tests, no producción.
 
 ---
 
@@ -269,6 +302,9 @@ masive_emails/
 - **Las imágenes no se ven en el correo recibido** — confirmá que `html/images/body/` contiene los archivos y que `body_html.html` usa `{images[N]}` en los `src`.
 - **WSL2 no encuentra Outlook** — invocá el script con `/mnt/c/Python313/python.exe` en lugar del Python de WSL2.
 - **`uv sync` falla con `pywin32`** — es normal fuera de Windows. Las dependencias condicionales se saltean automáticamente.
+- **`uv sync` desinstaló pytest** — volvés a la línea anterior: `uv sync` a secas poda el grupo `test` de este repo. Usá `uv sync --all-groups` y verificá con `uv run --no-sync pytest`.
+- **`ModuleNotFoundError: domain` al correr `main.py`** — lo estás lanzando con el Python de Windows. `main.py` necesita el venv de **uv**: corré `uv run main.py` (WSL). El único script que va con `python.exe` es `send_from_staging.py`.
+- **No aparece `pytest` en el venv** — `uv sync --all-groups` (no `uv sync`).
 
 ---
 

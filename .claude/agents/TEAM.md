@@ -3,8 +3,9 @@
 Este documento define cómo colaboran los agentes de este proyecto.
 
 **El Coordinador es la sesión principal, no un subagente.** Su rol está
-definido en [`coordinador.md`](./coordinador.md) y se carga como agente al
-arrancar la sesión. El motivo no es cosmético:
+definido en [`coordinador.md`](./coordinador.md), que **no lleva frontmatter
+YAML**: al no registrarse como agente, no aparece en la lista de agentes
+disponibles y no se puede lanzar como subagente. El motivo no es cosmético:
 
 - Un subagente **no puede pararse a pedirte aprobación**: devuelve un resultado
   y muere. Cualquier «parada» que prometa su prompt es ficción — o decide solo,
@@ -24,14 +25,14 @@ estado de git) y devuelven un informe.
 | ---------------- | ------------------------------------------------ | ------- | -------------------------------------------------------------------------------------------- |
 | Coordinador      | [`coordinador.md`](./coordinador.md)             | —       | Verificar, planificar el ciclo, obtener aprobación, delegar, desbloquear                     |
 | Planificador     | [`planificador.md`](./planificador.md)           | opus    | Spec → tareas atómicas con archivos exclusivos y olas sin solape                             |
-| Diseñador Web    | [`diseñador-web.md`](./diseñador-web.md)         | sonnet  | UI/UX, plantillas HTML para correos, design system, accesibilidad                          |
+| Diseñador Web    | [`disenador-web.md`](./disenador-web.md)         | sonnet  | UI/UX, plantillas HTML para correos, design system, accesibilidad                          |
 | Desarrollador    | [`desarrollador.md`](./desarrollador.md)         | sonnet  | Implementar en el repo. **Único que escribe código de producción**                           |
 | Tester           | [`tester.md`](./tester.md)                       | sonnet  | Diseñar y ejecutar pruebas con pytest contra la spec                                         |
 | Revisor          | [`revisor.md`](./revisor.md)                     | opus    | Tests debilitados, prueba de mutación, corrección, convenciones, restricciones de plataforma |
 
 **Reparto de modelos**: razonamiento fuerte donde se decide y se juzga
 (`planificador`, `revisor`); modelo medio donde se ejecuta con criterios
-explícitos y puerta objetiva (`desarrollador`, `tester`, `diseñador-web`).
+explícitos y puerta objetiva (`desarrollador`, `tester`, `disenador-web`).
 
 Este proyecto **no tiene agente experto de dominio** (como `luna-serena` en
 `cycle-companion`): es una herramienta técnica interna (pipeline de envío
@@ -58,7 +59,7 @@ plantillas HTML), se agrega un agente de dominio siguiendo el patrón de
      └──────┬───────┘
             ▼
      ┌──────────────┐
-     │ diseñador-web│  (solo si hay UI) → spec → 🛑 usuario aprueba
+     │ disenador-web│  (solo si hay UI) → spec → 🛑 usuario aprueba
      └──────┬───────┘
             ▼
    ── por cada ola ────────────────────────────────────────────────────────
@@ -73,7 +74,7 @@ plantillas HTML), se agrega un agente de dominio siguiendo el patrón de
                    ▼
               ┌──────────┐
               │ revisor  │  tests debilitados → mutación → corrección
-              └────┬─────┘  (sin Write ni Edit)
+              └────┬─────┘  (sin Write ni Edit; el guardian de Bash le impide escribir)
                    ▼
             puerta COMPLETA → siguiente ola
    ──────────────────────────────────────────────────────────────────────────
@@ -89,11 +90,40 @@ Sin ellos, esto es un grupo de agentes que se autoaprueban.
    diga. El hook `SubagentStop` (`../hooks/puerta-calidad.mjs`) vuelve a
    ejecutar los comandos por su cuenta y sale con código 2 si fallan.
 2. **Línea base congelada.** «No empeores el repo» comprobable por comando
-   (`../linea-base.json`). Cuando se agregue ruff al proyecto, se inicializa
-   con `node .claude/hooks/linea-base.mjs generar`.
+   (`../linea-base.json`), verificado con
+   `node .claude/hooks/linea-base.mjs verificar`. `ruff` ya está en el
+   `pyproject.toml`; la línea base **solo la regenera el usuario, y solo a la
+   baja**.
 3. **Olas con archivos exclusivos.** Dos tareas de la misma ola nunca
    comparten un archivo. La intersección se verifica por comando antes de
    lanzar cada ola.
+
+## Sistema de hooks
+
+Los hooks se registran en **dos sitios distintos**, y por eso están separados.
+
+### En `.claude/settings.json` (aplican a todo subagente del proyecto)
+
+| Evento | Matcher | Hook | Qué hace |
+| ------ | ------- | ---- | -------- |
+| `SubagentStop` | `desarrollador\|tester` | `puerta-calidad.mjs rapida` | Ejecuta los comandos del perfil `rapida` y **bloquea** al subagente (código de salida 2 + motivo en stderr) si alguno falla |
+| `PreToolUse` | `Write\|Edit\|MultiEdit\|NotebookEdit` | `guardian-config.mjs` | Impide que un agente **vigilado** (`desarrollador`, `tester`) reescriba la configuración de la puerta que lo juzga: `.claude/hooks/`, `.claude/verificacion.json`, `.claude/linea-base.json`, `.claude/settings.json`, `.claude/settings.local.json` |
+
+### En el frontmatter del agente (aplican solo mientras ese agente está activo)
+
+| Hook | Matcher | En qué agente | Qué hace |
+| ---- | ------- | ------------- | -------- |
+| `guardian-escritura.mjs` | `Write\|Edit\|MultiEdit\|NotebookEdit` | `planificador`, `disenador-web` | Bloquea la escritura fuera de `.claude/planes/`, `.claude/disenos/`, `.claude/cache/`, `docs/`, `SPEC.md` |
+| `guardian-bash.mjs` | `Bash` | `planificador`, `disenador-web`, `revisor` | Cierra la fuga por Bash: `echo x > main.py`, `sed -i`, `rm -rf`, `git reset --hard`, `git clean`, `uv add`/`sync`/`lock`… quedan denegados. Para el `revisor` es lo que hace **técnica** su independencia: puede usar `Bash`, pero no escribir en el repo (solo en `/tmp`) |
+| `validar-plan.mjs` | `Write` | `planificador` | Valida el schema de los planes `.claude/planes/*.json` |
+
+Los comandos `checkpoint.mjs`, `drift-detection.mjs` y `linea-base.mjs` **no son
+hooks**: son CLI que el Coordinador invoca a mano.
+
+**Límite conocido — workspace trust**: los hooks de proyecto **NO se ejecutan**
+si la carpeta no es confiable en Claude Code. Sin trust, la puerta no bloquea
+y todo parece ir bien. Es la trampa más fácil de pasar por alto al leer un
+«pasó».
 
 ## Cómo delega el Coordinador
 
@@ -126,7 +156,7 @@ la vez.
 Este proyecto tiene restricciones específicas que todo el equipo respeta.
 Cualquier violación es defecto crítico:
 
-1. **`outlook_send.py` permanece standalone.** Sin imports del proyecto.
+1. **`send_from_staging.py` permanece standalone.** Sin imports del proyecto.
    Razón: evitar cache de `.pyc` de Windows Python
    (`/mnt/c/Python313/python.exe`).
 2. **Paths absolutos** con `Path(__file__).resolve().parent`. Razón: el
@@ -140,13 +170,21 @@ Cualquier violación es defecto crítico:
 Las reglas 1 y 3 son **defecto crítico** si se violan. Las reglas 2, 4 y 5 son
 defecto alto.
 
+**Ojo con la arquitectura**: el repo tiene capa hexagonal (`domain/`, `ports/`,
+`application/`, `infrastructure/`), pero **la capa hexagonal no es el camino de
+envío**. El envío real es `import_email_template.py` → `main.py` (o
+`web/app.py`) → `staging/emails_to_send.json` → `send_from_staging.py` (Windows)
+→ Outlook COM. `application/send_emails.py` y
+`infrastructure/adapters/outlook_desktop_adapter.py` los usan **solo los
+tests**.
+
 ## Reglas generales
 
 1. **Plan-first.** El Coordinador siempre presenta el plan y espera aprobación
    explícita antes de ejecutar. Nunca delega sin que el usuario lo haya visto
    y aceptado.
 2. **Spec antes que código.** Nunca se envía trabajo al desarrollador sin spec
-   de `diseñador-web` cuando hay UI nueva — excepto trabajo puramente técnico
+   de `disenador-web` cuando hay UI nueva — excepto trabajo puramente técnico
    de backend (dominio, adaptadores, repositorios, bug de lógica, refactor sin
    cambio de comportamiento).
 3. **QA es obligatorio.** Ninguna feature pasa a "lista" sin `tester` y sin
@@ -189,9 +227,9 @@ defecto alto.
 | Tipo de solicitud                                                                                | Ruta                                                |
 | ------------------------------------------------------------------------------------------------ | --------------------------------------------------- |
 | Feature con spec escrita, varios archivos                                                        | ciclo completo (Fase 1-4)                           |
-| Feature nueva con UI (cualquier archivo en `web/`, `html/`, `Templates/`)                        | `planificador` → `diseñador-web` → `desarrollador`  |
+| Feature nueva con UI (cualquier archivo en `web/`, `html/`, `Templates/`)                        | `planificador` → `disenador-web` → `desarrollador`  |
 | Feature nueva puramente backend (`domain/`, `application/`, `infrastructure/`, `ports/`)        | `planificador` → `desarrollador`                    |
-| Diseño/rediseño de UI, UX, plantilla HTML                                                        | `diseñador-web`                                     |
+| Diseño/rediseño de UI, UX, plantilla HTML                                                        | `disenador-web`                                     |
 | Bug técnico (crash, parser EML falla, Airtable no carga, Outlook COM falla)                      | `desarrollador` → `tester`                          |
 | Refactor sin cambio de comportamiento                                                            | `tester` (caracterización) → `desarrollador`        |
 | Auditoría / verificación de que algo funciona                                                    | `revisor`                                           |
@@ -212,7 +250,9 @@ comportamiento no cambió.
   `tests/test_<archivo>.py` (las dos suites coexisten).
 - **Suite de tests**: pytest, configurado en `pyproject.toml`
   `[tool.pytest.ini_options]` con `pythonpath = ["."]` y
-  `testpaths = ["."]`. Ejecutar con `uv run pytest`.
+  `testpaths = ["."]`. Comando canónico: `uv run --no-sync pytest`.
+  (`uv sync` a secas desinstala pytest: poda el grupo `test`. Para instalar
+  sin romper nada, `uv sync --all-groups`.)
 
 ## Diferencias con otros proyectos de la familia
 
@@ -221,7 +261,7 @@ comportamiento no cambió.
 | Stack                         | React/TS/pnpm     | TanStack/TS/pnpm   | **Python/uv**             |
 | Restricción externa           | Lovable           | Lovable            | **WSL2 + Windows Python** |
 | `CLAUDE.md` como              | Documento fundacional | Convenciones + orq. embebido | **Documento fundacional** |
-| `outlook_send.py` standalone  | n/a               | n/a                | **Sí (crítica)**          |
+| `send_from_staging.py` standalone  | n/a            | n/a                | **Sí (crítica)**          |
 | Agente de dominio             | `luna-serena`     | ninguno            | **ninguno**               |
 | Tests E2E                     | Playwright        | Vitest             | **pytest**                |
-| Línea base congelada activa   | Sí (eslint)       | Sí (eslint)        | **No (ruff no agregado)** |
+| Línea base congelada activa   | Sí (eslint)       | Sí (eslint)        | **Sí (ruff, `linea-base.mjs`)** |

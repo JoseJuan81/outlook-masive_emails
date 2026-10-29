@@ -29,7 +29,7 @@ Usuario → Coordinador (sesión principal)
           └──────┬───────┘
                  ↓
           ┌──────────────┐
-          │ diseñador-web│ → specs de UI/UX, plantillas HTML (si hay UI nueva)
+          │ disenador-web│ → specs de UI/UX, plantillas HTML (si hay UI nueva)
           └──────┬───────┘
                  ↓
      ┌───────────┴───────────┐
@@ -52,6 +52,38 @@ Usuario → Coordinador (sesión principal)
 
 ---
 
+## El flujo de producción real
+
+El repo tiene capa hexagonal (`domain/`, `ports/`, `application/`,
+`infrastructure/`), pero **la capa hexagonal NO es el camino de envío**. El
+envío real es este:
+
+```
+import_email_template.py → html/templates/body_html.html + html/images/body/*.png
+    ↓
+main.py   (o web/app.py, vía POST /api/send)  → staging/emails_to_send.json
+    ↓
+send_from_staging.py   (Python de Windows)     → Outlook COM
+```
+
+Qué se usa en producción y qué no (verificado con `grep` sobre todos los
+`.py`):
+
+| Módulo | ¿En el camino de producción? |
+| ------ | ---------------------------- |
+| `domain/entities.py`, `domain/types.py` | Sí (`main.py`, `web/app.py`, repositorios) |
+| `infrastructure/repositories/*` | Sí (`main.py`, `web/app.py`) |
+| `infrastructure/services/*` | Sí (`main.py`, `preview.py`, `web/app.py`) |
+| `ports/*` | Solo a través de `application/` |
+| `application/send_emails.py` | **No**: lo importan solo `test/test_architecture.py` y `test/test_preview_flow.py` |
+| `infrastructure/adapters/outlook_desktop_adapter.py` | **No**: lo importa solo `test/test_outlook_adapter.py` |
+
+Consecuencia práctica: un cambio en `application/` o en el adaptador de
+Outlook **no altera el envío real**. El envío lo hace `send_from_staging.py`,
+que es standalone y no importa nada del proyecto.
+
+---
+
 ## Archivos del sistema
 
 El sistema vive en `.claude/`. Estructura:
@@ -59,28 +91,43 @@ El sistema vive en `.claude/`. Estructura:
 ```
 .claude/
 ├── agents/
-│   ├── coordinador.md          # Orquestador (sesión principal, cargado como agente)
+│   ├── coordinador.md          # Rol del Coordinador (documentado; NO es un subagente)
 │   ├── planificador.md         # Spec → tareas atómicas
-│   ├── diseñador-web.md        # UI/UX, plantillas HTML
-│   ├── desarrollador.md        # Implementación en el repo (único que escribe código)
+│   ├── disenador-web.md        # UI/UX, plantillas HTML
+│   ├── desarrollador.md         # Implementación en el repo (único que escribe código)
 │   ├── tester.md               # Pruebas con pytest
 │   ├── revisor.md              # Tests debilitados + prueba de mutación
-│   ├── TEAM.md                 # Este archivo resumido
-│   └── AGENT_TEAMS.md          # Docs sobre Agent Teams (experimental)
+│   └── TEAM.md                 # Este archivo resumido
 ├── hooks/
-│   ├── puerta-calidad.mjs      # Hook de calidad (SubagentStop)
-│   ├── guardian-escritura.mjs  # Bloquea escritura no autorizada
-│   ├── checkpoint.mjs          # Git tags para rollback
-│   ├── drift-detection.mjs     # Verifica APIs citadas existen
-│   └── linea-base.mjs          # Línea base de errores heredados
-├── decisiones/
-│   └── README.md               # Registro de decisiones de arquitectura
-├── cache/                       # Estado de bloqueos, caché de lint
-├── settings.json               # Config: hooks, autonomía
+│   ├── puerta-calidad.mjs      # Puerta de calidad (SubagentStop, en settings.json)
+│   ├── guardian-config.mjs     # Impide reescribir la config de la puerta (settings.json)
+│   ├── guardian-escritura.mjs  # Bloquea escritura fuera de las rutas permitidas (frontmatter)
+│   ├── guardian-bash.mjs       # Bloquea la fuga por Bash (frontmatter)
+│   ├── validar-plan.mjs        # Valida el schema de los planes .json (frontmatter)
+│   ├── permitidas.mjs          # Allowlist de rutas + protocolo de denegación (compartido)
+│   ├── checkpoint.mjs          # Git tags para rollback (CLI manual)
+│   ├── drift-detection.mjs     # Verifica APIs citadas existen (CLI manual)
+│   └── linea-base.mjs          # Línea base de errores heredados (CLI manual)
+├── planes/                     # Plan .json + plan .md de cada ciclo
+├── cache/                      # Estado de bloqueos, caché de lint
+├── worktrees/                  # Copias de trabajo aisladas (Agent Teams)
+├── settings.json               # Hooks registrados del proyecto
 ├── settings.local.json         # Permisos locales del sandbox
 ├── verificacion.json           # Comandos de calidad por perfil
 └── linea-base.json             # Errores heredados por archivo (generado por el script)
 ```
+
+`coordinador.md` **no tiene frontmatter YAML**: documenta el rol del
+Coordinador, que se aplica a la **sesión principal** (ver «El
+Coordinador»).
+
+Los hooks se registran en **dos sitios distintos**, y por eso están separados:
+
+- En `.claude/settings.json`: los que aplican a cualquier subagente del
+  proyecto (`puerta-calidad.mjs`, `guardian-config.mjs`).
+- En el **frontmatter** del agente: los que solo aplican mientras ese agente
+  está activo (`guardian-escritura.mjs`, `guardian-bash.mjs`,
+  `validar-plan.mjs`).
 
 En la raíz:
 - `CLAUDE.md` — documento fundacional del proyecto (qué es, flujo principal, stack, restricciones).
@@ -95,6 +142,10 @@ En la raíz:
 El Coordinador es la **sesión principal**, no un subagente. Su rol está
 definido en `.claude/agents/coordinador.md`. Es el único que puede pedir
 aprobación al usuario y el único que puede delegar en paralelo.
+
+`coordinador.md` no lleva frontmatter YAML a propósito: al no registrarlo como
+agente, no aparece en la lista de agentes disponibles y no se puede lanzar
+como subagente.
 
 ### Fases del ciclo
 
@@ -113,7 +164,7 @@ node .claude/hooks/puerta-calidad.mjs completa
 - 🛑 Parada: usuario aprueba el plan
 
 **Fase 2 — Diseño** (solo si hay UI)
-- Delegar en `diseñador-web`
+- Delegar en `disenador-web`
 - 🛑 Parada: usuario aprueba el diseño
 
 **Fase 3 — Ejecución por olas**
@@ -131,7 +182,9 @@ Para cada ola:
 - 🛑 Parada: mostrar resultado al usuario
 - **No commitees** hasta que el usuario lo pida
 
-### Niveles de autonomía (en settings.json)
+### Niveles de autonomía (referenciados, no implementados)
+
+`coordinador.md` describe una clave `autonomia` con esta forma:
 
 ```json
 "autonomia": {
@@ -145,6 +198,11 @@ Para cada ola:
 
 `automatico` = el Coordinador actúa sin preguntar. `aprobacion` = pide al
 usuario.
+
+**Hoy esa clave NO existe en `.claude/settings.json`**: el fichero solo
+contiene `hooks`. La autonomía real se aplica con las paradas 🛑 del prompt y
+con el hook `SubagentStop`. Si se implementa la clave, hay que añadirla al
+`settings.json` de verdad.
 
 ---
 
@@ -167,8 +225,9 @@ exclusivos y olas sin solape.
 **Archivo**: `.claude/agents/planificador.md`
 
 **Herramientas**: Read, Grep, Glob, Bash, Write
-**Bloqueo**: Hook que impide Write/Edit fuera de `.claude/planes/`,
-`.claude/disenos/`, `docs/`, `SPEC.md`
+**Bloqueo**: hook `guardian-escritura.mjs` (y `guardian-bash.mjs`) que impiden
+escribir fuera de `.claude/planes/`, `.claude/disenos/`, `.claude/cache/`,
+`docs/`, `SPEC.md`
 
 **Proceso**:
 1. Leer SPEC.md y verificar cada símbolo/ruta con grep
@@ -186,11 +245,12 @@ antes de planificar.
 **Responsabilidad**: UI/UX, design system, especificaciones de interacción y
 accesibilidad. Plantillas HTML para correos.
 
-**Archivo**: `.claude/agents/diseñador-web.md`
+**Archivo**: `.claude/agents/disenador-web.md`
 
-**Herramientas**: Read, Write, Edit, Glob, Grep, WebSearch, WebFetch, Bash
-**Bloqueo**: Hook que impide Write/Edit fuera de `.claude/disenos/`,
-`.claude/planes/`, `docs/`, `SPEC.md`
+**Herramientas**: Read, Write, Edit, WebSearch, WebFetch, Bash
+**Bloqueo**: hooks `guardian-escritura.mjs` y `guardian-bash.mjs` que impiden
+escribir fuera de `.claude/planes/`, `.claude/disenos/`, `.claude/cache/`,
+`docs/`, `SPEC.md`
 
 **Entregable**: `.claude/disenos/<pantalla>.md`
 
@@ -220,14 +280,16 @@ accesibilidad. Plantillas HTML para correos.
 **Proceso**:
 1. Leer spec/plan completo
 2. Verificar que las APIs citadas existen
-3. Implementar respetando arquitectura hexagonal: domain → ports → application
-   → infrastructure → entrypoints (main.py / import_email_template.py /
-   outlook_send.py)
-4. Verificar con `uv run pytest` (y ruff/mypy si están disponibles)
+3. Implementar en la capa que corresponda: `domain/` (puro), `ports/`
+   (interfaces), `infrastructure/` (adaptadores, repositorios, servicios) y
+   los entrypoints (`main.py`, `import_email_template.py`, `web/app.py`,
+   `send_from_staging.py`)
+4. Verificar con `uv run --no-sync pytest` (y la regresión de lint con
+   `node .claude/hooks/linea-base.mjs verificar`)
 5. Reportar con salida literal de los comandos
 
 **Reglas duras del proyecto**:
-- `outlook_send.py` debe permanecer standalone (sin imports del proyecto)
+- `send_from_staging.py` debe permanecer standalone (sin imports del proyecto)
 - Paths siempre absolutos con `Path(__file__).resolve().parent`
 - Filtrar archivos `.Identifier` al listar imágenes en WSL
 - El HTML para correos usa `{images[N]}` como placeholders que se reemplazan
@@ -242,7 +304,7 @@ accesibilidad. Plantillas HTML para correos.
 - No tocar la configuración para silenciar errores
 
 **Entregable**: reporte con `git diff --stat`, salida literal de
-`uv run pytest` (y lint/typecheck si aplica).
+`uv run --no-sync pytest` (y lint/typecheck si aplica).
 
 ### 5. Tester (modelo: sonnet)
 
@@ -256,7 +318,7 @@ accesibilidad. Plantillas HTML para correos.
 1. Leer spec y criterios del plan
 2. Verificar que la implementación cumple la spec
 3. Escribir tests faltantes en `tests/` o `test/`
-4. Ejecutar suite completa con `uv run pytest`
+4. Ejecutar suite completa con `uv run --no-sync pytest`
 5. Emitir APROBADO o RECHAZADO
 
 **Reglas duras**:
@@ -274,8 +336,15 @@ accesibilidad. Plantillas HTML para correos.
 Unit tests       → funciones puras (parsers EML, builders, reemplazos de template)
 Integration      → carga de contactos desde Airtable (con credenciales de test)
 E2E (staging)    → uv run main.py → verifica emails_to_send.json generado correctamente
-E2E (send)       → outlook_send.py con mock de win32com (sin enviar correos reales)
+E2E (send)       → send_from_staging.py con mock de win32com (sin enviar correos reales)
 ```
+
+Las suites viven en `tests/` (reciente, 2026-09-25) y `test/` (legacy,
+2026-07-17). `tests/` es la que crece; `test/` conserva los tests de la capa
+hexagonal. `web/` **sí** tiene tests automatizados (`tests/conftest.py`,
+`tests/test_send_payload.py`, `tests/test_upload_eml.py`,
+`tests/test_regression_cross_contamination.py` importan `web.app`); lo que no
+tiene cobertura automatizada es el **render visual** de la UI.
 
 ### 6. Revisor (modelo: opus)
 
@@ -295,69 +364,125 @@ con mutación.
    - 15-30 mutaciones variadas sobre el código de la ola
    - Clasificar supervivientes: dentro o fuera del alcance
 3. **Corrección** contra spec y plan
-4. **Convenciones** con grep (domain sin I/O, `outlook_send.py` standalone, etc.)
+4. **Convenciones** con grep (domain sin I/O, `send_from_staging.py` standalone, etc.)
 5. **Restricciones de plataforma** (las 5 listadas en desarrollador/revisor)
 6. **Seguridad** (secrets en logs, validación de inputs antes de enviar)
 
-**Regla clave**: no puede arreglar nada. Solo reportar. Su independencia
-depende de no poder escribir.
+**Regla clave**: solo reporta, no arregla. No lleva `Write` ni `Edit`, así que
+no puede tocar ficheros por la vía directa — **pero sí lleva `Bash`**, que
+permitiría escribir igual (`sed -i`, redirecciones, `python -c`). Ese hueco
+lo cierra el hook `guardian-bash.mjs`, declarado también en su frontmatter:
+le **deniega** los comandos con semántica de escritura cuando apuntan al
+repo, y solo le deja escribir en `/tmp` (la copia aislada de la mutación).
+Su independencia es, por tanto, **técnica**, no solo de convención.
 
 ---
 
 ## La puerta de calidad
 
-Hook `SubagentStop` en `.claude/settings.json`:
+Hook `SubagentStop` registrado en `.claude/settings.json` (fichero real, tal
+como está hoy):
 
 ```json
-"hooks": {
-  "SubagentStop": [
-    {
-      "matcher": "desarrollador|tester",
-      "hooks": [
-        {
-          "type": "command",
-          "command": "node .claude/hooks/puerta-calidad.mjs",
-          "timeout": 900
-        }
-      ]
-    }
-  ]
+{
+  "hooks": {
+    "SubagentStop": [
+      {
+        "matcher": "desarrollador|tester",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR:-$PWD}\"/.claude/hooks/puerta-calidad.mjs rapida",
+            "timeout": 900,
+            "statusMessage": "Puerta de calidad: ejecutando las comprobaciones…"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR:-$PWD}\"/.claude/hooks/guardian-config.mjs",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
 }
 ```
 
-**Perfiles (en `.claude/verificacion.json`)**:
+Dos eventos, dos hooks:
 
-```json
-"perfiles": {
-  "rapida": [
-    { "etiqueta": "tests", "comando": "uv run pytest", "obligatorio": true },
-    { "etiqueta": "lint", "comando": "uv run ruff check .", "obligatorio": false },
-    { "etiqueta": "tipos", "comando": "uv run mypy .", "obligatorio": false }
-  ],
-  "completa": [
-    { "etiqueta": "tests", "comando": "uv run pytest", "obligatorio": true },
-    { "etiqueta": "lint", "comando": "uv run ruff check .", "obligatorio": false },
-    { "etiqueta": "tipos", "comando": "uv run mypy .", "obligatorio": false },
-    { "etiqueta": "linea-base", "comando": "node .claude/hooks/linea-base.mjs verificar", "obligatorio": false },
-    { "etiqueta": "cobertura", "comando": "uv run pytest --cov=. --cov-report=term-missing", "obligatorio": false }
-  ]
-}
-```
+| Evento | Matcher | Hook | Qué hace |
+| ------ | ------- | ---- | -------- |
+| `SubagentStop` | `desarrollador\|tester` | `puerta-calidad.mjs rapida` | Ejecuta los comandos del perfil `rapida` y bloquea si fallan |
+| `PreToolUse` | `Write\|Edit\|MultiEdit\|NotebookEdit` | `guardian-config.mjs` | Impide que un agente vigilado reescriba la configuración de la puerta |
+
+**Perfiles (en `.claude/verificacion.json`)** — el hook no conoce ningún
+comando concreto: los lee de ahí. Ese fichero es la fuente de verdad.
+
+| Perfil | Cuándo corre | Comprobaciones |
+| ------ | ------------ | -------------- |
+| `rapida` | En cada `SubagentStop` de `desarrollador` y `tester` | `tests` (`uv run --no-sync pytest`), `lint` (`node .claude/hooks/linea-base.mjs verificar`), `tipos` (`uv run --no-sync mypy .`) |
+| `completa` | A mano, el Coordinador, al cerrar cada ola | las tres de `rapida` + `drift` (`node .claude/hooks/drift-detection.mjs verificar`) |
+
+`completa` **no** se registra como hook: su presupuesto de timeouts no cabe en
+los 900 s del evento `SubagentStop`.
+
+**Semántica de `obligatorio`** (no significa «opcional»):
+
+- `true` + comprobación **no ejecutable** (herramienta ausente) → **FALLA** y
+  bloquea, con motivo accionable. Un obligatorio saltado en silencio es el
+  fail-open que hay que cerrar.
+- `false` + comprobación no ejecutable → **SALTADO**, no bloquea.
+- Herramienta presente + comando fallando → **FALLA** y bloquea, **siempre**.
+
+La disponibilidad de la herramienta nunca suaviza el resultado.
 
 **Comportamiento**:
-- Si la puerta falla → bloquea al agente, no puede declararse terminado
-- Anti-bucle: tras 3 bloqueos, deja pasar para que el fallo escale al
-  Coordinador
-- La puerta ejecuta los comandos, no el agente → no puede mentir
+- Si la puerta falla → **bloquea al subagente**: el hook sale con **código 2**
+  y el motivo va por `stderr`. El subagente no puede declararse terminado.
+- Anti-bucle: tras `maxBloqueosPorAgente` (3) bloqueos del mismo `agent_id`,
+  deja pasar para que el fallo escale al Coordinador. La invocación manual
+  (sin `agent_id`) siempre bloquea: ahí el bloqueo lo pidió un humano.
+- Fail-closed por tipo de agente: si el evento dice quién es y ese rol no
+  está en `agentesVigilados`, la puerta no comprueba nada (no es trabajo suyo).
+  Si el evento **no** trae `agent_type`, se ejecutan **todas** las
+  comprobaciones: nunca se sale en silencio por no saber quién eres.
+- La puerta ejecuta los comandos, no el agente → no puede mentir.
 
-**Nota sobre este proyecto**: `ruff` y `mypy` no están agregados todavía al
-`pyproject.toml`. La puerta los salta si no están instalados
-(`obligatorio: false`). Cuando se agreguen con `uv add --dev`, cambiar a
-`obligatorio: true`.
+**Trampa conocida — workspace trust**: los hooks de proyecto **NO se ejecutan**
+si la carpeta no es confiable en Claude Code. Sin trust, la puerta no bloquea
+y todo parece ir bien. Antes de fiarse de un «pasó», comprobar el trust.
+
+**Sobre `uv sync`**: `uv sync` a secas **desinstala pytest** en este repo
+(poda el grupo `test`). Para instalar sin romper nada: `uv sync --all-groups`.
+Los comandos de la puerta usan `uv run --no-sync` justamente para no mutar el
+entorno del proyecto.
+
+**Nota sobre este proyecto**: `ruff` ya está en `pyproject.toml`
+(`ruff>=0.17.3`, grupo `dev`); `mypy` no. La comprobación `lint` no es un
+`ruff check` crudo: mide la **regresión contra la línea base congelada**
+(`.claude/linea-base.json`) con `linea-base.mjs verificar`. Esa línea base
+solo la regenera el usuario, y solo a la baja.
 
 ---
 
 ## Hooks del sistema
+
+Los hooks se registran en **dos sitios**, y por eso están separados:
+
+| Dónde | Qué se registra | Por qué |
+| ----- | ---------------- | ------- |
+| `.claude/settings.json` | `puerta-calidad.mjs` (`SubagentStop`), `guardian-config.mjs` (`PreToolUse`) | Aplican a **cualquier** subagente del proyecto, esté o no activo su agente |
+| Frontmatter del agente | `guardian-escritura.mjs`, `guardian-bash.mjs`, `validar-plan.mjs` | Aplican **solo mientras ese agente está activo**, y solo a sus capacidades |
+
+`checkpoint.mjs`, `drift-detection.mjs` y `linea-base.mjs` **no son hooks**: son
+CLI que el Coordinador invoca a mano.
 
 ### guardian-escritura.mjs
 
@@ -368,40 +493,91 @@ frontmatter del agente:
 ---
 hooks:
   PreToolUse:
-    - matcher: "Write|Edit|NotebookEdit"
+    - matcher: "Write|Edit|MultiEdit|NotebookEdit"
       hooks:
         - type: command
-          command: node .claude/hooks/guardian-escritura.mjs
+          command: 'node "${CLAUDE_PROJECT_DIR:-$PWD}"/.claude/hooks/guardian-escritura.mjs'
+          timeout: 10
 ---
 ```
 
-**Rutas permitidas**:
+**Rutas permitidas** (definidas en `.claude/hooks/permitidas.mjs`, que es la
+allowlist compartida):
 - `.claude/planes/`
 - `.claude/disenos/`
+- `.claude/cache/`
 - `docs/`
 - `SPEC.md` (exacto)
 
+### guardian-bash.mjs
+
+Cierra la fuga que `guardian-escritura.mjs` deja abierta: `Write` no es la
+única forma de escribir en disco. Se declara en el frontmatter de los dos roles
+que producen documentos (`planificador`, `disenador-web`) **y también del
+`revisor`**, con matcher `Bash`:
+
+```yaml
+    - matcher: "Bash"
+      hooks:
+        - type: command
+          command: 'node "${CLAUDE_PROJECT_DIR:-$PWD}"/.claude/hooks/guardian-bash.mjs'
+          timeout: 10
+```
+
+Analiza el comando y **deniega** las escrituras prohibidas: redirecciones
+(`echo x > domain/entities.py`), `sed -i`, `rm -rf`, `git reset --hard`,
+`git clean`, `uv add`/`sync`/`lock`, `writeFileSync` embebido… Ante la duda
+permite: un falso positivo manda al agente a un rodeo, un falso negativo lo
+deja escribir.
+
+### guardian-config.mjs
+
+Vive en `.claude/settings.json` (evento `PreToolUse`), no en el frontmatter:
+aplica a todos los subagentes, pero **solo** restringe a los que están en
+`agentesVigilados` (`desarrollador`, `tester`).
+
+Impide que un agente vigilado reescriba la configuración de la puerta que lo
+juzga. Rutas protegidas:
+
+- `.claude/hooks/`
+- `.claude/verificacion.json`
+- `.claude/linea-base.json`
+- `.claude/settings.json`
+- `.claude/settings.local.json`
+
+`.claude/agents/` **no** está protegido a propósito: en una ola posterior hay
+que poder corregir la documentación de los agentes, incluidos sus hooks
+declarados.
+
+### validar-plan.mjs
+
+Valida el **schema** de los planes JSON. Se declara en el frontmatter del
+`planificador` con matcher `Write` (solo aplica a `.claude/planes/*.json`;
+un `.md` no se valida). Sin esto, el schema estaba documentado pero nadie lo
+comprobaba.
+
 ### checkpoint.mjs
 
-Git tags para rollback antes de cada ola.
+Git tags para rollback antes de cada ola. **CLI manual**, no es un hook.
 
 ```sh
 # Crear checkpoint antes de una ola
 node .claude/hooks/checkpoint.mjs crear ola-ciclo-1-ola-1
 
-# Rollback si algo sale mal
-node .claude/hooks/checkpoint.mjs rollback ola-ciclo-1-ola-1 --confirmar
+# Restaurar (rollback) si algo sale mal
+node .claude/hooks/checkpoint.mjs restaurar ola-ciclo-1-ola-1
 
 # Listar checkpoints
 node .claude/hooks/checkpoint.mjs listar
 
-# Verificar que existe
-node .claude/hooks/checkpoint.mjs verificar ola-ciclo-1-ola-1
+# Estado del árbol y de los checkpoints
+node .claude/hooks/checkpoint.mjs estado
 ```
 
 ### drift-detection.mjs
 
-Verifica que las APIs citadas en un plan existen en el código.
+Verifica que las APIs citadas en un plan existen en el código. **CLI manual**,
+no es un hook.
 
 ```sh
 # Verificar un plan específico
@@ -409,11 +585,14 @@ node .claude/hooks/drift-detection.mjs .claude/planes/mi-plan.json
 
 # Verificar todos los planes
 node .claude/hooks/drift-detection.mjs verificar
+
+# Revisión heurística
+node .claude/hooks/drift-detection.mjs heuristico
 ```
 
 ### linea-base.mjs
 
-Gestiona la línea base de errores heredados.
+Gestiona la línea base de errores heredados. **CLI manual**, no es un hook.
 
 ```sh
 # Verificar que no se agregaron errores
@@ -437,37 +616,66 @@ de aquí.
 ```json
 {
   "perfiles": {
-    "rapida": [...],
-    "completa": [...]
+    "rapida": [
+      { "etiqueta": "tests", "comando": "uv run --no-sync pytest", "obligatorio": true },
+      { "etiqueta": "lint", "comando": "node .claude/hooks/linea-base.mjs verificar", "obligatorio": false },
+      { "etiqueta": "tipos", "comando": "uv run --no-sync mypy .", "obligatorio": false }
+    ],
+    "completa": [
+      { "etiqueta": "tests", "comando": "uv run --no-sync pytest", "obligatorio": true },
+      { "etiqueta": "lint", "comando": "node .claude/hooks/linea-base.mjs verificar", "obligatorio": false },
+      { "etiqueta": "tipos", "comando": "uv run --no-sync mypy .", "obligatorio": false },
+      { "etiqueta": "drift", "comando": "node .claude/hooks/drift-detection.mjs verificar", "obligatorio": false }
+    ]
   },
   "agentesVigilados": ["desarrollador", "tester"],
   "maxBloqueosPorAgente": 3,
+  "timeoutPorComandoMs": 300000,
   "timeouts": {
     "tests": 300000,
     "lint": 120000,
-    "tipos": 300000
+    "tipos": 120000,
+    "linea-base": 120000,
+    "drift": 120000,
+    "cobertura": 600000
   }
 }
 ```
+
+Códigos de salida de los comandos: `0` = pasa · `1` = falla · `2` = error de
+ejecución · `3` = no aplica (convención compartida con `linea-base.mjs` y
+`drift-detection.mjs`).
 
 Para adaptar a otro proyecto:
 1. Cambiar los comandos en `perfiles`
 2. Ajustar `agentesVigilados` según qué agentes escriben código
 3. Ajustar `timeouts` según el tamaño del proyecto
+4. Usar `uv run --no-sync`: la puerta **nunca** debe mutar el entorno del
+   proyecto
 
 ### linea-base.json
 
 ```json
 {
-  "archivos": {
-    "domain/entities.py": 0
-  }
+  "_comentario": "Errores de lint heredados POR ARCHIVO...",
+  "generado": "2025-09-25T00:00:00.000Z",
+  "comando": "uv run ruff check . -f json -o .claude/cache/eslint-informe.json",
+  "totalErrores": 0,
+  "archivos": {}
 }
 ```
 
-Cada archivo tiene un presupuesto de errores de lint. Hoy día 0 errores en
-todos los archivos nuevos. Se genera ejecutando
-`node .claude/hooks/linea-base.mjs generar` (solo el usuario, solo a la baja).
+Cada archivo tiene un presupuesto de errores de lint; un archivo **ausente**
+tiene presupuesto **cero**. Hoy `archivos` está **vacío**: cualquier error de
+ruff en el repo es una regresión y `linea-base.mjs verificar` sale con `1`.
+
+El hook es **fail-closed a propósito**: si la línea base no existe, sale con
+`1` y lo dice («Esto NO es un «todo bien»»), no con `3`. Borrar la línea base
+no puede hacer que la comprobación pase. La única forma de que `lint` no
+bloquee es tener la base sembrada **y** no haber empeorado el repo.
+
+Se genera ejecutando `node .claude/hooks/linea-base.mjs generar` — **solo el
+usuario, y solo a la baja**. Regenerarla para tapar un error está prohibido.
 
 ---
 
@@ -478,15 +686,15 @@ Estas convenciones están adaptadas al proyecto específico:
 | Convención                                                       | Evidencia                                                    |
 | ---------------------------------------------------------------- | ------------------------------------------------------------ |
 | `domain/` es lógica pura, sin I/O                               | `domain/entities.py`, `domain/types.py`                      |
-| Arquitectura hexagonal: domain ← ports ← application ← infrastructure | Estructura del repo                                     |
-| `outlook_send.py` standalone (sin imports del proyecto)         | Restricción de plataforma para evitar cache de `.pyc` Windows |
+| Arquitectura hexagonal: domain ← ports ← application ← infrastructure | Estructura del repo (pero **no** es el camino de envío: ver «El flujo de producción real») |
+| `send_from_staging.py` standalone (sin imports del proyecto)     | Restricción de plataforma para evitar cache de `.pyc` Windows |
 | Paths absolutos con `Path(__file__).resolve().parent`           | `import_email_template.py`, `main.py`                        |
 | Filtrar archivos `.Identifier` al listar imágenes               | Restricción WSL/Windows                                      |
-| HTML usa `{images[N]}` → `cid:image_N`                          | `application/send_emails.py`, `infrastructure/services/`     |
+| HTML usa `{images[N]}` → `cid:image_N`                          | `infrastructure/services/html_email_builder.py` (el `{images[N]}` lo escribe `import_email_template.py`) |
 | Subject desde `html/templates/subject.txt`                      | `main.py`                                                    |
 | Tests en `test/` y `tests/` (las dos suites coexisten)          | `pyproject.toml [tool.pytest.ini_options]`                   |
 | Contactos desde Airtable REST API                               | `infrastructure/repositories/airtable_contact_repository.py` |
-| Imágenes inline embebidas vía Outlook COM con MAPI properties   | `infrastructure/adapters/outlook_desktop_adapter.py`         |
+| Imágenes inline embebidas vía Outlook COM con MAPI properties   | `send_from_staging.py` (el adaptador `infrastructure/adapters/outlook_desktop_adapter.py` solo lo usan los tests) |
 
 ---
 
@@ -500,10 +708,11 @@ Estas convenciones están adaptadas al proyecto específico:
 4. **Tests que no cazan bugs.** → Mutación revela esto.
 5. **La puerta se salta porque "ya sabemos que pasa".** → La puerta es la
    única verdad.
-6. **Decisiones que no se documentan.** → Van al registro de decisiones.
+6. **Decisiones que no se documentan.** → Van al entregable del ciclo y a
+   `SPEC.md` (no hay un registro de decisiones aparte en este repo).
 7. **Scope creep.** → El agente reporta trabajo extra, no lo expande en
    silencio.
-8. **`outlook_send.py` con imports del proyecto.** → Rompe la restricción
+8. **`send_from_staging.py` con imports del proyecto.** → Rompe la restricción
    de standalone. Defecto crítico.
 9. **Subject hardcodeado en código.** → Debe leerse de
    `html/templates/subject.txt`.
@@ -584,7 +793,7 @@ para el envío, Airtable como fuente de contactos, imágenes inline con
 1. Leer spec/plan completo
 2. Verificar que las APIs citadas existen
 3. Implementar respetando la arquitectura hexagonal
-4. Verificar: uv run pytest
+4. Verificar: uv run --no-sync pytest
 5. Reportar con salida literal
 
 ## Reglas duras
@@ -592,7 +801,7 @@ para el envío, Airtable como fuente de contactos, imágenes inline con
 - No reinterpretar la spec: si es ambiguo, preguntar
 - No debilitar tests para pasar
 - No tocar la configuración para silenciar errores
-- `outlook_send.py` permanece standalone
+- `send_from_staging.py` permanece standalone
 - Archivos exclusivos: no tocar nada fuera de los asignados
 
 ## Checklist de entrega
@@ -611,7 +820,7 @@ para el envío, Airtable como fuente de contactos, imágenes inline con
 
 ### Comandos de verificación — salida literal
 
-$ uv run pytest
+$ uv run --no-sync pytest
 [salida]
 
 ### Criterios de aceptación
@@ -662,8 +871,9 @@ sí derivás del código (tests de caracterización).
 ```markdown
 # Revisor
 
-Sos el **último filtro**. No podés escribir ni editar nada. Tu independencia
-depende de eso.
+Sos el **último filtro**. No llevás `Write` ni `Edit`: no podés escribir ni
+editar por la vía directa. Tu independencia depende de eso — y de que no
+uses `Bash` para escribir.
 
 ## Premisa
 
@@ -692,7 +902,7 @@ Contra spec y plan. Cada criterio: ¿lo cumple? ¿con qué comando?
 
 Comprobables con grep. Para este proyecto:
 - `domain/` sin I/O
-- `outlook_send.py` standalone
+- `send_from_staging.py` standalone
 - Filtro `.Identifier`
 - Subject desde archivo
 - Paths absolutos
@@ -704,7 +914,7 @@ Comprobables con grep. Para este proyecto:
 
 ## No hacés
 
-- No arreglás nada (no tenés Write ni Edit)
+- No arreglás nada (no tenés Write ni Edit; tampoco uses Bash para escribir)
 - No aprobás por cansancio (crítico/alto → RECHAZADO)
 ```
 
@@ -714,16 +924,18 @@ Comprobables con grep. Para este proyecto:
 
 1. **Crear estructura de carpetas**:
    ```sh
-   mkdir -p .claude/{agents,hooks,decisiones,cache/bloqueos}
+   mkdir -p .claude/{agents,hooks,planes,cache/bloqueos}
    ```
 
 2. **Copiar este documento** como `AGENTS_SYSTEM.md`
 
 3. **Copiar los prompts de agentes** (`coordinador.md`, `planificador.md`,
-   `diseñador-web.md`, `desarrollador.md`, `tester.md`, `revisor.md`)
+   `disenador-web.md`, `desarrollador.md`, `tester.md`, `revisor.md`)
 
 4. **Copiar los hooks**: `puerta-calidad.mjs`, `guardian-escritura.mjs`,
-   `checkpoint.mjs`, `drift-detection.mjs`, `linea-base.mjs`
+   `guardian-bash.mjs`, `guardian-config.mjs`, `validar-plan.mjs`,
+   `permitidas.mjs`, `checkpoint.mjs`, `drift-detection.mjs`,
+   `linea-base.mjs`
 
 5. **Crear `settings.json` y `verificacion.json`** adaptados al stack
 
