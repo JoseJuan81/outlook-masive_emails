@@ -20,6 +20,9 @@ from __future__ import annotations
 
 import json
 import logging
+import os
+import sys
+import types
 from types import SimpleNamespace
 from unittest.mock import MagicMock
 
@@ -739,4 +742,213 @@ def test_caller_uses_sent_items_grew_as_fallback_for_object_deleted():
     assert "delivered = True" in block, (
         "caller must flip delivered=True when sent_items_grew=True so the "
         f"item counts as sent (not pending)\n{block}"
+    )
+
+
+# ---------------------------------------------------------------------------
+# D1 - el camino REAL de envío apaga el recibo de lectura
+# ---------------------------------------------------------------------------
+#
+# `send_from_staging.py` es el único fichero que cruza WSL→Windows: es el
+# remitente de producción. `infrastructure/adapters/outlook_desktop_adapter.py`
+# es capa en pruebas, así que sus asserts NO cubren el código que de verdad
+# manda los correos a los clientes.
+#
+# El test de abajo EJECUTA `send_from_staging.main()` de verdad (el bloque de
+# dispatch real, línea a línea) con un doble de COM inyectado en `sys.modules`:
+# ni win32com ni Outlook existen en WSL, y aun así el bloque de producción se
+# ejecuta completo.
+
+
+class _FakePropertyAccessor:
+    """Doble de ``MailItem.PropertyAccessor``."""
+
+    def __init__(self, target):
+        self._target = target
+
+    def SetProperty(self, name, value):
+        self._target.properties.append((name, value))
+
+
+class _FakeAttachment:
+    """Doble de un adjunto inline (con sus MAPI properties)."""
+
+    def __init__(self, path):
+        self.path = path
+        self.properties = []
+
+    @property
+    def PropertyAccessor(self):
+        return _FakePropertyAccessor(self)
+
+
+class _FakeAttachments:
+    """Doble de ``MailItem.Attachments``."""
+
+    def __init__(self, owner):
+        self._owner = owner
+
+    def Add(self, path):
+        adjunto = _FakeAttachment(path)
+        self._owner.attachments.append(adjunto)
+        return adjunto
+
+
+class _FakeMailItem:
+    """Doble del MailItem de Outlook para el bloque de dispatch real.
+
+    Los atributos que producción debe tocar empiezan en ``None``: así el
+    test distingue "producción no lo puso" de "producción lo puso a False".
+    """
+
+    def __init__(self, namespace):
+        self.namespace = namespace
+        self.properties = []
+        self.attachments = []
+        self.To = None
+        self.Subject = None
+        self.HTMLBody = None
+        self.ReadReceiptRequested = None
+        self.OriginatorDeliveryReportRequested = None
+        self.SendUsingAccount = None
+        self.SaveSentMessageFolder = None
+        self.EntryID = "EID-D1"
+        self.SentOn = "2026-01-01 09:00:00"
+        self.created_with = None
+        self.send_calls = 0
+        self.read_receipt_at_send = None
+
+    @property
+    def PropertyAccessor(self):
+        return _FakePropertyAccessor(self)
+
+    @property
+    def Attachments(self):
+        return _FakeAttachments(self)
+
+    def Send(self):
+        self.send_calls += 1
+        self.read_receipt_at_send = self.ReadReceiptRequested
+        self.namespace.mark_sent()
+
+
+class _FakeItems(list):
+    """Colección de Outlook: ``Items.Count`` es el número de elementos."""
+
+    @property
+    def Count(self):
+        return len(self)
+
+
+class _FakeFolder:
+    """Doble de una carpeta de Outlook."""
+
+    def __init__(self, items):
+        self.Items = items
+
+
+class _FakeSyncObjects:
+    """``SyncObjects`` vacío: ``trigger_sync`` no tiene nada que sincronizar."""
+
+    Count = 0
+
+
+class _FakeNamespace:
+    """Namespace MAPI: Outbox (4), Elementos enviados (5) y SyncObjects."""
+
+    def __init__(self):
+        self.outbox = _FakeItems()
+        self.sent = _FakeItems()
+        self.SyncObjects = _FakeSyncObjects()
+
+    def GetDefaultFolder(self, folder_id):
+        if folder_id == 4:
+            return _FakeFolder(self.outbox)
+        if folder_id == 5:
+            return _FakeFolder(self.sent)
+        return _FakeFolder(_FakeItems())
+
+    def mark_sent(self):
+        """El item enviado aparece en Elementos enviados."""
+        self.sent.append(object())
+
+
+class _FakeOutlook:
+    """Doble de ``Outlook.Application``: CreateItem, GetNamespace y Session."""
+
+    def __init__(self, namespace, accounts):
+        self.namespace = namespace
+        self.Session = SimpleNamespace(Accounts=accounts)
+        self.created = []
+
+    def CreateItem(self, kind):
+        mail = _FakeMailItem(self.namespace)
+        mail.created_with = kind
+        self.created.append(mail)
+        return mail
+
+    def GetNamespace(self, name):
+        return self.namespace
+
+
+def _inyectar_win32com(monkeypatch, outlook):
+    """Inyecta un ``win32com.client`` falso: en WSL el módulo no existe."""
+    win32com = types.ModuleType("win32com")
+    cliente = types.ModuleType("win32com.client")
+    cliente.Dispatch = lambda progid: outlook
+    win32com.client = cliente
+    monkeypatch.setitem(sys.modules, "win32com", win32com)
+    monkeypatch.setitem(sys.modules, "win32com.client", cliente)
+
+
+def _inyectar_pywintypes(monkeypatch):
+    """``main()`` hace ``import pywintypes`` dentro del bloque de dispatch."""
+    modulo = types.ModuleType("pywintypes")
+    modulo.com_error = _ComError
+    monkeypatch.setitem(sys.modules, "pywintypes", modulo)
+
+
+def test_dispatch_real_apaga_el_recibo_de_lectura(monkeypatch, tmp_path, staging_file):
+    """El remitente de producción hace ``mail.ReadReceiptRequested = False``.
+
+    Sin esta línea, Outlook avisa "su mensaje ha sido leído" a los clientes.
+    Si desaparece (o pasa a True), los correos vuelven a pedir acuse de
+    lectura y nadie lo nota: este test ejecuta el bloque de dispatch REAL de
+    ``send_from_staging.main()``, no un espejo.
+    """
+    staging_file.write_text(
+        json.dumps(
+            [{"to": "cliente@example.com", "subject": "Hola", "html": "<p>Hola</p>"}]
+        ),
+        encoding="utf-8",
+    )
+
+    # La cuenta remitente sale del .env del repo (OUTLOOK_SENDER_EMAIL).
+    # ``load_env()`` es idempotente y se replica en el doble para que
+    # producción no aborte con "cuenta no encontrada".
+    sfs.load_env()
+    remitente = os.environ.get("OUTLOOK_SENDER_EMAIL", "")
+    cuentas = [SimpleNamespace(SmtpAddress=remitente)] if remitente else []
+
+    namespace = _FakeNamespace()
+    outlook = _FakeOutlook(namespace, cuentas)
+
+    _inyectar_win32com(monkeypatch, outlook)
+    _inyectar_pywintypes(monkeypatch)
+    # El tracking del run va a un directorio temporal: un test no debe
+    # escribir en el árbol de trabajo del repo.
+    monkeypatch.setattr(sfs, "_TRACKING_DIR", tmp_path / "tracking")
+
+    sfs.main()
+
+    assert len(outlook.created) == 1, "el bloque de dispatch no despachó ningún correo"
+    mail = outlook.created[0]
+    assert mail.send_calls == 1, "mail.Send() no llegó a ejecutarse"
+    assert mail.ReadReceiptRequested is False, (
+        "el remitente de producción debe hacer mail.ReadReceiptRequested = False "
+        "(si no, Outlook pide acuse de lectura a los clientes); se observó "
+        f"{mail.ReadReceiptRequested!r}"
+    )
+    assert mail.read_receipt_at_send is False, (
+        "el recibo de lectura tiene que estar apagado ANTES de mail.Send()"
     )

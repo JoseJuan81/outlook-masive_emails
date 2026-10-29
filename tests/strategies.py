@@ -11,20 +11,26 @@ in test_outlook_com_order.py).
 DOCUMENTED MIRROR ANCHORS (line numbers of send_from_staging.py as of
 the time this test was written; the watcher test asserts they still hold):
 
-    M1: mail = outlook.CreateItem(0)                    -> send_from_staging.py:217
-    M2: if account: mail.SendUsingAccount = account     -> send_from_staging.py:219
-    M3: mail.PropertyAccessor.SetProperty(              -> send_from_staging.py:230
+    M1: mail = outlook.CreateItem(0)                    -> send_from_staging.py:427
+    M2: if account: mail.SendUsingAccount = account     -> send_from_staging.py:429
+    M3: mail.PropertyAccessor.SetProperty(              -> send_from_staging.py:440
             "http://schemas.microsoft.com/mapi/proptag/0x0037001F",
             item["subject"],
         )
-    M4: mail.To = item["to"]                             -> send_from_staging.py:236
-    M5: for idx, img_path in enumerate(images):          -> send_from_staging.py:239
+    M4: mail.To = item["to"]                             -> send_from_staging.py:446
+    M8: mail.ReadReceiptRequested = False                -> send_from_staging.py:447
+    M5: for idx, img_path in enumerate(images):          -> send_from_staging.py:449
             att = mail.Attachments.Add(str(img_path))
             att.PropertyAccessor.SetProperty(_CID_PROP, f"image_{idx}")
             att.PropertyAccessor.SetProperty(_HIDDEN_PROP, True)
-    M6: mail.Subject = item["subject"]                   -> send_from_staging.py:245
-    M7: mail.HTMLBody = item["html"]                     -> send_from_staging.py:246
-    M9: mail.Send()                                      -> send_from_staging.py:250
+    M6: mail.Subject = item["subject"]                   -> send_from_staging.py:455
+    M7: mail.HTMLBody = item["html"]                     -> send_from_staging.py:456
+    M9: mail.Send()                                      -> send_from_staging.py:460
+
+M8 (mail.ReadReceiptRequested = False) es la línea que este espejo había
+perdido: producción la apagaba para que Outlook no pidiera acuse de lectura
+y el espejo no la reproducía. Un espejo que se queda sin una línea deja de
+servir de referencia, así que va sincronizada y con su watcher.
 """
 
 from __future__ import annotations
@@ -87,6 +93,9 @@ class MockMailItem:
     To: str = ""
     Subject: str = ""
     HTMLBody: str = ""
+    # Lo que producción debe dejar en False. El default es None (no "False")
+    # para que el test distinga "el espejo no lo puso" de "el espejo lo puso".
+    ReadReceiptRequested: bool | None = None
     OriginatorDeliveryReportRequested: bool = False
     SendUsingAccount: Any = None
     SaveSentMessageFolder: Any = None
@@ -204,6 +213,7 @@ def dispatch_one_mail(
         pass
 
     mail.To = item["to"]  # M4
+    mail.ReadReceiptRequested = False  # M8
     mail.OriginatorDeliveryReportRequested = False
 
     for idx, img_path in enumerate(images):  # M5

@@ -203,6 +203,37 @@ def test_outlook_dispatch_calls_send_without_save(
     assert "Send" in method_names, f"Send must be called; got {method_names}"
 
 
+def test_outlook_dispatch_desactiva_el_recibo_de_lectura(
+    client, tmp_eml_factory, body_images_dir, staging_file
+):
+    """El espejo apaga el recibo de lectura, igual que producción (M8).
+
+    ``mail.ReadReceiptRequested = False`` evita que Outlook pida acuse de
+    lectura a los clientes. El espejo es la implementación de referencia del
+    bloque de dispatch: si pierde la línea, deja de ser referencia.
+    """
+    eml = tmp_eml_factory(subject="S", n_images=0)
+    client.post(
+        "/api/upload-eml",
+        files={"file": ("a.eml", eml.read_bytes(), "message/rfc822")},
+    )
+
+    repo = FakeRepo([{"Nombre": "M", "Correo": "m@example.com"}])
+    with _patch_send_runtime(repo):
+        client.post("/api/send", json={"source": "csv", "test_email": "x@example.com"})
+
+    outlook = MockOutlook()
+    sent_items = run_send_from_staging_with_mocks(
+        staging_path=staging_file,
+        body_images_dir=body_images_dir,
+        outlook=outlook,
+    )
+    assert sent_items[0].ReadReceiptRequested is False, (
+        "el espejo debe apagar el recibo de lectura (M8): "
+        f"{sent_items[0].ReadReceiptRequested!r}"
+    )
+
+
 # ---------------------------------------------------------------------------
 # Watcher: keep strategies.py mirror in sync with send_from_staging.py
 # ---------------------------------------------------------------------------
@@ -217,6 +248,7 @@ SEND_FROM_STAGING = Path(__file__).resolve().parent.parent / "send_from_staging.
         (429, "mail.SendUsingAccount = account"),
         (440, '"http://schemas.microsoft.com/mapi/proptag/0x0037001F"'),
         (446, "mail.To = item[\"to\"]"),
+        (447, "mail.ReadReceiptRequested = False"),
         (449, "for idx, img_path in enumerate(images)"),
         (455, "mail.Subject = item[\"subject\"]"),
         (456, "mail.HTMLBody = item[\"html\"]"),

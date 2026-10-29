@@ -21,6 +21,8 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
+from tests.durable_write import EspiaDurabilidad
+
 
 class FakeRepo:
     """Minimal stand-in for a real contact repository."""
@@ -227,3 +229,82 @@ def test_api_send_flushes_and_fsyncs_staging_file(
     assert staging_file.exists()
     data = staging_file.read_text(encoding="utf-8")
     assert "Caso X" in data
+
+
+def test_api_send_hace_flush_del_staging_antes_del_fsync(
+    client, tmp_eml_factory, body_images_dir, staging_file, monkeypatch
+):
+    """FIX 1: el staging recibe ``flush()`` y el flush va ANTES del ``fsync``.
+
+    ``fh.flush()`` es lo que baja el buffer de Python al descriptor. Si
+    desaparece, el ``os.fsync()`` sincroniza un fichero vacío y el staging se
+    pierde: por eso el orden importa, no solo que ocurran.
+    """
+    from web import app as web_app
+
+    eml = tmp_eml_factory(subject="Caso Flush", n_images=0)
+    client.post(
+        "/api/upload-eml",
+        files={"file": ("a.eml", eml.read_bytes(), "message/rfc822")},
+    )
+
+    espia = EspiaDurabilidad(monkeypatch, web_app)
+
+    repo = FakeRepo([{"Nombre": "M", "Correo": "m@example.com"}])
+    with _patch_send_runtime(repo):
+        resp = client.post("/api/send", json={"source": "csv", "test_email": "x@example.com"})
+
+    assert resp.status_code == 200
+    assert espia.flushes() >= 1, (
+        "el staging no recibió flush(): los bytes pueden quedarse en el buffer "
+        "de Python y el fsync sincronizaría un fichero vacío"
+    )
+    assert espia.fsyncs() >= 1, "el staging no recibió os.fsync()"
+    assert espia.nombres().index("flush") < espia.nombres().index("fsync"), (
+        f"el flush() debe ocurrir antes del fsync(); eventos: {espia.nombres()}"
+    )
+
+
+def test_api_send_tiene_los_bytes_en_el_staging_cuando_hace_fsync(
+    client, tmp_eml_factory, body_images_dir, staging_file, monkeypatch
+):
+    """Cuando se llama a ``os.fsync()``, el JSON ya está en el fichero.
+
+    Es la garantía de fondo del ``flush()``: el tamaño que el SO ve en el
+    descriptor tiene que ser el del JSON escrito. Sin el flush, el tamaño
+    sería 0 (los bytes siguen en el buffer de Python) y el fsync no
+    garantizaría nada.
+    """
+    eml = tmp_eml_factory(subject="Caso Bytes", n_images=0)
+    client.post(
+        "/api/upload-eml",
+        files={"file": ("a.eml", eml.read_bytes(), "message/rfc822")},
+    )
+
+    tamanos: list[int] = []
+    inodos: list[int] = []
+    fsync_real = os.fsync
+
+    def spy_fsync(fd):
+        estado = os.fstat(fd)
+        tamanos.append(estado.st_size)
+        inodos.append(estado.st_ino)
+        return fsync_real(fd)
+
+    monkeypatch.setattr(os, "fsync", spy_fsync)
+
+    repo = FakeRepo([{"Nombre": "M", "Correo": "m@example.com"}])
+    with _patch_send_runtime(repo):
+        resp = client.post("/api/send", json={"source": "csv", "test_email": "x@example.com"})
+
+    assert resp.status_code == 200
+    assert tamanos, "os.fsync() no se llamó sobre el staging"
+    assert tamanos[0] > 0, (
+        "en el momento del fsync el staging estaba vacío en disco: "
+        "falta el fh.flush() que vuelca el buffer de Python al descriptor"
+    )
+    # El fsync tiene que ser sobre el fichero de staging, no sobre otro.
+    assert inodos[0] == os.stat(staging_file).st_ino, (
+        "el fsync no se hizo sobre el fichero de staging"
+    )
+

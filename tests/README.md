@@ -32,9 +32,12 @@ Expected output: **34 tests passing** in under 2 seconds on Linux.
 tests/
   conftest.py                       # fixtures (clean_state autouse, client, tmp_eml_factory)
   strategies.py                     # MockOutlook + mirror of send_from_staging.main()
+  durable_write.py                  # EspiaDurabilidad: instrumenta flush()/os.fsync() sin sustituirlos
   test_upload_eml.py                # 5 tests — FIX 2 surface
-  test_send_payload.py              # 7 tests — FIX 1 surface (fsync) + payload contract
-  test_outlook_com_order.py         # 6 dispatch order tests + 9 mirror-anchor watchdogs
+  test_send_payload.py              # FIX 1 surface (fsync) + payload contract + durabilidad del staging
+  test_main_flow.py                 # main.run(): contrato del staging + durabilidad (flush + fsync)
+  test_send_from_staging_fix.py     # send_from_staging.py: helpers + el dispatch REAL de main()
+  test_outlook_com_order.py         # dispatch order tests + mirror-anchor watchdogs
   test_regression_cross_contamination.py
                                     # 3 tests — the original repro A -> B -> A -> B
   test_diagnostic_log.py            # 4 tests — the staging diag line format/source anchor
@@ -85,12 +88,54 @@ because:
 The mirror approach is **invasive in the test code only** — production
 remains untouched, and the team's review surface stays minimal.
 
+### …pero el espejo no basta para lo que tiene que quedar en producción
+
+Un espejo es una **copia**: si producción pierde una línea, el espejo
+sigue teniendo la línea y la suite sigue en verde. Eso es exactamente lo
+que pasó con `mail.ReadReceiptRequested = False` (el recibo de lectura):
+`infrastructure/adapters/outlook_desktop_adapter.py` es capa en pruebas y
+`send_from_staging.py` es el remitente de producción, así que nadie miraba
+esa línea.
+
+Por eso ahora hay las dos capas:
+
+- el **espejo** (`tests/strategies.py` + sus watchdogs de anclas), que
+  documenta la secuencia del dispatch, y
+- el **camino real**: `test_send_from_staging_fix.py::test_dispatch_real_apaga_el_recibo_de_lectura`
+  ejecuta `send_from_staging.main()` DE VERDAD con un `win32com.client`
+  falso inyectado en `sys.modules` (`monkeypatch.setitem`), sin tocar
+  Outlook ni importar `pywintypes` de verdad.
+
+Producción no se toca: `main()` ya hace `import win32com.client` **dentro**
+de la función, así que inyectar el módulo basta para que el bloque de
+dispatch real se ejecute línea a línea en WSL.
+
 ## FIX 1 (fsync) coverage
 
 `test_api_send_flushes_and_fsyncs_staging_file` instruments
 `os.fsync` and verifies it was called with the staging file's fileno
 in the same transaction as the `write()`. This is the regression
 guard for `web/app.py:295-299`.
+
+## Durabilidad de la escritura del staging (flush + fsync)
+
+`fh.flush()` no es decorativo: baja el buffer de Python al descriptor.
+Sin él, el `os.fsync()` sincroniza un fichero **vacío** y el staging se
+pierde. Los dos caminos de producción que arman el staging lo hacen:
+
+- `web/app.py::_write_staging_file` (el de la UI),
+- `main.py::run` (el de la CLI).
+
+`tests/durable_write.py::EspiaDurabilidad` instrumenta ambos sin
+sustituir nada: proxy del `open()` del módulo que registra cada
+`flush()`, y espía de `os.fsync` que registra el tamaño y el inodo que el
+SO ve en ese instante. Con eso se comprueba que el `flush()` ocurre
+**antes** del `fsync()` y que, cuando se sincroniza, los bytes ya están
+en el fichero.
+
+Tests: `tests/test_send_payload.py::test_api_send_hace_flush_del_staging_antes_del_fsync`,
+`tests/test_send_payload.py::test_api_send_tiene_los_bytes_en_el_staging_cuando_hace_fsync`
+y `tests/test_main_flow.py::test_main_run_escribe_el_staging_con_flush_antes_del_fsync`.
 
 ## FIX 2 (no contamination) coverage
 
@@ -146,6 +191,9 @@ When adding new coverage, prefer:
 - For new dispatch-related tests, extend the mocks in `strategies.py`
   first and add the matching anchor watchdog in
   `test_outlook_com_order.py::test_strategies_mirror_anchors_match_production`.
+- If the behaviour has to stay in PRODUCTION (not in the mirror), test it
+  against the real file or by running the real block: a mirror cannot catch
+  a mutation in production, because it keeps the line that production lost.
 
 ## Coverage estimate (approximate)
 
