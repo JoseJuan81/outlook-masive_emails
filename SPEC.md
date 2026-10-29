@@ -4,21 +4,34 @@
 > máquina en `.claude/planes/<nombre>.json` y su explicación en
 > `.claude/planes/<nombre>.md`; este archivo es solo el índice que lee el
 > Coordinador por defecto.
+>
+> **`.claude/planes/` está en `.gitignore`** (decisión del ciclo 3: los planes
+> son artefactos regenerables; el índice de ciclos es este `SPEC.md`, que sí se
+> versiona). Dos consecuencias, para que no se infiera mal:
+> los enlaces a planes de este archivo **solo resuelven en la máquina que los
+> produjo** — en un clon nuevo no hay planes que abrir; y
+> `node .claude/hooks/drift-detection.mjs verificar` no tiene nada que
+> comprobar y sale con `3` ("no aplica") en lugar de con `0`.
 
 ## Estado actual
 
-**Ciclo 3 abierto — revisión del sistema de agentes, saneado del repo y
-arreglo del envío.** Es el ciclo en curso. Los dos ciclos anteriores están
-cerrados: su código ya está en `main` y sus planes quedan en `.claude/planes/`.
+**Ciclo 3 cerrado — revisión del sistema de agentes, saneado del repo y
+arreglo del envío.** Cerrado en `a888fee` (rango `2d40b8d..a888fee`, publicado
+en `origin/main`). Los tres ciclos anteriores están cerrados: su código ya está
+en `main` y sus planes quedan en `.claude/planes/`.
+
+**No hay ciclo activo.** Para abrir uno, sigue las instrucciones de la última
+sección de este archivo.
 
 La spec fundacional del proyecto está en [`README.md`](README.md) (flujo EML →
 preview → envío masivo vía Outlook COM, arquitectura hexagonal, stack
 Python/uv, Airtable como fuente de contactos).
 
-## Ciclo 3 — Sistema de agentes, saneado del repo y envío · ACTIVO
+## Ciclo 3 — Sistema de agentes, saneado del repo y envío · CERRADO
 
-**Spec detallada**: esta misma entrada. El ciclo todavía no tiene plan propio
-en `.claude/planes/`; cuando lo tenga, se enlaza aquí.
+**Spec detallada**: esta misma entrada. El plan aprobado del ciclo vive en
+`~/.claude/plans/abstract-mixing-dragon.md` (fuera del repo, a propósito:
+`.claude/planes/` está en `.gitignore` porque sus artefactos son regenerables).
 
 **Spec**: tres frentes.
 
@@ -54,13 +67,23 @@ repo y cierra los agujeros del envío (recibos, log de diagnóstico,
 persistencia del staging).
 
 **Estado de implementación**: los tres frentes están implementados y son
-verificables por comando. La puerta de calidad está registrada en
-`.claude/settings.json` y los guardianes funcionan; los arreglos de envío
-están en su sitio; el saneado del repo está a medias (las duplicidades de la
-raíz ya están en `tests/`, pero siguen en pie el `test/` legacy y
-`contacts.py`/`env.py` en la raíz).
+verificables por comando.
 
-**Criterio de hecho**: la puerta de calidad en verde y la suite en verde.
+- **Sistema de agentes**: `.claude/settings.json` registra la puerta en
+  `SubagentStop` (matcher `desarrollador|tester`, perfil `rapida`, timeout
+  900 s) y `guardian-config.mjs` en `PreToolUse`. Los guardianes están
+  registrados en el frontmatter de los cinco roles. La auditoría D1–D6 está
+  cerrada; el último hueco (D4: `desarrollador` y `tester` podían reescribir
+  por Bash la puerta que los juzga) se cerró con `guardian-bash.mjs` en dos
+  modos según el rol — "documentos" (allowlist estricta) y "vigilado" (código
+  de producción permitido; solo se niegan las rutas de la puerta y los
+  comandos destructivos).
+- **Saneado del repo**: las duplicidades de la raíz están movidas a `tests/`;
+  quedan `test/` (legacy, aún en pie) y `contacts.py`/`env.py` en la raíz.
+- **Envío**: recibos apagados en las dos rutas, log de diagnóstico restaurado y
+  `fsync` del staging en `main.py` y `web/app.py`.
+
+**Criterio de hecho**: la suite en verde y la puerta de calidad en verde.
 
 ```sh
 uv run --no-sync pytest                          # exit 0
@@ -75,12 +98,21 @@ grep -n "os.fsync" main.py web/app.py
 grep -n "staging cargado" send_from_staging.py
 ```
 
-**Pendiente que bloquea la puerta**: el perfil `rapida` incluye `lint`, que
-mide la regresión contra la línea base congelada. `.claude/linea-base.json`
-está vacía, así que todo error de ruff cuenta como regresión: `ruff` reporta
-102 errores y `linea-base.mjs verificar` sale con `1`, con lo que la puerta
-bloquea (código 2). **Solo el usuario regenera la línea base, y solo a la
-baja**; la otra vía es arreglar los 102 errores.
+**Pendiente que bloquea la puerta (acción del usuario)**: el perfil `rapida`
+incluye `lint`, que mide la regresión contra la línea base congelada.
+`.claude/linea-base.json` sigue siendo el placeholder vacío (`"archivos": {}`),
+generado antes de que ruff estuviera instalado, así que todo hallazgo de ruff
+cuenta como regresión: `ruff` reporta **80** hallazgos y
+`linea-base.mjs verificar` sale con `1`, con lo que la puerta bloquea (código
+2). **Solo el usuario regenera la línea base, y solo a la baja**:
+
+```sh
+rm .claude/linea-base.json && node .claude/hooks/linea-base.mjs generar
+```
+
+La otra vía es arreglar los 80 hallazgos. Con la línea base regenerada, la
+puerta queda en verde y `lint` puede pasar a `"obligatorio": true` en los dos
+perfiles de `.claude/verificacion.json`.
 
 ## Ciclo 2 — `MAPI_E_OBJECT_DELETED` en el gate de entrega · CERRADO
 
@@ -117,7 +149,9 @@ y `uv run pytest tests/test_outlook_com_order.py -v` en verde. Cerrado en
    schema que valida `validar-plan.mjs`) y `.claude/planes/<nombre-corto>.md`
    (la explicación para el usuario) con la spec detallada de la feature a
    implementar. La spec debe terminar con un criterio de hecho medible con un
-   comando.
+   comando. Ambos ficheros viven en `.claude/planes/`, que está en
+   `.gitignore`: el plan es un artefacto local de trabajo, y lo que queda
+   versionado es la entrada de este `SPEC.md`.
 2. Editar este `SPEC.md` y añadir la entrada del nuevo ciclo **arriba** de los
    anteriores (el más reciente primero), y mover a CERRADO la entrada del
    ciclo que se cierra, anotando el commit.

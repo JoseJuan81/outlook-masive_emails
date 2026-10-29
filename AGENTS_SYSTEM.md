@@ -512,9 +512,8 @@ allowlist compartida):
 ### guardian-bash.mjs
 
 Cierra la fuga que `guardian-escritura.mjs` deja abierta: `Write` no es la
-única forma de escribir en disco. Se declara en el frontmatter de los dos roles
-que producen documentos (`planificador`, `disenador-web`) **y también del
-`revisor`**, con matcher `Bash`:
+única forma de escribir en disco. Se declara en el frontmatter de **los cinco
+roles**, con matcher `Bash`:
 
 ```yaml
     - matcher: "Bash"
@@ -524,11 +523,31 @@ que producen documentos (`planificador`, `disenador-web`) **y también del
           timeout: 10
 ```
 
+El hook tiene **dos modos**, según el rol del evento. El modo se decide con
+`agent_type` contra la lista `agentesVigilados` de `.claude/verificacion.json`
+(`desarrollador`, `tester`); si falta `agent_type`, cae al modo restrictivo.
+
+| Modo | Roles | Regla |
+|---|---|---|
+| **documentos** | `planificador`, `disenador-web`, `revisor` | Allowlist estricta: solo se permite escribir en `.claude/planes/`, `.claude/disenos/`, `.claude/cache/`, `docs/` y `SPEC.md`. |
+| **vigilado** | `desarrollador`, `tester` | Escriben código de producción, así que sus comandos de Bash son legítimos: se les niegan **las rutas de la configuración de la puerta** (`.claude/hooks/`, `.claude/verificacion.json`, `.claude/linea-base.json`, los `settings.json`) y los comandos que destruyen el árbol o el entorno. |
+
 Analiza el comando y **deniega** las escrituras prohibidas: redirecciones
 (`echo x > domain/entities.py`), `sed -i`, `rm -rf`, `git reset --hard`,
 `git clean`, `uv add`/`sync`/`lock`, `writeFileSync` embebido… Ante la duda
 permite: un falso positivo manda al agente a un rodeo, un falso negativo lo
 deja escribir.
+
+> **Por qué el rol vigilado tiene su propio modo:** `guardian-config.mjs` solo
+> cubre `Write`/`Edit`/`NotebookEdit`. Sin este modo, `desarrollador` y
+> `tester` —los dos roles vigilados por la puerta— podían reescribir por Bash
+> la configuración que los juzga (`echo x > .claude/hooks/puerta-calidad.mjs`
+> pasaba limpio). Ese hueco era el hallazgo **D4** de la auditoría.
+>
+> **Lo que el rol vigilado sigue sin poder hacer:** mutar el entorno
+> (`uv sync`, `uv add`, `uv remove`, `uv lock`). El entorno lo prepara el
+> usuario con `uv sync --all-groups`; `uv sync` a secas **poda el grupo
+> `test`** de este repo y desinstala pytest.
 
 ### guardian-config.mjs
 

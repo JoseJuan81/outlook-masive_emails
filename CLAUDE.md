@@ -330,13 +330,20 @@ aplica).
 
 ### Hooks por agente (frontmatter)
 
-Viven en el `hooks:` del frontmatter de los agentes de documentación:
+Viven en el `hooks:` del frontmatter de los agentes:
 
-| Hook                      | Matcher                    | Qué hace                                                                 |
-| ------------------------- | -------------------------- | ------------------------------------------------------------------------ |
-| `guardian-escritura.mjs`  | `Write|Edit|MultiEdit|NotebookEdit` | Solo permite escribir en `.claude/planes/`, `.claude/disenos/`, `.claude/cache/`, `docs/` y `SPEC.md` |
-| `guardian-bash.mjs`       | `Bash`                     | Cubre la fuga por Bash: `echo x > domain/entities.py`, `sed -i`, `rm -rf`, `git reset --hard`, `git clean`, `uv add/sync/lock`, `writeFileSync`… se deniegan |
-| `validar-plan.mjs`        | `Write` (solo `planificador`) | Valida el schema de `.claude/planes/*.json`                        |
+| Hook                      | Matcher                    | Roles | Qué hace                                                                 |
+| ------------------------- | -------------------------- | ----- | ------------------------------------------------------------------------ |
+| `guardian-escritura.mjs`  | `Write|Edit|MultiEdit|NotebookEdit` | `planificador`, `disenador-web` | Solo permite escribir en `.claude/planes/`, `.claude/disenos/`, `.claude/cache/`, `docs/` y `SPEC.md` |
+| `guardian-bash.mjs`       | `Bash`                     | los cinco | Cubre la fuga por Bash. **Dos modos**: en `planificador`/`disenador-web`/`revisor` es una allowlist estricta de documentos; en `desarrollador`/`tester` permite el código de producción y solo niega las rutas de la configuración de la puerta y los comandos destructivos (`sed -i`, `rm -rf`, `git reset --hard`, `git clean`, `uv add/sync/lock`, `writeFileSync`…) |
+| `validar-plan.mjs`        | `Write` (solo `planificador`) | `planificador` | Valida el schema de `.claude/planes/*.json`                        |
+
+> El modo de `guardian-bash.mjs` se decide con `agent_type` contra
+> `agentesVigilados` de `.claude/verificacion.json`. Sin `agent_type` cae al
+> modo restrictivo (*fail-safe*). Sin este modo, `desarrollador` y `tester`
+> —los roles vigilados por la puerta— podían reescribir **por Bash** la
+> configuración que los juzga: `guardian-config.mjs` solo cubre
+> `Write`/`Edit`/`NotebookEdit`.
 
 ### CLI que el Coordinator invoca a mano
 

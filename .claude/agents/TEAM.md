@@ -114,7 +114,7 @@ Los hooks se registran en **dos sitios distintos**, y por eso están separados.
 | Hook | Matcher | En qué agente | Qué hace |
 | ---- | ------- | ------------- | -------- |
 | `guardian-escritura.mjs` | `Write\|Edit\|MultiEdit\|NotebookEdit` | `planificador`, `disenador-web` | Bloquea la escritura fuera de `.claude/planes/`, `.claude/disenos/`, `.claude/cache/`, `docs/`, `SPEC.md` |
-| `guardian-bash.mjs` | `Bash` | `planificador`, `disenador-web`, `revisor` | Cierra la fuga por Bash: `echo x > main.py`, `sed -i`, `rm -rf`, `git reset --hard`, `git clean`, `uv add`/`sync`/`lock`… quedan denegados. Para el `revisor` es lo que hace **técnica** su independencia: puede usar `Bash`, pero no escribir en el repo (solo en `/tmp`) |
+| `guardian-bash.mjs` | `Bash` | los cinco | Cierra la fuga por Bash, en **dos modos** según el rol: en `planificador`/`disenador-web`/`revisor` es una allowlist estricta (`echo x > main.py`, `sed -i`, `rm -rf`, `git reset --hard`, `git clean`, `uv add`/`sync`/`lock`… denegados; el `revisor` solo puede escribir en `/tmp`, lo que hace **técnica** su independencia); en `desarrollador`/`tester` permite el código de producción y solo niega las rutas de la configuración de la puerta y los comandos destructivos |
 | `validar-plan.mjs` | `Write` | `planificador` | Valida el schema de los planes `.claude/planes/*.json` |
 
 Los comandos `checkpoint.mjs`, `drift-detection.mjs` y `linea-base.mjs` **no son
