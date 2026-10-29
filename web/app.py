@@ -243,19 +243,15 @@ _PROGRESS_FILE = _PROJECT_ROOT / "staging" / "send_progress.json"
 _send_process = None
 
 
-def _resolve_windows_python() -> str | None:
-    """Resuelve la ruta al intérprete Python de Windows con pywin32 instalado.
+def _candidate_windows_python_paths() -> list[str]:
+    """Candidatos de instalación de Python en el mount /mnt/c de WSL2.
 
-    Orden de resolución:
-      1. Variable de entorno ``WINDOWS_PYTHON_PATH`` (override explícito).
-      2. Rutas comunes de instalación en el mount ``/mnt/c`` de WSL2.
-
-    Devuelve ``None`` si no encuentra ningún candidato válido.
+    Devuelve las rutas literales (con el placeholder ``/USER/``) y, si el
+    usuario de WSL está definido, también las variantes con el placeholder
+    sustituido. Ambas son necesarias: el nombre real de la carpeta de perfil
+    de Windows puede coincidir con el placeholder (p. ej. ``/mnt/c/Users/USER/``),
+    en cuyo caso sustituir deja la ruta real fuera de la lista.
     """
-    explicit = os.getenv("WINDOWS_PYTHON_PATH")
-    if explicit and Path(explicit).is_file():
-        return explicit
-
     candidates = [
         # Instalaciones "para todos los usuarios" en C:\ raíz
         "/mnt/c/Python313/python.exe",
@@ -278,12 +274,28 @@ def _resolve_windows_python() -> str | None:
         "/mnt/c/Users/USER/miniconda3/python.exe",
     ]
 
-    # Reemplazar el placeholder USER con el usuario WSL actual
     user = os.getenv("USER") or ""
-    if user:
-        candidates = [c.replace("/USER/", f"/{user}/") for c in candidates]
+    if not user:
+        return candidates
 
-    for path in candidates:
+    substituted = [c.replace("/USER/", f"/{user}/") for c in candidates]
+    return candidates + [c for c in substituted if c not in candidates]
+
+
+def _resolve_windows_python() -> str | None:
+    """Resuelve la ruta al intérprete Python de Windows con pywin32 instalado.
+
+    Orden de resolución:
+      1. Variable de entorno ``WINDOWS_PYTHON_PATH`` (override explícito).
+      2. Rutas comunes de instalación en el mount ``/mnt/c`` de WSL2.
+
+    Devuelve ``None`` si no encuentra ningún candidato válido.
+    """
+    explicit = os.getenv("WINDOWS_PYTHON_PATH")
+    if explicit and Path(explicit).is_file():
+        return explicit
+
+    for path in _candidate_windows_python_paths():
         if Path(path).is_file():
             return path
 
