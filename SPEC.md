@@ -119,6 +119,13 @@ cuenta como regresión: `ruff` reporta **80** hallazgos y
 rm .claude/linea-base.json && node .claude/hooks/linea-base.mjs generar
 ```
 
+La línea base no está simplemente «sin llenar»: quedó **obsoleta**. Se generó
+el 25 de septiembre, cuando su propia nota decía «ruff no está agregado
+todavía al `pyproject.toml`», mientras que `uv.lock` ya fija `ruff 0.17.3`, con
+un conjunto de reglas por defecto mucho más amplio que el de entonces. Por eso
+los ~80 hallazgos heredados (25 ficheros) cuentan como regresión aunque no haya
+cambiado ni una línea de código desde entonces.
+
 La otra vía es arreglar los 80 hallazgos. Con la línea base regenerada, la
 puerta queda en verde y `lint` puede pasar a `"obligatorio": true` en los dos
 perfiles de `.claude/verificacion.json`.
